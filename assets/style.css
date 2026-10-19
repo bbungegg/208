@@ -232,6 +232,7 @@ svg{display:block}
 }
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .scrim.is-dark{background:rgba(24,24,26,.8);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.scrim.is-solid{background:#2b2c2e;-webkit-backdrop-filter:none;backdrop-filter:none}
 .scrim.is-fading{opacity:0;transition:opacity .55s ease}
 .scrim.is-dim{background:rgba(236,238,240,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 
@@ -460,6 +461,7 @@ svg{display:block}
 .sec-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
 .prose{font-size:15px;line-height:1.85;color:var(--ink-2);word-break:keep-all;overflow-wrap:anywhere}
 .prose a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
+mark{padding:0 2px;border-radius:2px;color:inherit;background:linear-gradient(transparent 45%,#cfe2f6 45%)}
 .prose img{max-width:100%;height:auto;border-radius:10px}
 
 /* 기본 정보 */

@@ -178,7 +178,8 @@
   var scrim = $('#scrim');
   function setScrim(mode) {
     scrim.hidden = !mode;
-    scrim.classList.toggle('is-dark', mode === 'dark');
+    scrim.classList.toggle('is-dark', mode === 'dark' || mode === 'solid');
+    scrim.classList.toggle('is-solid', mode === 'solid');
     scrim.classList.toggle('is-dim', mode === 'dim');
   }
 
@@ -446,7 +447,7 @@
     editable(holder);
     stage.classList.remove('is-leaving', 'is-out');
     stage.hidden = false;
-    setScrim('dark');
+    setScrim('solid');               // 오프닝: 지도는 가리고 탑승권만
     box.classList.add('is-ticket');
     view = 'ticket';
     fitTicket();
@@ -735,7 +736,7 @@
   function notesHtml(list, k) {
     return arr(list).map(function (n, i) {
       n = arr(n);
-      return '<section class="sec"><h3 class="sec-t"><span>NOTE</span>' + ed(k + '.' + i + '.0', n[0] || '') + '</h3>' +
+      return '<section class="sec"><h3 class="sec-t"><span>' + esc(n[2] || 'NOTE') + '</span>' + ed(k + '.' + i + '.0', n[0] || '') + '</h3>' +
         '<div class="prose">' + edr(k + '.' + i + '.1', n[1]) + '</div></section>';
     }).join('');
   }
@@ -810,6 +811,8 @@
   function sheetHtml(d, o) {
     o = o || {};
     var k = o.k;
+    // 이름도 사진도 없는 성향표는 큰 프로필 없이 제목만
+    if (!o.char && !d.name && !d.photo) return headHtml(d) + chips(d.keywords, false, k + '.keywords') + songBtn(d.song) + sheetRest(d, k);
     var h = '<div class="hero">' + photo(d) +
       '<div class="hero-txt">' +
         (o.tag ? '<span class="hero-code">' + esc(o.tag) + '</span>' : '') +
@@ -821,6 +824,10 @@
         (o.char && (d.note || EDIT) ? '<p class="hero-note">' + ed(k + '.note', d.note) + '</p>' : '') +
         chips(d.keywords, false, k + '.keywords') + songBtn(d.song) +
       '</div></div>';
+    return h + sheetRest(d, k);
+  }
+  function sheetRest(d, k) {
+    var h = '';
     if (arr(d.basics).length) {
       h += sec('BASIC', '기본 정보', '<dl class="facts">' + arr(d.basics).map(function (r, i) {
         r = arr(r);
