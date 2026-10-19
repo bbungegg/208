@@ -1058,3 +1058,148 @@ body{background:#d9d8dd}
 /* 대사: 이공팔(왼쪽) 검정 · 임완청(오른쪽) 흰색 */
 .quote.is-a p{background:#141414;color:#fff;box-shadow:none}
 .quote.is-b p{background:#fff;color:#141414;box-shadow:inset 0 0 0 1px #dcdcdc}
+
+/* ==========================================================================
+   페어: 사진 토글 · 체크 태그 · 통승 달력 · 말풍선 색
+   ========================================================================== */
+:root{--hair:#7a3038;--ink2:#1c1a1a}
+
+/* 사진 = 버튼 (누르면 아래로 소개가 펼쳐짐) */
+.who-pic{position:relative;display:block;width:min(150px,100%);margin:0 auto 18px;padding:0;border-radius:12px;cursor:pointer;transition:transform .25s cubic-bezier(.3,1.5,.5,1)}
+.who-pic .photo{width:100% !important;max-width:none !important;margin:0 !important;display:block}
+.who-pic:hover{transform:translateY(-3px) rotate(-1deg)}
+.who-pic.is-on{transform:translateY(-3px)}
+.who-pic.is-on .photo{box-shadow:0 0 0 2px var(--ink2),0 14px 26px -18px rgba(30,20,20,.55) !important}
+.who-tap{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 10px;border-radius:99px;background:#fff;box-shadow:0 0 0 1.5px var(--ink2);font-family:var(--cond);font-size:10.5px;letter-spacing:.14em;color:var(--ink2);white-space:nowrap}
+.who-tap b{font-weight:700;transition:transform .3s}
+.who-pic.is-on .who-tap{background:var(--ink2);color:#fff}
+.who-pic.is-on .who-tap b{transform:rotate(45deg)}
+
+/* 태그: 달력 속 체크 상자처럼 */
+.wt{display:flex;flex-direction:column;width:100%;max-width:230px;margin:14px auto 0;padding:0;list-style:none;border:1.5px solid var(--ink2);border-radius:10px}
+.wt li{display:flex;align-items:center;gap:8px;padding:6px 10px;border-top:1.5px dashed var(--ink2);font-size:12.5px;line-height:1.35;color:var(--ink2);text-align:left}
+.wt li:first-child{border-top:0}
+.wt li span{flex:1;min-width:0;text-align:center;word-break:keep-all}
+.wt li i{flex:none;position:relative;width:12px;height:12px;border:1.5px solid var(--ink2);border-radius:2px}
+.wt li i::after{content:"";position:absolute;left:2.5px;top:0;width:3px;height:6px;border:solid var(--ink2);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+.duo .who-tags{display:none}
+
+/* 펼쳐지는 소개 */
+.duo-about{display:none}
+.dp-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.3,.8,.3,1)}
+.dp-wrap.is-open{grid-template-rows:1fr}
+.dp-in{min-height:0;overflow:hidden}
+.dp{display:none;position:relative;margin:22px 0 4px;padding:20px 22px 22px;border:1.5px solid var(--ink2);border-radius:14px;animation:dpin .35s ease}
+.dp-wrap[data-on="a"] .dp.is-a,.dp-wrap[data-on="b"] .dp.is-b,.dp-wrap.is-edit .dp{display:block}
+.dp::before{content:"";position:absolute;top:-9px;width:14px;height:14px;background:#fff;border-left:1.5px solid var(--ink2);border-top:1.5px solid var(--ink2);transform:rotate(45deg)}
+.dp.is-a::before{left:calc(25% - 7px)}
+.dp.is-b::before{right:calc(25% - 7px)}
+.dp-n{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;font-size:18px;font-weight:700;color:var(--ink2)}
+.dp-n small{font-size:12px;font-weight:400;color:#888}
+.dp p{margin:0;font-size:14.5px;line-height:1.9;color:#3a3535;word-break:keep-all;overflow-wrap:anywhere}
+@keyframes dpin{from{opacity:0;transform:translateY(-6px)}}
+
+/* 말풍선: 이공팔 검정 · 임완청 머리색 */
+.quote.is-a p{background:var(--ink2) !important;color:#fff !important;box-shadow:none !important}
+.quote.is-b p{background:var(--hair) !important;color:#fff !important;box-shadow:none !important}
+
+/* 성향표: 제목을 누르면 펼쳐지는 칸 */
+details.tg{margin-top:12px;border:1.5px solid var(--ink2);border-radius:14px;overflow:hidden}
+details.tg:first-of-type{margin-top:30px}
+.tg summary{display:flex;align-items:baseline;gap:10px;padding:14px 18px;cursor:pointer;list-style:none;user-select:none}
+.tg summary::-webkit-details-marker{display:none}
+.tg summary em{font-family:var(--cond);font-style:normal;font-size:11px;letter-spacing:.2em;color:#888}
+.tg summary span{flex:1;font-size:16px;font-weight:700;color:var(--ink2)}
+.tg summary i{flex:none;position:relative;width:14px;height:14px;align-self:center}
+.tg summary i::before,.tg summary i::after{content:"";position:absolute;left:0;top:6px;width:14px;height:1.8px;background:var(--ink2);transition:transform .3s}
+.tg summary i::after{transform:rotate(90deg)}
+.tg[open] summary i::after{transform:rotate(0)}
+.tg[open] summary{border-bottom:1.5px dashed var(--ink2)}
+.tg summary:hover{background:#f6f4f4}
+.tg-in{padding:14px 18px 18px;animation:dpin .35s ease}
+.tg-in .prose{font-size:14.5px;line-height:1.9}
+
+/* 페어 목록 카드: 심플하게 (흰 바탕 · 얇은 선) */
+.pc{padding:14px 18px 14px 14px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px #e4e4e4;transition:box-shadow .2s}
+.pc:hover{background:#fff;transform:none;box-shadow:inset 0 0 0 1px #bdbdbd}
+.pc-photos .photo{width:58px;aspect-ratio:4/5;border-radius:6px;box-shadow:none;outline:0}
+.pc-photos .photo + .photo{margin-left:6px;transform:none}
+.pc-photos .photo:first-child{transform:none}
+.pc-route{font-size:12px;letter-spacing:.04em;color:#999}
+.pc-title{font-size:20px;font-weight:700;letter-spacing:.02em;color:#1c1a1a}
+.pc-sub{font-size:12.5px;color:#999}
+.pc-tag{font-size:13.5px;color:#555}
+.pc .tk-badge{height:auto;padding:0;border-radius:0;background:none;box-shadow:none;font-family:var(--cond);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#999}
+.pc .go{color:#bbb}
+
+/* 체크인 카드: 옛 윈도우 창 테두리 (지도 바깥 창과 같은 실버) */
+.tag{aspect-ratio:auto;height:auto;padding:0 6px 6px;border:1px solid #6f6f7d;border-radius:8px 8px 3px 3px;background:#ecebe6;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);filter:drop-shadow(0 30px 34px rgba(0,0,0,.4))}
+.tag-bar{display:flex;align-items:center;gap:6px;height:30px;margin:0 -6px 6px;padding:0 4px 0 8px;border-radius:7px 7px 0 0;
+  background:linear-gradient(#fdfdfe 0,#e3e3ea 10%,#cfcfd9 45%,#c3c3ce 55%,#d4d4dd 90%,#b9b9c4 100%);border-bottom:1px solid #9a9aa6;
+  font-family:Tahoma,"Segoe UI",Verdana,var(--sans);font-size:13px;font-weight:700;color:#1d1d26;text-shadow:0 1px 0 rgba(255,255,255,.8);text-align:left}
+.tag-bar .xp-ico{width:16px;height:16px;flex:none}
+.tag-file{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tag-ctl{display:flex;gap:2px}
+.tag-ctl .xp-c{display:inline-block;flex:none}
+.tag-x{cursor:pointer}
+.tag-in{position:relative;inset:auto;display:block;aspect-ratio:733/585;border:1px solid #9a9aa6;border-radius:0;background:#fff}
+.stage-close.card-close{display:none}
+
+/* ==========================================================================
+   창 바깥 배경 — 사진 + 한자 단어장 (넓은 화면에서만 보임)
+   ========================================================================== */
+.bd{position:fixed;inset:0;z-index:0;background:#cfeee9 center/cover no-repeat;overflow:hidden}
+.has-bd body{background:#cfeee9}
+.has-bd #app{z-index:1;pointer-events:none}
+.has-bd #app > *{pointer-events:auto}
+.bd-w{--gut:max(0px,calc(50vw - 578px));position:absolute;top:var(--y);display:grid;justify-items:start;gap:2px;padding:4px;border:0;background:none;color:#1d5c55;cursor:pointer;
+  font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;animation:bdbob 6s ease-in-out infinite;animation-delay:var(--d)}
+.bd-w.is-l{left:calc(var(--gut) * var(--x))}
+.bd-w.is-r{right:calc(var(--gut) * var(--x))}
+.bd-w b{font-size:36px;font-weight:500;line-height:1}
+.bd-w small{font-family:"Courier New",Courier,monospace;font-size:14px;letter-spacing:.02em;color:#2c6d65}
+.bd-w.is-up small{order:-1;justify-self:end}
+.bd-w.is-side{grid-template-columns:auto auto;align-items:end;column-gap:4px}
+.bd-w.is-side .bd-chip{grid-column:1/-1}
+.bd-w.is-vert{grid-template-columns:auto auto;align-items:start;column-gap:2px}
+.bd-w.is-vert small{writing-mode:vertical-rl;text-orientation:upright;letter-spacing:-.1em;line-height:1}
+.bd-w.is-vert .bd-chip{grid-column:1/-1}
+.bd-chip{display:inline-block;padding:2px 5px;background:#d4d0c8;box-shadow:inset -1px -1px 0 #6f6f6f,inset 1px 1px 0 #fff,1px 1px 0 #3a3a3a;font-family:"Noto Serif TC","PMingLiU",serif;font-size:13px;line-height:1.25;color:#111;white-space:nowrap}
+.bd-chip.is-v{writing-mode:vertical-rl;padding:5px 2px}
+.bd-w:hover b,.bd-w:focus-visible b{color:#7a3038}
+.bd-w.is-pop{animation:bdpop .5s ease,bdbob 6s ease-in-out infinite .5s}
+@keyframes bdbob{50%{translate:0 -6px}}
+@keyframes bdpop{40%{transform:scale(1.25)}}
+.bd-angel{--gut:max(0px,calc(50vw - 578px));position:absolute;left:calc(var(--gut) / 2);top:76%;transform:translateX(-50%);display:grid;justify-items:center;width:130px;padding:0;border:0;background:none;cursor:pointer;animation:bdbob 4s ease-in-out infinite}
+.bd-angel img{position:relative;z-index:1;width:46px;image-rendering:pixelated;margin-top:22px}
+.bd-angel .bd-chip{position:relative;z-index:1;margin-top:4px}
+.bd-wing{position:absolute;top:0;left:4px;width:58px;fill:#fff;stroke:#3f6f69;stroke-width:1.6;stroke-linejoin:round;transform-origin:95% 60%;animation:flap 1.6s ease-in-out infinite}
+.bd-wing path + path{fill:none;stroke-width:1.2}
+.bd-wing.is-r{left:auto;right:4px;transform:scaleX(-1);transform-origin:5% 60%;animation-name:flapr}
+@keyframes flap{50%{transform:rotate(-12deg)}}
+@keyframes flapr{0%,100%{transform:scaleX(-1)}50%{transform:scaleX(-1) rotate(-12deg)}}
+.bd-angel.is-pop{animation:bdpop .5s ease}
+@media (max-width:1499px){.bd-w,.bd-angel{display:none}}
+.bd-wing{stroke-width:1.1}.bd-wing path + path{stroke-width:.8}
+@media (max-width:720px){.bd{display:none}}
+@media (prefers-reduced-motion:reduce){.bd-w,.bd-angel,.bd-wing{animation:none}}
+/* 배경: 하늘 계단 사진, 글씨는 체리색 */
+.bd{background-color:#bfe0f5;background-position:center 60%}
+.has-bd body{background:#bfe0f5}
+.bd-w{color:#7a1b1b;text-shadow:0 0 6px rgba(255,255,255,.85),0 0 2px rgba(255,255,255,.9)}
+.bd-w small{color:#7a1b1b}
+.bd-w:hover b,.bd-w:focus-visible b{color:#b3262d}
+.bd-angel{display:none !important}
+
+/* 오프닝: 뒤는 흐린 홍콩 사진, 탑승권은 불투명 유리 (frosted) */
+.scrim.is-solid{background:linear-gradient(rgba(18,24,32,.38),rgba(18,24,32,.38)),var(--bd-photo,none) center 40%/cover no-repeat,#2b2c2e}
+.tk{--paper:rgba(255,255,255,.62);filter:none;animation-fill-mode:backwards}
+.tk-main,.tk-stub{background:var(--paper) !important;-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+.tk-main{
+  -webkit-mask:radial-gradient(circle at 0 100%,transparent var(--notch),#000 calc(var(--notch) + .5px)) left/51% 100% no-repeat,radial-gradient(circle at 100% 100%,transparent var(--notch),#000 calc(var(--notch) + .5px)) right/51% 100% no-repeat;
+          mask:radial-gradient(circle at 0 100%,transparent var(--notch),#000 calc(var(--notch) + .5px)) left/51% 100% no-repeat,radial-gradient(circle at 100% 100%,transparent var(--notch),#000 calc(var(--notch) + .5px)) right/51% 100% no-repeat}
+.tk-stub{
+  -webkit-mask:radial-gradient(circle at 0 6px,transparent var(--notch),#000 calc(var(--notch) + .5px)) left/51% 100% no-repeat,radial-gradient(circle at 100% 6px,transparent var(--notch),#000 calc(var(--notch) + .5px)) right/51% 100% no-repeat;
+          mask:radial-gradient(circle at 0 6px,transparent var(--notch),#000 calc(var(--notch) + .5px)) left/51% 100% no-repeat,radial-gradient(circle at 100% 6px,transparent var(--notch),#000 calc(var(--notch) + .5px)) right/51% 100% no-repeat}
+.tk-strip{background:#d3eaf2;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}

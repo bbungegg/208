@@ -14,7 +14,7 @@ window.ERA = {
   site: {
     title: "208 with me",      // 브라우저 탭 제목
     sub: "auto",                // 왼쪽 위 지명. "auto" = 지금 보고 있는 동네 이름 (직접 적으면 그 글자로 고정)
-    color: "#a7bfe3",           // 기본 포인트 색 (티켓 파란 띠)
+    color: "#d3eaf2",           // 기본 포인트 색 (티켓 띠 · 연하늘)
     dot: "#6b1717",             // 지도 위 점 색 (pin 이 없을 때)
     pin: "assets/img/cherry.png", // 지도 위 점 대신 쓸 그림 (비우면 동그란 점). 점마다 pin: "assets/img/goldfish.png" 처럼 따로 줄 수도 있어요
     tiles: "osm",               // 지도: "osm" 또는 "esri" (안 뜨면 바꿔 보기)
@@ -35,7 +35,7 @@ window.ERA = {
       to: { code: "SYD", name: "시드니", en: "Sydney", big: "01 JUL 97", small: "Kingsford Smith" },
       flight: "208 with me", badge: "One way",             // 가운데 작은 글씨 / 검은 알약
       strip: [["Date", "30.06.97"], ["Boarding", "02:08"], ["Gate", "8"], ["Flight", "208"]],
-      info: [["Passenger", "임완청 · 이공팔"], ["Seat", "20A · 20B"], ["Class", "Economy"]]
+      info: [["Passenger", "Joey Lam · Toby Li"], ["Seat", "20A · 20B"], ["Class", "Economy"]]
     }
   },
 
@@ -46,6 +46,19 @@ window.ERA = {
     src: "assets/label.svg",
     stamp: "CHECKED IN",       // 도장 위쪽 글씨 (비우면 도장 없음)
     date: "1997.06.30"         // 도장 날짜 (비우면 오늘 날짜)
+  },
+
+  /* 창 바깥 배경: 사진 + 둥둥 떠 있는 한자 (넓은 화면에서만 보여요)
+     photo: 배경 사진 (내 사진으로 바꾸려면 assets/img/ 에 넣고 주소만 바꾸기)
+     words: [한자, 병음, 단어]  — 한자를 누르면 광둥어로 읽어 줘요 */
+  backdrop: {
+    photo: "assets/img/bg.jpg",
+    words: [
+      ["晴", "qing2", "晴天"], ["情", "qing2", "感情"], ["精", "jing1", "精神"], ["靜", "jing4", "安靜"],
+      ["淨", "jing4", "乾淨"], ["八", "ba1", "八寶"], ["睛", "jing1", "眼睛"], ["請", "qing3", "請問"],
+      ["蜻", "qing1", "蜻蜓"], ["青", "qing1", "青年"], ["輕", "qing1", "年輕"], ["猜", "cai1", "猜想"],
+      ["清", "qing1", "清理，清醒"], ["林", "lin2", "樹林"]
+    ]
   },
 
   /* 왼쪽 아래 음악 (유튜브 주소의 v= 뒷부분). 비우면 [] */

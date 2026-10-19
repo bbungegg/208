@@ -372,7 +372,10 @@
     ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (t) {
       tag.addEventListener(t, function () { tag.classList.remove('is-press'); });
     });
-    tag.addEventListener('click', function () { audio(); stampCard(); });
+    tag.addEventListener('click', function (ev) {
+      if (ev.target.closest('.tag-x')) { closeCard(); return; }   // 창 제목줄의 X
+      audio(); stampCard();
+    });
     cardHint.addEventListener('click', function () { audio(); stampCard(); });
     cardClose.addEventListener('click', closeCard);
   }
@@ -782,9 +785,12 @@
     for (var i = 1; i <= 5; i++) h += '<i' + (i <= n ? ' class="is-on"' : '') + '>' + FLAME + '</i>';
     return '<span class="heat" role="img" aria-label="버닝 ' + n + ' / 5">' + h + '</span>';
   }
-  function notesHtml(list, k) {
+  /* toggle: 제목을 누르면 펼쳐지는 칸 (성향표) */
+  function notesHtml(list, k, toggle) {
     return arr(list).map(function (n, i) {
       n = arr(n);
+      if (toggle) return '<details class="tg"' + (EDIT ? ' open' : '') + '><summary><em>' + esc(n[2] || '') + '</em><span>' + ed(k + '.' + i + '.0', n[0] || '') + '</span><i aria-hidden="true"></i></summary>' +
+        '<div class="tg-in"><div class="prose">' + edr(k + '.' + i + '.1', n[1]) + '</div></div></details>';
       return '<section class="sec"><h3 class="sec-t">' + ed(k + '.' + i + '.0', n[0] || n[2] || 'NOTE') + '</h3>' +
         '<div class="prose">' + edr(k + '.' + i + '.1', n[1]) + '</div></section>';
     }).join('');
@@ -895,7 +901,7 @@
       '</div>';
     }
     if (d.about || EDIT) h += sec('ABOUT', '소개', '<div class="prose">' + edr(k + '.about', d.about) + '</div>');
-    h += notesHtml(d.notes, k + '.notes');
+    h += notesHtml(d.notes, k + '.notes', d.type === 'profile');
     return h;
   }
 
@@ -921,12 +927,14 @@
   }
 
   /* 페어 자세히 */
-  function whoHtml(x, k) {
+  function whoHtml(x, k, w) {
     x = x || {};
-    return '<div class="who">' + (x.photo ? photo(x) : '') +
+    var pic = x.photo ? photo(x) : '';
+    if (pic && w && x.about && !EDIT) pic = '<button type="button" class="who-pic" data-who="' + w + '" aria-expanded="false">' + pic + '<span class="who-tap">PROFILE <b>+</b></span></button>';
+    return '<div class="who">' + pic +
       (x.code || EDIT ? '<span class="who-code">' + ed(k + '.code', x.code) + '</span>' : '') +
       '<span class="who-name">' + ed(k + '.name', x.name || '') + '</span>' +
-      (arr(x.tags).length ? '<span class="who-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(k + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
+      (arr(x.tags).length ? '<ul class="wt">' + arr(x.tags).map(function (t, j) { return '<li><i></i><span>' + ed(k + '.tags.' + j, t) + '</span></li>'; }).join('') + '</ul>' : '') +
     '</div>';
   }
   function pairHtml(q, k) {
@@ -936,18 +944,19 @@
     h += '<div class="duo-title"><h2 id="win-title">' + ed(k + '.title', q.title || '') + '</h2>' +
       (q.work || EDIT ? '<span class="duo-work">' + ed(k + '.work', q.work) + '</span>' : '') +
       (q.tagline || EDIT ? '<p>' + ed(k + '.tagline', q.tagline) + '</p>' : '') + chips(q.keywords, false, k + '.keywords') + songBtn(q.song) + '</div>';
-    h += '<div class="duo">' + whoHtml(a, k + '.a') +
+    h += '<div class="duo">' + whoHtml(a, k + '.a', 'a') +
       '<div class="duo-mid">' +
         (q.flight || EDIT ? '<span class="duo-flight">' + ed(k + '.flight', q.flight) + '</span>' : '') +
         '<span class="duo-line"><i class="o"></i><i class="d"></i>' + plane() + '<i class="d"></i><i class="o is-fill"></i></span>' +
         (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') +
-      '</div>' + whoHtml(b, k + '.b') + '</div>';
+      '</div>' + whoHtml(b, k + '.b', 'b') + '</div>';
     // 두 사람 소개글: 이름 바로 아래 양쪽 단
+    // 사진을 누르면 아래로 펼쳐진다 (토글)
     if (a.about || b.about || EDIT) {
-      h += '<div class="duo-about">' + ['a', 'b'].map(function (w) {
+      h += '<div class="dp-wrap' + (EDIT ? ' is-open is-edit' : '') + '" data-on=""><div class="dp-in">' + ['a', 'b'].map(function (w) {
         var x = w === 'a' ? a : b;
-        return '<div class="da"><span class="da-n">' + esc(x.code || x.name || '') + '</span><p>' + edr(k + '.' + w + '.about', x.about) + '</p></div>';
-      }).join('') + '</div>';
+        return '<div class="dp is-' + w + '"><span class="dp-n">' + esc(x.code || x.name || '') + '<small>' + esc(x.name || '') + '</small></span><p>' + edr(k + '.' + w + '.about', x.about) + '</p></div>';
+      }).join('') + '</div></div>';
     }
 
     var views = arr(q.views);
@@ -1176,6 +1185,14 @@
   });
   winBody.addEventListener('click', function (ev) {
     if (capClick(ev)) return;
+    var wp = ev.target.closest('[data-who]');
+    if (wp) {
+      var wrap = $('.dp-wrap', winBody), w = wp.getAttribute('data-who'), on = wrap.getAttribute('data-on') === w;
+      wrap.setAttribute('data-on', on ? '' : w);
+      wrap.classList.toggle('is-open', !on);
+      $$('[data-who]', winBody).forEach(function (x) { var me = !on && x === wp; x.classList.toggle('is-on', me); x.setAttribute('aria-expanded', me); });
+      return;
+    }
     var mo = ev.target.closest('[data-more]');
     if (mo) { var da = mo.closest('.da'); da.classList.toggle('is-clip'); mo.textContent = da.classList.contains('is-clip') ? 'more' : 'close'; return; }
     var t = ev.target.closest('[data-pair],[data-char]');
@@ -1488,6 +1505,53 @@
     document.addEventListener('pointerdown', kick, true);
     document.addEventListener('keydown', kick, true);
   }
+
+  /* ------------------------------------------------------------------
+   * 창 바깥 배경 — 사진 위에 한자 · 병음 · 단어가 둥둥 (넓은 화면에서만)
+   * ------------------------------------------------------------------ */
+  (function backdrop() {
+    var B = D.backdrop;
+    if (!B) return;
+    var bd = document.createElement('div');
+    bd.className = 'bd';
+    if (B.photo) {
+      bd.style.backgroundImage = 'url("' + String(B.photo).replace(/"/g, '%22') + '")';
+      try { document.documentElement.style.setProperty('--bd-photo', 'url("' + new URL(B.photo, location.href).href + '")'); } catch (x) {}   // 오프닝 뒤 배경에도
+    }
+    var words = arr(B.words).filter(function (w) { return arr(w)[0]; });
+    var half = Math.ceil(words.length / 2), r = rng('208');
+    var h = '';
+    words.forEach(function (w, i) {
+      w = arr(w);
+      var side = i < half ? 'l' : 'r', n = side === 'l' ? i : i - half, cnt = side === 'l' ? half : words.length - half;
+      var y = 5 + (n + 0.5) * (84 / cnt) + (r() - 0.5) * 4;
+      var x = 0.08 + r() * 0.42;
+      var kind = ['up', 'down', 'side', 'vert'][Math.floor(r() * 4)];
+      var chip = w[2] ? '<span class="bd-chip' + (r() < 0.3 ? ' is-v' : '') + '">' + esc(w[2]) + '</span>' : '';
+      h += '<button type="button" class="bd-w is-' + kind + ' is-' + side + '" style="--x:' + x.toFixed(2) + ';--y:' + y.toFixed(1) + '%;--d:' + (-r() * 6).toFixed(2) + 's" data-say="' + esc(w[0]) + '" title="' + esc(w[1] || '') + '">' +
+        '<b>' + esc(w[0]) + '</b><small>' + esc(w[1] || '') + '</small>' + chip + '</button>';
+    });
+    if (B.center) {
+      h += '<button type="button" class="bd-angel" data-say="' + esc(B.center) + '">' +
+        '<svg class="bd-wing" viewBox="0 0 70 80" aria-hidden="true"><path d="M66 46C52 18 22 4 4 10c8 4 4 9 0 13 9 2 6 8 2 12 9 1 7 8 4 12 9-1 9 6 7 11 12-3 30-6 49-12Z"/><path d="M58 40C44 26 28 18 14 17M54 46C40 36 26 32 12 31M50 51C38 46 26 45 15 46"/></svg>' +
+        '<svg class="bd-wing is-r" viewBox="0 0 70 80" aria-hidden="true"><path d="M66 46C52 18 22 4 4 10c8 4 4 9 0 13 9 2 6 8 2 12 9 1 7 8 4 12 9-1 9 6 7 11 12-3 30-6 49-12Z"/><path d="M58 40C44 26 28 18 14 17M54 46C40 36 26 32 12 31M50 51C38 46 26 45 15 46"/></svg>' +
+        (site.pin ? '<img src="' + esc(site.pin) + '" alt="">' : '') + '<span class="bd-chip">' + esc(B.center) + '</span></button>';
+    }
+    bd.innerHTML = h;
+    document.body.insertBefore(bd, document.body.firstChild);
+    document.documentElement.classList.add('has-bd');
+    // 누르면 광둥어로 읽기 (지원하는 브라우저만)
+    bd.addEventListener('click', function (ev) {
+      var t = ev.target.closest('[data-say]');
+      if (!t) return;
+      t.classList.remove('is-pop'); void t.offsetWidth; t.classList.add('is-pop');
+      try {
+        var u = new SpeechSynthesisUtterance(t.getAttribute('data-say'));
+        u.lang = 'zh-HK'; u.rate = 0.8;
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
+      } catch (x) {}
+    });
+  })();
 
   /* ------------------------------------------------------------------
    * 옛 브라우저 창 — 제목줄 · 주소창 · 상태줄 · 버튼

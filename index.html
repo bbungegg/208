@@ -6,7 +6,7 @@
   <title>MY ERA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Noto+Serif+TC:wght@500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="assets/style.css">
@@ -84,6 +84,7 @@
 
       <!-- 체크인 카드 (페어 점) -->
       <button type="button" class="tag" id="tag" hidden aria-label="체크인 카드 — 눌러서 도장 찍기">
+        <span class="tag-bar" aria-hidden="true"><svg class="xp-ico" viewBox="0 0 16 16"><rect x="2" y="2.5" width="12" height="11" rx="1" fill="#fff" stroke="#6b1717"/><path d="M4.5 6h7M4.5 8.5h7M4.5 11h4" stroke="#6b1717" stroke-width=".9"/></svg><span class="tag-file">check_in.png</span><span class="tag-ctl"><span class="xp-c"><i class="i-min"></i></span><span class="xp-c"><i class="i-max"></i></span><span class="xp-c xp-close tag-x"><i class="i-x"></i></span></span></span>
         <span class="tag-in">
           <img class="tag-img" alt="" draggable="false">
           <span class="tag-stamp" id="tag-stamp" aria-hidden="true"></span>
