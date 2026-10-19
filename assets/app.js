@@ -946,8 +946,7 @@
     if (a.about || b.about || EDIT) {
       h += '<div class="duo-about">' + ['a', 'b'].map(function (w) {
         var x = w === 'a' ? a : b;
-        return '<div class="da' + (EDIT ? '' : ' is-clip') + '"><span class="da-n">' + esc(x.code || x.name || '') + '</span><p>' + edr(k + '.' + w + '.about', x.about) + '</p>' +
-          (EDIT ? '' : '<button type="button" class="da-more" data-more>more</button>') + '</div>';
+        return '<div class="da"><span class="da-n">' + esc(x.code || x.name || '') + '</span><p>' + edr(k + '.' + w + '.about', x.about) + '</p></div>';
       }).join('') + '</div>';
     }
 
@@ -1059,6 +1058,12 @@
     return '<small>FROM</small><i class="o"></i><b>' + esc(from.code || from.name || '') + '</b><i class="d"></i>' + plane() +
       '<i class="d"></i><b>' + esc(to.code || to.name || '') + '</b><i class="o is-fill"></i><small>TO</small>';
   }
+  /* 창 제목줄에 보이는 파일 이름 (점마다 file: "..." 로 바꿀 수 있어요) */
+  function fileName(v) {
+    var it = itemOf(v);
+    if (it) return it.file || (it.title || it.name || 'untitled') + '.png';
+    return v.p.file || { profile: 'me.txt', pairs: 'pairs', captcha: 'link' }[v.p.type] || (v.p.label || v.p.id) + '.txt';
+  }
   function bodyHtml(v) {
     var p = v.p;
     if (v.kind === 'pair') return pairHtml(itemOf(v), p._k + '.pairs.' + v.i);
@@ -1078,7 +1083,7 @@
     var wasHidden = win.hidden;
     win.style.setProperty('--c', colorOf(itemOf(v), v.p));
     win.classList.toggle('is-mini', v.p.type === 'captcha' && v.kind === 'page');
-    winRoute.innerHTML = routeHtml(v);
+    winRoute.innerHTML = '<span class="win-file">' + esc(fileName(v)) + '</span>';
     winBody.innerHTML = bodyHtml(v);
     if (v.p.type === 'captcha') capInit();
     editable(winBody);
