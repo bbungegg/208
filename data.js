@@ -13,8 +13,9 @@ window.ERA = {
    * ------------------------------------------------------------------ */
   site: {
     title: "208 with me",      // 브라우저 탭 제목
-    sub: "Hong Kong → Sydney · 30 JUN 1997",
+    sub: "auto",                // 왼쪽 위 지명. "auto" = 지금 보고 있는 동네 이름 (직접 적으면 그 글자로 고정)
     color: "#a7bfe3",           // 기본 포인트 색 (티켓 파란 띠)
+    dot: "#6b1717",             // 지도 위 점 색
     tiles: "osm",               // 지도: "osm" 또는 "esri" (안 뜨면 바꿔 보기)
     sound: true,                // 티켓 찢는 소리
     autoplay: true,             // 들어오자마자 음악 (브라우저 정책상 처음 누르는 순간 = 탑승권 뜯을 때 시작)
@@ -165,25 +166,22 @@ window.ERA = {
       label: "버닝 중",
       en: "NOW BURNING",
       lat: 22.3283, lng: 114.1673,
-      color: "#d8c3cf",
+      color: "#e2dcd9",
       ticket: { to: { code: "SSP", name: "삼수이포", en: "Sham Shui Po", big: "02:10 AM", small: "골목 시장" } },
-      intro: "지금 제일 뜨거운 애들. 불꽃이 많을수록 위험.",
 
       // 캐릭터 하나 = { ... }. heat: 불꽃 0~5
       // quote / about / basics / traits 같은 걸 더 적으면 카드를 눌렀을 때 자세히 보기가 열려요.
       chars: [
         {
-          name: "이공팔", en: "李公八", work: "八寶丸子", photo: "assets/img/gongpal.webp",
+          name: "李公八", photo: "assets/img/gongpal.webp",
           heat: 5, since: "1990.01",
-          note: "삼합회 정식 단원. 낮에는 요양원 봉사, 밤에는 칼부림.",
           keywords: ["삼합회 정식 단원", "햇살?연하강아지", "냄새맡고쫓아가"],
           quote: "근데 나는 현실주의자 아닐 걸?",
           about: "홍콩 바닥에서 삼합회란 이름을 모르는 이가 있을 리가. 모른다면 그 무지는 죄일 테니까. 이공팔은 삼합회 간부 대신 8년 간 수감 생활을 끝내고 출소한 뒤로, 삼합회 정식 단원이 됐다. 낮에는 요양원을 찾아 봉사하면서도, 밤이 되면 칼부림 끝에 기어코 피를 보는 것. 그에겐 그닥 이상한 일도 아닐 것이다. 모순, 그만큼 이 남자를 잘 표현한 말이 있을까."
         },
         {
-          name: "임완청", en: "林浣清", work: "八寶丸子", photo: "assets/img/wancheong.webp",
+          name: "林浣清", photo: "assets/img/wancheong.webp",
           heat: 5, since: "1990.01",
-          note: "삼합회 계열사 배우. 벽을 세우고, 진심은 절대 드러내지 않는다.",
           keywords: ["삼합회 계열사 배우", "회피형연상누님", "프로도망러"],
           quote: "글쎄, 네가 발 딛고 서 있는 여기는 현실인데.",
           about: "돈도 백도 없던 시절, 스포트라이트가 간절했던 임완청은 삼합회 회장의 눈에 들어 그의 스폰을 받아들였다. 그렇게 10년. 그 사이 잃어버린 것이 무엇인지도 모른 채, 재미없는 어른이 되어버렸다. 이 바닥에서 구를 대로 구른 그녀가 터득한 생존 방식은 간단했다. 벽을 세우고, 진심은 절대 드러내지 않는 것. 그런데, 자꾸만 이상한 남자가 벽을 허문다. 체리맛 사탕. 시작은 그랬다."
@@ -201,7 +199,6 @@ window.ERA = {
       lat: 22.3218, lng: 114.1776,
       color: "#a7bfe3",
       ticket: { to: { code: "WWW", name: "다른 홈" } },
-      intro: "사람이면 통과. ⟳ 를 누르면 다른 홈으로 넘어가요.",
       verify: "Verify",
       // label: 보이는 주소 · words: 비뚤비뚤한 글자 · answer: 입력칸에 저절로 쳐지는 답
       links: [

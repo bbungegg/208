@@ -22,7 +22,7 @@ assets/vendor/    지도 라이브러리 (Leaflet)
 
 ## 내용 고치기 — `data.js`
 
-- `site` — 탭 제목, 왼쪽 위 지명, 기본 색, 찢는 소리 on/off, `passenger`(탑승권 출발지 = 나)
+- `site` — 탭 제목, 왼쪽 위 지명(`"auto"` = 지금 보고 있는 동네), 기본 색, 점 색(`dot`), 찢는 소리 on/off, `passenger`(탑승권 출발지 = 나)
 - `opening` — 들어오면 먼저 뜨는 탑승권(히어로). 뜯으면 지도로. `show`: `"session"` 한 번 / `"always"` 매번 / `"off"`
 - `playlist` — 왼쪽 아래 음악 (유튜브 주소의 `v=` 뒷부분)
 - `pages` — 지도 위 점들. 하나씩 `type`을 고르면 돼요.
@@ -62,9 +62,9 @@ assets/vendor/    지도 라이브러리 (Leaflet)
 
 ## 연결 점 (CAPTCHA 기믹)
 
-`type: "captcha"` 점을 누르면 "I'm not a robot" 체크 상자가 떠요. 체크 → 문제가 펼쳐지고 → ⟳ 를 누르면 옆 홈으로 넘어가고 → **Verify** 를 누르면 그 홈이 새 탭으로 열려요. 🎧 는 음악 재생/정지.
+`type: "captcha"` 점을 누르면 작은 캡차 창이 떠요. 자글자글한 글자 그림 + 답이 저절로 쳐지고, ⟳ 를 누르면 옆 홈으로 넘어가고, **Verify** 를 누르면 그 홈이 새 탭으로 열려요. 🔈 는 음악 재생/정지.
 
-`data.js`의 `links`에 한 줄씩: `url`(주소) · `label`(보이는 주소) · `words`(비뚤비뚤 글자) · `answer`(입력칸에 저절로 쳐지는 답)
+`data.js`의 `links`에 한 줄씩: `url`(주소) · `label`(보이는 주소) · `words`(그림 글자, 한 칸 = 한 줄) · `answer`(입력칸에 저절로 쳐지는 답)
 
 ## 체크인 카드 (페어 점)
 

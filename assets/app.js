@@ -72,8 +72,10 @@
   var box = $('#box');
   var view = '';          // '' | 'ticket' | 'card' | 'win'
 
-  $('#brand-sub').textContent = site.sub || '';
-  $('.brand').hidden = !site.sub;
+  // 왼쪽 위 지명: site.sub 가 "auto"(또는 비어 있으면) 지금 보고 있는 동네 이름
+  var AUTO_SUB = !site.sub || site.sub === 'auto';
+  $('#brand-sub').textContent = AUTO_SUB ? '' : site.sub;
+  $('.brand').hidden = false;
   if (site.title) document.title = site.title;
 
   /* ------------------------------------------------------------------
@@ -133,6 +135,30 @@
   pages.forEach(function (p) { p._ll = llOf(p); if (p._ll) placed.push(p._ll); });
   pages.forEach(function (p) { if (!p._ll) { p._ll = scatter(p, placed); placed.push(p._ll); } });
 
+  /* 지금 보고 있는 동네 */
+  var PLACES = [
+    [22.3193, 114.1694, '旺角', 'Mong Kok'], [22.3245, 114.1683, '太子', 'Prince Edward'],
+    [22.3307, 114.1622, '深水埗', 'Sham Shui Po'], [22.3322, 114.1700, '石硤尾', 'Shek Kip Mei'],
+    [22.3212, 114.1608, '大角咀', 'Tai Kok Tsui'], [22.3129, 114.1707, '油麻地', 'Yau Ma Tei'],
+    [22.3049, 114.1717, '佐敦', 'Jordan'], [22.2988, 114.1722, '尖沙咀', 'Tsim Sha Tsui'],
+    [22.3157, 114.1820, '何文田', 'Ho Man Tin'], [22.3245, 114.1790, '嘉道理山', 'Kadoorie Hill'],
+    [22.3368, 114.1765, '九龍塘', 'Kowloon Tong'], [22.3365, 114.1565, '長沙灣', 'Cheung Sha Wan'],
+    [22.3375, 114.1480, '荔枝角', 'Lai Chi Kok'], [22.3045, 114.1615, '西九龍', 'West Kowloon'],
+    [22.3045, 114.1840, '紅磡', 'Hung Hom'], [22.3285, 114.1910, '九龍城', 'Kowloon City']
+  ];
+  var brandSub = $('#brand-sub');
+  function where() {
+    var c = map.getCenter(), best = null, bd = Infinity;
+    PLACES.forEach(function (q) { var d = c.distanceTo(L.latLng(q[0], q[1])); if (d < bd) { bd = d; best = q; } });
+    var t = best && bd < 1600 ? best[2] + '  ' + best[3] + ' · Kowloon' : 'Kowloon, Hong Kong';
+    if (brandSub.textContent === t) return;
+    brandSub.textContent = t;
+    brandSub.classList.remove('is-swap');
+    void brandSub.offsetWidth;
+    brandSub.classList.add('is-swap');
+  }
+  if (AUTO_SUB) { map.on('moveend', where); where(); }
+
   /* 지도 위 점 — 누르면 탑승권 */
   pages.forEach(function (p) {
     var label = p.label || p.id;
@@ -141,7 +167,7 @@
       riseOnHover: true,
       icon: L.divIcon({
         className: 'spot',
-        html: '<i style="--c:' + esc(colorOf(p)) + '"></i>',
+        html: '<i style="--c:' + esc(site.dot || colorOf(p)) + '"></i>',
         iconSize: [22, 22],
         iconAnchor: [11, 11]
       })
@@ -1018,8 +1044,10 @@
     winCur = v;
     var wasHidden = win.hidden;
     win.style.setProperty('--c', colorOf(itemOf(v), v.p));
+    win.classList.toggle('is-mini', v.p.type === 'captcha' && v.kind === 'page');
     winRoute.innerHTML = routeHtml(v);
     winBody.innerHTML = bodyHtml(v);
+    if (v.p.type === 'captcha') capInit();
     editable(winBody);
     winBody.scrollTop = 0;
     winBack.hidden = !stack.length;
@@ -1102,108 +1130,139 @@
   });
 
   /* ------------------------------------------------------------------
-   * 연결 (CAPTCHA 기믹) — 다른 홈으로 가는 문
-   *   체크 → 문제가 펼쳐지고, ⟳ 를 누르면 옆 홈으로 넘어가고, 확인을 누르면 그 홈이 열린다
+   * 연결 (CAPTCHA 기믹) — 다른 홈으로 가는 문. 작은 창 하나
+   *   ⟳ 를 누르면 옆 홈으로 넘어가고, Verify 를 누르면 그 홈이 새 탭으로
    * ------------------------------------------------------------------ */
   var capTimer = null;
   function hostOf(u) { return String(u || '').replace(/^https?:\/\//, '').replace(/\/$/, ''); }
   function shown(l) { return (l && l.label) || hostOf(l && l.url); }
-  /* 비뚤비뚤한 글자 */
-  function warp(word, seed) {
-    var n = (seed * 9301 + 49297) % 233280;
-    function rnd() { n = (n * 9301 + 49297) % 233280; return n / 233280; }
-    var chars = Array.from(String(word || ''));
-    var h = chars.map(function (c) {
-      if (c === ' ') return '<i class="sp"></i>';
-      var r = (rnd() - 0.5) * 44, y = (rnd() - 0.5) * 14, sx = 0.78 + rnd() * 0.5, sz = 0.85 + rnd() * 0.35;
-      return '<b style="transform:translateY(' + y.toFixed(1) + 'px) rotate(' + r.toFixed(1) + 'deg) scaleX(' + sx.toFixed(2) + ');font-size:' + sz.toFixed(2) + 'em">' + esc(c) + '</b>';
-    }).join('');
-    var a = (rnd() * 10 + 4).toFixed(1), b = (rnd() * 10 + 4).toFixed(1);
-    return '<span class="cw" style="transform:rotate(' + ((rnd() - 0.5) * 12).toFixed(1) + 'deg)">' + h +
-      '<svg class="cw-line" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ' + a + 'C30 ' + (30 - a) + ' 60 ' + b + ' 100 ' + (30 - b) + '"/></svg></span>';
-  }
+  function capLinks(p) { return arr(p && p.links).filter(function (l) { return l && l.url; }); }
   function capHtml(p) {
-    var list = arr(p.links).filter(function (l) { return l && l.url; }), k = p._k;
+    var list = capLinks(p);
     if (!list.length) return headHtml(p) + '<div class="empty">아직 없어요</div>';
     var first = list[0];
-    return headHtml(p) +
-      '<div class="cap" data-i="0" style="--n:' + list.length + '">' +
-        '<div class="cap-anchor">' +
-          '<button type="button" class="cap-box" data-cap="check" aria-expanded="false" aria-label="I\'m not a robot"><i class="cap-spin"></i><svg class="cap-ok" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19.5 7"/></svg></button>' +
-          '<span class="cap-label">I\'m not a robot</span>' +
-          '<span class="cap-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4a12 12 0 0 1 11.3 8M28 16a12 12 0 0 1-8 11.3M16 28A12 12 0 0 1 4.7 20M4 16a12 12 0 0 1 8-11.3"/><path d="M27.5 6.5v6h-6M4.5 25.5v-6h6"/></svg><small>208CAPTCHA</small></span>' +
+    return '<h2 class="sr" id="win-title">' + esc(p.label || '') + '</h2>' +
+      '<div class="cap" data-i="0">' +
+        '<p class="cap-h">' + esc(p.ask || 'Enter the following:') + '</p>' +
+        '<div class="cap-view"><div class="cap-track">' + list.map(function (l, i) {
+          var w = arr(l.words).length ? arr(l.words) : [shown(l)];
+          return '<canvas class="cap-art" width="264" height="124" aria-hidden="' + (i ? 'true' : 'false') + '" data-words="' + esc(JSON.stringify(w)) + '" data-seed="' + esc(l.url + i) + '"></canvas>';
+        }).join('') + '</div></div>' +
+        '<label class="cap-l" for="cap-in">' + esc(p.answerLabel || 'Your Answer') + '</label>' +
+        '<div class="cap-row">' +
+          '<input id="cap-in" class="cap-in" type="text" spellcheck="false" autocomplete="off" value="">' +
+          '<button type="button" class="cap-ic" data-cap="next" aria-label="다른 홈 (새 문제)"><svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2-4.95"/><path d="M19 4.5v4h-4"/></svg></button>' +
+          '<button type="button" class="cap-ic" data-cap="audio" aria-label="음악 듣기"><svg viewBox="0 0 24 24"><path d="M4.5 9.5h3l4.5-4v13l-4.5-4h-3z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>' +
+          '<button type="button" class="cap-ic" data-cap="info" aria-label="도움말"><svg viewBox="0 0 24 24"><path d="M9.3 9.2a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.9v.6M12 17.6v.1"/></svg></button>' +
         '</div>' +
-        '<div class="cap-pop" aria-hidden="true">' +
-          '<p class="cap-to"><b data-cap-to>' + esc(shown(first)) + '</b> 에 가려면 아래 글자를 입력하세요</p>' +
-          '<div class="cap-view"><div class="cap-track">' + list.map(function (l, i) {
-            var w = arr(l.words).length ? arr(l.words) : [shown(l)];
-            return '<div class="cap-slide" aria-hidden="' + (i ? 'true' : 'false') + '">' +
-              '<input class="cap-in" type="text" spellcheck="false" autocomplete="off" aria-label="정답" value="">' +
-              '<div class="cap-words">' + w.map(function (x, j) { return warp(x, i * 7 + j * 3 + 1); }).join('') + '</div>' +
-            '</div>';
-          }).join('') + '</div></div>' +
-          '<div class="cap-foot">' +
-            '<button type="button" class="cap-ic" data-cap="next" aria-label="다른 홈 (새 문제)"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4h-4"/></svg></button>' +
-            '<button type="button" class="cap-ic" data-cap="audio" aria-label="소리로 듣기 (음악)"><svg viewBox="0 0 24 24"><path d="M4.5 15v-3a7.5 7.5 0 0 1 15 0v3"/><rect x="3.5" y="13.5" width="4" height="6.5" rx="1.6"/><rect x="16.5" y="13.5" width="4" height="6.5" rx="1.6"/></svg></button>' +
-            '<button type="button" class="cap-ic" data-cap="info" aria-label="도움말"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/></svg></button>' +
-            '<span class="cap-dots">' + list.map(function (l, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') + '</span>' +
-            '<a class="cap-go" data-cap="go" href="' + esc(first.url) + '" target="_blank" rel="noopener">' + esc(p.verify || 'Verify') + '</a>' +
-          '</div>' +
-          '<p class="cap-help" hidden>' + esc(p.help || '사람만 지나갈 수 있어요. ⟳ 를 누르면 다른 홈으로 넘어가요.') + '</p>' +
+        '<p class="cap-help" hidden>' + esc(p.help || '사람만 지나갈 수 있어요. ⟳ 를 누르면 다른 홈으로 넘어가요.') + '</p>' +
+        '<div class="cap-end">' +
+          '<span class="cap-to"><span class="cap-dots">' + list.map(function (l, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') + '</span>' +
+            '<b data-cap-to>' + esc(shown(first)) + '</b></span>' +
+          '<a class="cap-go" data-cap="go" href="' + esc(first.url) + '" target="_blank" rel="noopener">' + esc(p.verify || 'Verify') + '</a>' +
         '</div>' +
       '</div>';
   }
+  /* 자글자글한 글자 그림 (점묘 + 잡티) */
+  function grain(cv) {
+    var W = cv.width, H = cv.height, r = rng(cv.getAttribute('data-seed'));
+    var words = [];
+    try { words = JSON.parse(cv.getAttribute('data-words')) || []; } catch (x) {}
+    function layer(draw) {
+      var c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      var g = c.getContext('2d');
+      draw(g);
+      return g.getImageData(0, 0, W, H).data;
+    }
+    var text = layer(function (g) {
+      g.fillStyle = '#000';
+      g.textBaseline = 'middle';
+      var n = words.length || 1, lh = (H - 14) / n;
+      words.forEach(function (w, li) {
+        var chars = Array.from(String(w));
+        var size = Math.min(lh * (n > 1 ? 0.86 : 0.78), W * 1.45 / Math.max(3.2, chars.length));
+        g.font = '900 ' + size.toFixed(1) + 'px Georgia, "Times New Roman", Pretendard, serif';
+        var ws = chars.map(function (c) { return g.measureText(c).width * 0.84; });
+        var total = ws.reduce(function (a, b) { return a + b; }, 0);
+        var x = (W - total) / 2 + (r() - 0.5) * W * 0.08, y = H / 2 + (li - (n - 1) / 2) * lh * 0.94 + (r() - 0.5) * 4;
+        chars.forEach(function (c, i) {
+          g.save();
+          g.translate(x + ws[i] / 2, y + (r() - 0.5) * size * 0.16);
+          g.rotate((r() - 0.5) * 0.55);
+          g.scale(0.82 + r() * 0.36, 0.9 + r() * 0.24);
+          g.fillText(c, -ws[i] / 2 / 0.84, 0);
+          g.restore();
+          x += ws[i];
+        });
+      });
+    });
+    var shape = layer(function (g) {
+      g.strokeStyle = '#000';
+      for (var i = 0; i < 3; i++) {
+        g.lineWidth = 7 + r() * 14;
+        g.beginPath();
+        g.arc(r() * W, r() * H, 30 + r() * 70, r() * 6, r() * 6 + 2 + r() * 3);
+        g.stroke();
+      }
+      g.lineWidth = 3 + r() * 3;
+      g.beginPath();
+      g.moveTo(-10, H * (0.3 + r() * 0.4));
+      g.bezierCurveTo(W * 0.3, r() * H, W * 0.7, r() * H, W + 10, H * (0.3 + r() * 0.4));
+      g.stroke();
+    });
+    var out = cv.getContext('2d'), img = out.createImageData(W, H), d = img.data;
+    var INK = [26, 22, 22], GHOST = [190, 182, 179], PAPER = [240, 238, 235], SPECK = [208, 202, 198];
+    for (var i = 0; i < W * H; i++) {
+      var a = text[i * 4 + 3] / 255, s = shape[i * 4 + 3] / 255, col;
+      if (r() < a * 0.9 - 0.03) col = INK;
+      else if (r() < s * 0.5) col = GHOST;
+      else col = r() < 0.04 ? SPECK : PAPER;
+      d[i * 4] = col[0]; d[i * 4 + 1] = col[1]; d[i * 4 + 2] = col[2]; d[i * 4 + 3] = 255;
+    }
+    out.putImageData(img, 0, 0);
+  }
+  function capInit() {
+    var cap = $('.cap', winBody);
+    if (!cap) return;
+    $$('.cap-art', cap).forEach(grain);
+    // 글꼴이 늦게 오면 한 번 더
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (cap.isConnected) $$('.cap-art', cap).forEach(grain); });
+    setTimeout(function () { if (cap.isConnected) capType(cap); }, reduced ? 0 : 650);
+  }
   function capType(cap) {
-    var p = winCur && winCur.p, list = arr(p && p.links).filter(function (l) { return l && l.url; });
-    var i = +cap.getAttribute('data-i'), l = list[i] || {}, input = $$('.cap-in', cap)[i];
+    var list = capLinks(winCur && winCur.p);
+    var i = +cap.getAttribute('data-i'), l = list[i] || {}, input = $('.cap-in', cap);
     clearInterval(capTimer);
-    if (!input) return;
     var text = String(l.answer || ''), n = 0;
     input.value = '';
     if (reduced) { input.value = text; return; }
     capTimer = setInterval(function () {
-      if (!document.body.contains(input)) { clearInterval(capTimer); return; }
+      if (!input.isConnected) { clearInterval(capTimer); return; }
       input.value = text.slice(0, ++n);
       if (n >= text.length) clearInterval(capTimer);
-    }, 70);
+    }, 65);
   }
   function capClick(ev) {
     var b = ev.target.closest('[data-cap]'), cap = b && b.closest('.cap');
     if (!b || !cap) return false;
-    var act = b.getAttribute('data-cap');
-    var list = arr(winCur && winCur.p.links).filter(function (l) { return l && l.url; });
-    if (act === 'check') {
-      if (cap.classList.contains('is-open') || cap.classList.contains('is-wait')) return true;
-      audio();
-      cap.classList.add('is-wait');
-      setTimeout(function () {
-        cap.classList.remove('is-wait');
-        cap.classList.add('is-open');
-        b.setAttribute('aria-expanded', 'true');
-        $('.cap-pop', cap).setAttribute('aria-hidden', 'false');
-        capType(cap);
-      }, reduced ? 0 : 750);
-      return true;
-    }
+    var act = b.getAttribute('data-cap'), list = capLinks(winCur && winCur.p);
     if (act === 'next') {
       var i = (+cap.getAttribute('data-i') + 1) % list.length;
       cap.setAttribute('data-i', i);
       cap.style.setProperty('--i', i);
-      $$('.cap-slide', cap).forEach(function (s, j) { s.setAttribute('aria-hidden', j === i ? 'false' : 'true'); });
+      $$('.cap-art', cap).forEach(function (c, j) { c.setAttribute('aria-hidden', j === i ? 'false' : 'true'); });
       $$('.cap-dots i', cap).forEach(function (d, j) { d.classList.toggle('on', j === i); });
       $('[data-cap-to]', cap).textContent = shown(list[i]);
       $('.cap-go', cap).href = list[i].url;
+      cap.classList.remove('is-ok');
       b.classList.remove('is-spin'); void b.offsetWidth; b.classList.add('is-spin');
       capType(cap);
       return true;
     }
     if (act === 'audio') { if (playing || intent) pause(); else play(); return true; }
     if (act === 'info') { var h = $('.cap-help', cap); h.hidden = !h.hidden; return true; }
-    if (act === 'go') {
-      // 새 탭으로 열리는 건 그대로 두고, 체크 표시만
-      cap.classList.add('is-ok');
-      return true;
-    }
+    if (act === 'go') { cap.classList.add('is-ok'); return false; }   // 새 탭은 그대로 열리게
     return true;
   }
 
@@ -1471,10 +1530,10 @@
       }
     });
     // 왼쪽 위 지명도
-    var sub = $('#brand-sub');
-    sub.setAttribute('data-k', 'site.sub');
-    $('.brand').hidden = false;
-    editable($('.brand'));
+    if (!AUTO_SUB) {
+      $('#brand-sub').setAttribute('data-k', 'site.sub');
+      editable($('.brand'));
+    }
     // 고치면 바로 data 에 반영 (같은 칸이 화면에 두 번 있으면 같이 바뀜)
     document.addEventListener('input', function (ev) {
       var el = ev.target.closest && ev.target.closest('[data-k]');
