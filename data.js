@@ -2,6 +2,7 @@
    MY ERA — 내용 파일
    이 파일만 고치면 됩니다. (글자는 "따옴표" 안에, 항목 사이엔 쉼표)
 
+   본서사: 1997년 6월 30일, 홍콩 카이탁 → 시드니. 임완청 · 이공팔
    흐름: 오프닝 탑승권 → 절취선 뜯기 → 지도 → 점 누르면 창
    점 하나 = 창 하나 (pages 에 하나씩)
    ========================================================================== */
@@ -11,25 +12,27 @@ window.ERA = {
    * 사이트
    * ------------------------------------------------------------------ */
   site: {
-    title: "MY ERA",           // 브라우저 탭 제목
-    sub: "Mong Kok — Sham Shui Po, Kowloon",
+    title: "208 with me",      // 브라우저 탭 제목
+    sub: "Hong Kong → Sydney · 30 JUN 1997",
     color: "#a7bfe3",           // 기본 포인트 색 (티켓 파란 띠)
     tiles: "osm",               // 지도: "osm" 또는 "esri" (안 뜨면 바꿔 보기)
     sound: true,                // 티켓 찢는 소리
 
-    // 탑승권 · 창 위쪽 줄의 출발지(FROM) = 나
+    // 창 위쪽 줄의 출발지(FROM) = 나 (오프닝 탑승권은 아래 opening.ticket.from)
     passenger: { code: "ERA", name: "에라", en: "@my_era", big: "20↑", small: "INFP" }
   },
 
-  /* 오프닝 — 들어오면 먼저 뜨는 탑승권. 바코드 부분을 당겨 뜯으면 지도로 들어가요.
+  /* 오프닝 — 들어오면 먼저 뜨는 탑승권 (본서사: 1997.06.30 홍콩 → 시드니).
+     바코드 부분을 누르거나 당겨 뜯으면 지도로 들어가요.
      show: "session"(브라우저 닫기 전까지 한 번) / "always"(들어올 때마다) / "off"(안 띄움) */
   opening: {
     show: "session",
     ticket: {
-      to: { code: "HKG", name: "홍콩", en: "Hong Kong", big: "02:08 AM", small: "Kai Tak" },
-      flight: "208 with me", badge: "Direct",              // 가운데 작은 글씨 / 검은 알약
-      strip: [["Boarding", "02:08"], ["Terminal", "1"], ["Gate", "C21"], ["Flight", "ERA208"]],
-      info: [["Passenger", "에라"], ["Seat", "15C"], ["Class", "Economy"]]
+      from: { code: "HKG", name: "홍콩", en: "Hong Kong", big: "30 JUN 97", small: "Kai Tak" },
+      to: { code: "SYD", name: "시드니", en: "Sydney", big: "01 JUL 97", small: "Kingsford Smith" },
+      flight: "208 with me", badge: "One way",             // 가운데 작은 글씨 / 검은 알약
+      strip: [["Date", "30.06.97"], ["Boarding", "02:08"], ["Gate", "8"], ["Flight", "208"]],
+      info: [["Passenger", "임완청 · 이공팔"], ["Seat", "20A · 20B"], ["Class", "Economy"]]
     }
   },
 
@@ -96,7 +99,7 @@ window.ERA = {
       // stats: [["체력", 3], ["끈기", 5]], // (선택) 0~5 칸
       likes: ["쌍방 삽질", "소꿉친구", "재회물", "새벽 감성"],
       dislikes: ["사망 소재", "실존 인물 엮기"],
-      about: "몽콕 야시장 같은 계정. 아무 말이나 다 받아요.\n지뢰만 피해 주시면 언제든 환영!\n\n<b>HTML 태그</b>도 쓸 수 있고, <a href=\"#pairs/1\">이렇게</a> 다른 창으로 링크도 돼요.",
+      about: "몽콕 야시장 같은 계정. 아무 말이나 다 받아요.\n지뢰만 피해 주시면 언제든 환영!",
       notes: [
         ["소통", "멘션, 디엠 다 편하게. 답이 늦어도 꼭 해요."],
         ["언팔 · 블언블", "자유롭게!"]
@@ -112,54 +115,28 @@ window.ERA = {
       lat: 22.3236, lng: 114.1628,
       color: "#c9d3dc",
       ticket: { to: { code: "PRE", name: "프린스 에드워드", en: "Prince Edward", big: "11:40 PM", small: "꽃시장 골목" } },
-      intro: "요즘 붙들고 있는 페어. 누르면 자세히 볼 수 있어요.",
+      intro: "본서사 — 1997년 6월 30일, 홍콩에서 시드니로.",
 
       // 페어 하나 = { ... }. a / b 가 두 사람 (티켓의 FROM → TO 처럼 보여요)
       pairs: [
         {
-          title: "린준",
-          work: "작품명",
-          badge: "고정",
+          title: "208",
+          work: "본서사",
+          badge: "One way",
           color: "#a7bfe3",
-          a: { code: "SRN", name: "서린", en: "Seo Rin", photo: "" },
-          b: { code: "HJN", name: "한준", en: "Han Jun", photo: "" },
-          flight: "18 years together",
-          tagline: "새벽 두 시, 불 켜진 편의점 하나.",
-          keywords: ["소꿉친구", "쌍방 삽질", "새벽"],
-          song: { id: "AIGIYAwv2kw", title: "The Flying Pickets - Only You" },
-
-          // 서로에게: who = "a" 또는 "b", call = 부르는 호칭, text = 상대를 어떻게 보는지
-          views: [
-            { who: "a", call: "한준아", text: "제일 편한 사람. 근데 요즘 좀 이상하게 안 편하다." },
-            { who: "b", call: "야, 서린", text: "매일 늦게 오는 손님. 오늘은 왜 안 오지." }
-          ],
-          // 관계 수치: [이름, 0~100]
-          meters: [["린 → 준 호감", 72], ["준 → 린 호감", 94], ["주변 답답함", 100]],
+          a: { code: "", name: "임완청", en: "", photo: "" },
+          b: { code: "", name: "이공팔", en: "", photo: "" },
+          flight: "HKG → SYD",
+          tagline: "1997년 6월 30일, 홍콩을 떠나 시드니로.",
+          keywords: ["1997", "홍콩", "시드니"],
           timeline: [
-            ["2007", "같은 유치원, 같은 반"],
-            ["2016", "서린 이사 · 연락 끊김"],
-            ["2024", "새벽 편의점에서 재회"]
-          ],
-          quotes: [
-            ["a", "삼각김밥 하나만 외상 되냐?"],
-            ["b", "…저번 거부터 갚아."]
-          ],
-          about: "어릴 땐 매일 붙어 다녔고, 지금은 매일 새벽에 마주친다. 이 둘이 좋은 이유는…"
-        },
-        {
-          title: "준이안",
-          work: "작품명",
-          badge: "리버스 OK",
-          color: "#d8c3cf",
-          a: { code: "HJN", name: "한준", en: "Han Jun", photo: "" },
-          b: { code: "RYA", name: "류이안", en: "Ryu Ian", photo: "" },
-          flight: "Ferry 8 min",
-          tagline: "바다 하나 건너, 정반대.",
-          keywords: ["악연", "라이벌"],
-          views: [
-            { who: "a", call: "류이안 씨", text: "귀찮다. 진짜로." },
-            { who: "b", call: "준아~", text: "놀리면 반응이 제일 재밌는 사람." }
+            ["1997.06.30", "홍콩 카이탁 공항 → 시드니"]
           ]
+          // 더 적을 수 있는 칸: views(서로에게) · meters(관계 수치) · quotes(대사) · about(소개)
+          //   views: [{ who: "a", call: "부르는 호칭", text: "상대를 어떻게 보는지" }, { who: "b", ... }],
+          //   meters: [["완청 → 공팔", 80]],
+          //   quotes: [["a", "대사"], ["b", "대사"]],
+          //   about: "소개 글"
         }
       ]
     },
@@ -179,25 +156,14 @@ window.ERA = {
       // quote / about / basics / traits 같은 걸 더 적으면 카드를 눌렀을 때 자세히 보기가 열려요.
       chars: [
         {
-          name: "서린", en: "Seo Rin", work: "작품명", photo: "",
-          heat: 5, since: "2024.03",
-          note: "말투 하나에 무너짐. 매일 새로 반함.",
-          keywords: ["야행성", "직진"],
-          quote: "늦었다고 생각할 때가 제일 늦은 거야. 그러니까 지금 가.",
-          about: "처음엔 그냥 시끄러운 애인 줄 알았는데…",
-          song: { id: "W6NcLBQZrU0", title: "回春丹 - 初恋" }
+          name: "임완청", en: "", work: "본서사 · 208", photo: "",
+          heat: 5, since: "1997.06.30",
+          note: "홍콩 → 시드니"
         },
         {
-          name: "한준", en: "Han Jun", work: "작품명", photo: "",
-          heat: 4, since: "2024.05",
-          note: "무뚝뚝한 척하는 거 다 보임.",
-          keywords: ["츤데레"],
-          about: "말수는 적지만 단골 얼굴은 다 외우고 있는 사람."
-        },
-        {
-          name: "류이안", en: "Ryu Ian", work: "작품명", photo: "",
-          heat: 3, since: "2025.01",
-          note: "보면 볼수록 수상함."
+          name: "이공팔", en: "", work: "본서사 · 208", photo: "",
+          heat: 5, since: "1997.06.30",
+          note: "홍콩 → 시드니"
         }
       ]
     }

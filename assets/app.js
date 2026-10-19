@@ -345,7 +345,7 @@
     x = x || {};
     return { code: x.code || '', name: x.name || '', en: x.en || '', big: x.big || '', small: x.small || '' };
   }
-  /* 출발지 = 나(passenger), 도착지 = 그 점 */
+  /* 출발지 = ticket.from (없으면 passenger = 나), 도착지 = 그 점 */
   function ticketOf(p) {
     var t = p.ticket || {};
     var from = endpoint(merge(site.passenger, t.from));
@@ -407,7 +407,7 @@
       '<div class="tk-main">' +
         '<div class="tk-route"><span>From</span><i class="o"></i><i class="d"></i>' + plane() + '<i class="d"></i><i class="o is-fill"></i><span>To</span></div>' +
         '<div class="tk-ends">' +
-          endHtml(t.from, false, 'site.passenger') +
+          endHtml(t.from, false, (p.ticket || {}).from ? k + '.from' : 'site.passenger') +
           '<div class="tk-mid">' +
             (t.flight || EDIT ? '<span class="tk-flight">' + ed(k + '.flight', t.flight) + '</span>' : '') +
             (t.badge ? '<span class="tk-badge">' + ed(k + '.badge', t.badge) + '</span>' : '') +
@@ -418,9 +418,7 @@
         dl('tk-info', t.info, k + '.info') +
       '</div>' +
       '<div class="tk-stub" tabindex="0" role="button" aria-label="절취선을 뜯어서 열기">' + barcode(p.id) + '</div>' +
-    '</div>' +
-    '<button type="button" class="tk-hint" id="tk-hint">' +
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5"/></svg>바코드 부분을 아래로 당겨 뜯기</button>';
+    '</div>';
   }
 
   /* 지도 점: 체크인 카드가 있으면 카드, 아니면 점에서 창이 바로 펴진다 */
@@ -517,7 +515,6 @@
     stub.addEventListener('keydown', function (ev) {
       if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'ArrowDown') { ev.preventDefault(); autoTear(); }
     });
-    $('#tk-hint').addEventListener('click', autoTear);
   }
 
   function autoTear() {
