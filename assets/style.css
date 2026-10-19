@@ -867,18 +867,40 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gray-2);outline-off
 .pp-about{margin:10px 0 0;font-size:14px;line-height:1.85;color:var(--ink-2);word-break:keep-all}
 @media (max-width:720px){.ppl{grid-template-columns:1fr;gap:26px}.pp:nth-child(2){padding:26px 0 0;margin:0;border-left:0;border-top:1px solid var(--line)}}
 
-/* ---------- 페어: 사진 있는 카드로 ---------- */
+/* ---------- 페어 ---------- */
 .pc{padding:14px 18px 14px 14px;border:0;border-radius:14px;background:#f4f3f1}
 .pc + .pc{border-top:0}
 .pc:hover{background:#eeece9}
-.pids{margin-top:2px}
-.pid{cursor:default}
-.pid .photo{width:84px;aspect-ratio:4/5}
-.pid .idc-name small{font-size:12.5px;font-weight:400;color:var(--muted);letter-spacing:0}
-.pid .chips{margin-top:8px;gap:2px 10px}
-.pid .chip{font-size:12px}
-.pid-about{margin:0;padding:12px 16px 16px;border-top:1px dashed var(--gray-2);font-size:13.5px;line-height:1.8;color:var(--ink-2);word-break:keep-all}
-@media (max-width:720px){.pids{grid-template-columns:1fr}}
+
+/* 두 사람 소개 카드 — 넓으면 나란히, 좁으면 위아래 */
+.pids{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
+.pid{min-width:0;display:flex;flex-direction:column;padding:18px 18px 20px;border-radius:16px;background:#f6f5f3}
+.pid-head{display:flex;gap:16px;align-items:center}
+.pid .photo{width:96px;aspect-ratio:4/5;border-radius:10px;box-shadow:0 8px 18px -12px rgba(30,20,20,.45)}
+.pid-txt{flex:1;min-width:0;display:flex;flex-direction:column;padding-bottom:2px}
+.pid-no{font-family:var(--cond);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#8d8580}
+.pid-name{margin:6px 0 0;font-size:30px;line-height:1.05;font-weight:700;letter-spacing:.02em;color:var(--tk-ink)}
+.pid-ko{margin-top:4px;font-size:13px;color:#7d7672}
+.pid-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.pid-tags span{padding:4px 9px;border-radius:99px;background:#fff;box-shadow:inset 0 0 0 1px #e6e2de;font-size:12px;line-height:1.3;color:#4c4542;white-space:nowrap}
+.pid-about{margin:16px 0 0;padding-top:14px;border-top:1px solid #e6e2de;font-size:14.5px;line-height:1.9;color:#3f3a37;word-break:keep-all;overflow-wrap:anywhere}
+@media (max-width:420px){.pid{padding:16px}.pid .photo{width:84px}.pid-name{font-size:26px}}
+
+/* 대사: 말풍선만, 하나씩 */
+.chat{display:flex;flex-direction:column;gap:14px;margin-top:34px}
+.chat .quote{opacity:0;transform:translateY(10px) scale(.96);transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.4,.4,1)}
+.chat .quote.is-a{transform-origin:0 100%}
+.chat .quote.is-b{transform-origin:100% 100%}
+.chat .quote.is-typing,.chat .quote.is-in,.chat.is-shown:not(.is-watch) .quote{opacity:1;transform:none}
+.chat .quote .dots{display:none;gap:4px;align-items:center;height:1.6em}
+.chat .quote.is-typing .dots{display:inline-flex}
+.chat .quote.is-typing .say{display:none}
+.chat .quote .dots i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.35;animation:dot 1s ease-in-out infinite}
+.chat .quote .dots i:nth-child(2){animation-delay:.15s}
+.chat .quote .dots i:nth-child(3){animation-delay:.3s}
+@keyframes dot{30%{opacity:.9;transform:translateY(-3px)}}
+.chat .quote.is-in .say{animation:sayin .3s ease}
+@keyframes sayin{from{opacity:0}}
 
 /* ---------- 서사표 ---------- */
 .story-t{margin:2px 0 8px;font-size:21px;font-weight:700;letter-spacing:.04em;color:var(--tk-ink)}
@@ -970,14 +992,14 @@ body{background:#d9d8dd}
 }
 .is-edit #app{padding-top:58px}
 
-/* 지도 위 체리 */
-.spot.is-pin img{position:absolute;left:0;top:0;width:34px;height:39px;image-rendering:pixelated;
-  filter:drop-shadow(0 2px 2px rgba(40,10,10,.35));transform-origin:50% 88%;transition:transform .2s cubic-bezier(.3,1.6,.5,1);animation:bob 2.8s ease-in-out infinite}
-.spot.is-pin:hover img{transform:scale(1.18) rotate(-6deg)}
-.spot.is-pin::after{content:"";position:absolute;left:9px;top:33px;width:16px;height:4px;border-radius:50%;background:rgba(40,20,20,.18);filter:blur(1px)}
+/* 지도 위 그림 핀 (체리 · 금붕어 · 안경) */
+.spot.is-pin{overflow:visible}
+.spot .pin{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;height:100%}
+.spot .pin img{display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 2px 2px rgba(40,10,10,.3));
+  transform-origin:50% 90%;transition:transform .2s cubic-bezier(.3,1.6,.5,1);animation:bob 2.8s ease-in-out infinite;animation-delay:var(--dl,0s)}
+.spot .pin::after{content:"";position:absolute;left:50%;bottom:-5px;width:60%;height:5px;margin-left:-30%;border-radius:50%;background:rgba(40,20,20,.16);filter:blur(1.5px)}
+.spot.is-pin:hover .pin img{transform:scale(1.18) rotate(-6deg)}
 @keyframes bob{50%{translate:0 -3px}}
-.leaflet-marker-icon.spot.is-pin:nth-child(2) img{animation-delay:-.9s}
-.leaflet-marker-icon.spot.is-pin:nth-child(3) img{animation-delay:-1.8s}
 /* 메뉴 아이콘: 전부 같은 선 아이콘 */
 .menu-item svg{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-@media (prefers-reduced-motion:reduce){.spot.is-pin img{animation:none}}
+@media (prefers-reduced-motion:reduce){.spot .pin img{animation:none}}

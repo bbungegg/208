@@ -74,6 +74,7 @@ window.ERA = {
       id: "profile",
       type: "profile",
       label: "me",
+      pin: "assets/img/goldfish.png", pinWidth: 46,   // 지도 위 그림 (없으면 site.pin)
       lat: 22.3196, lng: 114.1712,
       color: "#a7bfe3",
       ticket: { to: { code: "MKK", name: "몽콕", en: "Mong Kok", big: "09:00 PM", small: "야시장 입구" } },
@@ -99,6 +100,7 @@ window.ERA = {
       id: "pairs",
       type: "pairs",
       label: "♥",
+      pin: "assets/img/cherry.png", pinWidth: 34,
       card: "label",                     // 누르면 체크인 카드 → 도장 → 창 (위의 label)
       lat: 22.3236, lng: 114.1628,
       color: "#c9d3dc",
@@ -170,6 +172,7 @@ window.ERA = {
       id: "links",
       type: "captcha",
       label: "link",
+      pin: "assets/img/glasses.png", pinWidth: 54,
       lat: 22.3218, lng: 114.1776,
       color: "#a7bfe3",
       ticket: { to: { code: "WWW", name: "다른 홈" } },

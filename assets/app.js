@@ -171,16 +171,17 @@
   if (AUTO_SUB) { map.on('moveend', where); where(); }
 
   /* 지도 위 점 — 누르면 탑승권 */
-  pages.forEach(function (p) {
+  function pw(p) { return Math.round(parseFloat(p.pinWidth) || 36); }
+  pages.forEach(function (p, i) {
     var label = p.label || p.id;
     var m = L.marker(p._ll, {
       keyboard: true,
       riseOnHover: true,
-      icon: site.pin ? L.divIcon({
+      icon: (p.pin || site.pin) ? L.divIcon({
         className: 'spot is-pin',
-        html: '<img src="' + esc(site.pin) + '" alt="" draggable="false">',
-        iconSize: [34, 39],
-        iconAnchor: [17, 34]
+        html: '<span class="pin" style="--dl:' + (-(i * 0.9)).toFixed(1) + 's"><img src="' + esc(p.pin || site.pin) + '" alt="" draggable="false"></span>',
+        iconSize: [pw(p), pw(p)],
+        iconAnchor: [pw(p) / 2, pw(p) * 0.9]
       }) : L.divIcon({
         className: 'spot',
         html: '<i style="--c:' + esc(site.dot || colorOf(p)) + '"></i>',
@@ -325,7 +326,6 @@
     tag.classList.remove('no-anim');
     tag.classList.add('is-open');
     cardClose.hidden = false;
-    setTimeout(function () { if (my === tagNo) cardHint.hidden = false; }, reduced ? 0 : 600);
     try { tag.focus({ preventScroll: true }); } catch (x) {}
   }
   function closeCard() {
@@ -961,20 +961,19 @@
           '<span class="meter-bar"><i style="width:0"></i></span><span class="meter-v">' + Math.round(v) + '</span></div>';
       }).join('') + '</div>');
     }
-    // 두 사람 소개: 증명사진 카드 (a 왼쪽, b 오른쪽)
+    // 두 사람 소개 카드 (a 왼쪽, b 오른쪽)
     if ([a, b].some(function (x) { return x.about || x.photo || arr(x.tags).length; })) {
-      h += sec('PROFILE', '', '<div class="ids pids">' + ['a', 'b'].map(function (w, i) {
+      h += sec('PROFILE', '', '<div class="pids">' + ['a', 'b'].map(function (w, i) {
         var x = w === 'a' ? a : b, kk = k + '.' + w;
-        return '<article class="idc pid">' +
-          '<span class="idc-top"><span>' + esc(q.title || 'PASSENGER') + '</span><span>No. ' + pad3(i + 1) + '</span><i class="idc-hole"></i></span>' +
-          '<span class="idc-main">' + photo(x) +
-            '<span class="idc-info">' +
-              '<span class="idc-label">NAME</span>' +
-              '<strong class="idc-name">' + esc(x.code || x.name || '') + (x.code && x.name ? ' <small>' + esc(x.name) + '</small>' : '') + '</strong>' +
-              chips(x.tags, false, kk + '.tags') +
-              '<span class="idc-foot"><i class="idc-bar"></i><em>' + esc(x.since || '') + '</em></span>' +
-            '</span>' +
-          '</span>' +
+        return '<article class="pid">' +
+          '<div class="pid-head">' + photo(x) +
+            '<div class="pid-txt">' +
+              '<span class="pid-no">No. ' + pad3(i + 1) + (x.since ? ' · ' + esc(x.since) : '') + '</span>' +
+              '<h4 class="pid-name">' + esc(x.code || x.name || '') + '</h4>' +
+              (x.code && x.name ? '<span class="pid-ko">' + esc(x.name) + '</span>' : '') +
+              (arr(x.tags).length ? '<span class="pid-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(kk + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
+            '</div>' +
+          '</div>' +
           (x.about || EDIT ? '<p class="pid-about">' + edr(kk + '.about', x.about) + '</p>' : '') +
         '</article>';
       }).join('') + '</div>');
@@ -988,10 +987,11 @@
     }
     var qs = arr(q.quotes);
     if (qs.length) {
-      h += sec('LINES', '대사', '<div class="quotes">' + qs.map(function (x, i) {
+      h += '<div class="quotes chat' + (EDIT || reduced ? ' is-shown' : '') + '">' + qs.map(function (x, i) {
         x = arr(x);
-        return '<blockquote class="quote is-' + (x[0] === 'b' ? 'b' : 'a') + '"><cite>' + esc(who(x[0])) + '</cite><p>' + edr(k + '.quotes.' + i + '.1', x[1]) + '</p></blockquote>';
-      }).join('') + '</div>');
+        return '<blockquote class="quote is-' + (x[0] === 'b' ? 'b' : 'a') + '"><cite>' + esc(who(x[0])) + '</cite>' +
+          '<p><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="say">' + edr(k + '.quotes.' + i + '.1', x[1]) + '</span></p></blockquote>';
+      }).join('') + '</div>';
     }
     var story = arr(q.story);
     if (story.length) {
@@ -1111,7 +1111,26 @@
     requestAnimationFrame(function () { requestAnimationFrame(settle); });
     try { win.focus({ preventScroll: true }); } catch (x) {}
   }
+  /* 대사 말풍선: 화면에 들어오면 한 줄씩 (… 치는 중 → 말) */
+  function chatIn() {
+    $$('.chat:not(.is-shown):not(.is-watch)', winBody).forEach(function (c) {
+      c.classList.add('is-watch');
+      function play() {
+        c.classList.add('is-shown');
+        $$('.quote', c).forEach(function (q, i) {
+          setTimeout(function () { q.classList.add('is-typing'); }, i * 1100);
+          setTimeout(function () { q.classList.remove('is-typing'); q.classList.add('is-in'); }, i * 1100 + 750);
+        });
+      }
+      if (!('IntersectionObserver' in window)) { play(); return; }
+      var io = new IntersectionObserver(function (es) {
+        if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); play(); }
+      }, { root: winBody, threshold: 0.35 });
+      io.observe(c);
+    });
+  }
   function settle() {
+    chatIn();
     $$('.trait', winBody).forEach(function (el) {
       var v = +el.getAttribute('data-v'), f = $('.trait-fill', el);
       $('.trait-knob', el).style.left = v + '%';
@@ -1487,7 +1506,7 @@
     if (!xpT) return;
     var name = site.title || '208 with me', label = xpLabel();
     var t = (label ? label + ' - ' : '') + name;
-    xpT.textContent = t + ' - Kowloon Explorer';
+    xpT.textContent = t;
     if (xpTask) xpTask.textContent = t;
     xpUrl.textContent = 'http://' + DOMAIN + '/' + (location.hash || '');
     xpStatus();
