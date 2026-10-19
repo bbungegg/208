@@ -31,7 +31,7 @@
     });
   }
   // 직접 쓴 긴 글: HTML은 그대로 두고 줄바꿈만 <br>로
-  function rich(s) { return String(s == null ? '' : s).replace(/\r?\n/g, '<br>'); }
+  function rich(s) { return String(s == null ? '' : s).replace(/\[\[(.+?)\]\]/g, '<mark>$1</mark>').replace(/\r?\n/g, '<br>'); }
   /* 편집 모드에서는 글자마다 data.js 의 어느 칸인지 적어 둔다 (평소에는 그냥 글자) */
   function ed(path, v) { return EDIT ? '<span data-k="' + path + '">' + esc(v) + '</span>' : esc(v); }
   function edr(path, v) { return EDIT ? '<span data-k="' + path + '" data-rich>' + rich(v) + '</span>' : rich(v); }
@@ -863,7 +863,7 @@
     if (!o.char && !d.name && !d.photo) return headHtml(d) + chips(d.keywords, false, k + '.keywords') + songBtn(d.song) + sheetRest(d, k);
     var h = '<div class="hero">' + photo(d) +
       '<div class="hero-txt">' +
-        (o.tag ? '<span class="hero-code">' + esc(o.tag) + '</span>' : '') +
+        (d.head && !o.char ? '<span class="hero-code">' + ed(k + '.head', d.head) + '</span>' : o.tag ? '<span class="hero-code">' + esc(o.tag) + '</span>' : '') +
         '<h2 class="hero-name" id="win-title">' + (d.link && !EDIT ? '<a href="' + esc(d.link) + '" target="_blank" rel="noopener">' + esc(d.name || '') + '</a>' : ed(k + '.name', d.name || '')) + '</h2>' +
         (d.en || EDIT ? '<span class="hero-en">' + ed(k + '.en', d.en) + '</span>' : '') +
         (o.char && (d.work || EDIT) ? '<span class="hero-work">' + ed(k + '.work', d.work) + '</span>' : '') +

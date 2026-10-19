@@ -16,7 +16,7 @@ window.ERA = {
     sub: "auto",                // 왼쪽 위 지명. "auto" = 지금 보고 있는 동네 이름 (직접 적으면 그 글자로 고정)
     color: "#a7bfe3",           // 기본 포인트 색 (티켓 파란 띠)
     dot: "#6b1717",             // 지도 위 점 색 (pin 이 없을 때)
-    pin: "assets/img/cherry.png", // 지도 위 점 대신 쓸 그림 (비우면 동그란 점)
+    pin: "assets/img/cherry.png", // 지도 위 점 대신 쓸 그림 (비우면 동그란 점). 점마다 pin: "assets/img/goldfish.png" 처럼 따로 줄 수도 있어요
     tiles: "osm",               // 지도: "osm" 또는 "esri" (안 뜨면 바꿔 보기)
     sound: true,                // 티켓 찢는 소리
     autoplay: true,             // 들어오자마자 음악 (브라우저 정책상 처음 누르는 순간 = 탑승권 뜯을 때 시작)
@@ -74,7 +74,6 @@ window.ERA = {
       id: "profile",
       type: "profile",
       label: "me",
-      pin: "assets/img/goldfish.png", pinWidth: 46,   // 지도 위 그림 (없으면 site.pin)
       lat: 22.3196, lng: 114.1712,
       color: "#a7bfe3",
       ticket: { to: { code: "MKK", name: "몽콕", en: "Mong Kok", big: "09:00 PM", small: "야시장 입구" } },
@@ -87,7 +86,7 @@ window.ERA = {
       keywords: ["성인", "AI 채팅 드림 OPEN", "FUB FREE"],
       intro: "<mark>(사용 플랫폼)</mark> 그 외 타플랫폼 이용 多",
 
-      // [제목, 글, 작은 영문 머리말]  <mark>글자</mark> = 하늘색 형광펜
+      // [제목, 글, 작은 영문 머리말]  [[글자]] 또는 <mark>글자</mark> = 하늘색 형광펜, \n = 줄바꿈
       notes: [
         ["♥", "@208X195님 - <mark>이공팔</mark>\n@208X195님 캐릭터 위주로 찍먹 성향 多\n↳ <mark>구일오</mark>, <mark>메오올</mark>, 몰텍스, <mark>하이스트</mark> or etc. . .", "TASTE"],
         ["网恋日记", "맘찍 >>> <mark>멘션 위주 교류</mark>, 제 기력 스태미나와 기분에 따라 달라지기도 ...\n계정주 <mark>키티 일기장</mark>처럼 편하게 쓰는 계정으로 <mark>NSFW 소재</mark> 필터링 없이 얘기합니다!\n↳ (시각 미디어는 블라인드 게시)\n<mark>AI 짤뽑 O</mark> 관련 사항 예민하시면 팔로 비추\n<mark>(소재)</mark> 소비 多\n↳ 현실과 덕질 구분 명확히 합니다 … 소재 지뢰 없음, 제가 님의 지뢰가 될 수도 있어요\n좋아하는 아이에게 사랑만 주지 못하고 <mark>(취향)</mark>을 번갈아서 줍니다…\n↳ 마찬가지로 예민하신 분 팔로 비추…", "DIARY"],
@@ -100,7 +99,6 @@ window.ERA = {
       id: "pairs",
       type: "pairs",
       label: "♥",
-      pin: "assets/img/cherry.png", pinWidth: 34,
       card: "label",                     // 누르면 체크인 카드 → 도장 → 창 (위의 label)
       lat: 22.3236, lng: 114.1628,
       color: "#c9d3dc",
@@ -172,7 +170,6 @@ window.ERA = {
       id: "links",
       type: "captcha",
       label: "link",
-      pin: "assets/img/glasses.png", pinWidth: 54,
       lat: 22.3218, lng: 114.1776,
       color: "#a7bfe3",
       ticket: { to: { code: "WWW", name: "다른 홈" } },

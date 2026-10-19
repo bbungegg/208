@@ -39,7 +39,7 @@ assets/vendor/    지도 라이브러리 (Leaflet)
 - **사진**: `assets/img/` 폴더에 넣고 `photo: "assets/img/gongpal.webp"`처럼 적기. 비우면 실루엣.
 - **서사**: 페어의 `story`에 `{ when, title, text, notes }`를 한 칸씩. 페어 창 아래 STORY로 나와요.
 - **음악**: `site.autoplay: true`면 처음 누르는 순간(탑승권 뜯을 때) 바로 재생. 브라우저가 소리 자동재생을 막아서 접속만으로는 못 틀어요.
-- `about` · `notes` · `text`에는 HTML도 됩니다. `<a href="#pairs/1">`처럼 쓰면 누를 때 그 창이 열려요.
+- `about` · `notes` · `text`에서 `[[글자]]`로 감싸면 하늘색 형광펜, `\n`은 줄바꿈. HTML도 됩니다. `<a href="#pairs/1">`처럼 쓰면 누를 때 그 창이 열려요.
 - 주소 끝에 `#아이디`(예: `.../#burning`, `.../#pairs/2`)를 붙이면 그 창이 바로 열립니다. 공유용.
 
 ## 사이트 안에서 바로 글자 고치기 — `?edit`
