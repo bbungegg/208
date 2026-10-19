@@ -58,7 +58,7 @@
   var GO = '<svg class="go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg>';
   var FLAME = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 2C13.5 5.5 18 8.2 18 13.6A6 6 0 0 1 6 13.6C6 10.6 6.6 8.4 7.6 6.6 8.2 8.8 9.2 10 10.6 10.6 9.8 7.6 10.6 4.6 12.5 2ZM12 19.4a2.6 2.6 0 0 0 2.6-2.6c0-1.6-1.2-2.6-2-3.8-.6 1.4-1.6 2-2.4 2.8a2.6 2.6 0 0 0 1.8 3.6Z"/></svg>';
   var MAP_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 4.5 6v13.5L9 18l6 1.5 4.5-1.5V4.5L15 6 9 4.5ZM9 4.5V18M15 6v13.5"/></svg>';
-  var EN = { profile: 'PROFILE', pairs: 'PAIRS', chars: 'CHARACTERS', note: 'NOTE' };
+  var EN = { profile: 'PROFILE', pairs: 'PAIRS', chars: 'CHARACTERS', note: 'NOTE', captcha: 'ARE YOU HUMAN?' };
 
   /* 점 = 창 */
   arr(D.pages).forEach(function (p, i) { if (p) p._k = 'pages.' + i; });
@@ -816,11 +816,12 @@
     var h = '<div class="hero">' + photo(d) +
       '<div class="hero-txt">' +
         (o.tag ? '<span class="hero-code">' + esc(o.tag) + '</span>' : '') +
-        '<h2 class="hero-name" id="win-title">' + ed(k + '.name', d.name || '') + '</h2>' +
+        '<h2 class="hero-name" id="win-title">' + (d.link && !EDIT ? '<a href="' + esc(d.link) + '" target="_blank" rel="noopener">' + esc(d.name || '') + '</a>' : ed(k + '.name', d.name || '')) + '</h2>' +
         (d.en || EDIT ? '<span class="hero-en">' + ed(k + '.en', d.en) + '</span>' : '') +
         (o.char && (d.work || EDIT) ? '<span class="hero-work">' + ed(k + '.work', d.work) + '</span>' : '') +
         (o.char ? heatHtml(d.heat) : '') +
         (d.quote || EDIT ? '<p class="hero-quote">“' + ed(k + '.quote', d.quote) + '”</p>' : '') +
+        (!o.char && d.intro ? '<p class="hero-intro">' + edr(k + '.intro', d.intro) + '</p>' : '') +
         (o.char && (d.note || EDIT) ? '<p class="hero-note">' + ed(k + '.note', d.note) + '</p>' : '') +
         chips(d.keywords, false, k + '.keywords') + songBtn(d.song) +
       '</div></div>';
@@ -1003,9 +1004,10 @@
     var p = v.p;
     if (v.kind === 'pair') return pairHtml(itemOf(v), p._k + '.pairs.' + v.i);
     if (v.kind === 'char') return sheetHtml(itemOf(v), { char: true, k: p._k + '.chars.' + v.i, tag: (p.en || EN.chars) + ' · No. ' + pad3(v.i + 1) });
-    if (p.type === 'profile') return sheetHtml(p, { k: p._k, tag: ticketOf(p).from.code + ' · PASSENGER' });
+    if (p.type === 'profile') return sheetHtml(p, { k: p._k, tag: p.head || ticketOf(p).from.code + ' · PASSENGER' });
     if (p.type === 'pairs') return pairsHtml(p);
     if (p.type === 'chars') return charsHtml(p);
+    if (p.type === 'captcha') return capHtml(p);
     return noteHtml(p);
   }
 
@@ -1081,7 +1083,14 @@
     var t = ev.target;
     if ((ev.key === 'Enter' || ev.key === ' ') && t.matches && t.matches('[data-pair],[data-char]')) { ev.preventDefault(); t.click(); }
   });
+  winBody.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' && ev.target.classList && ev.target.classList.contains('cap-in')) {
+      var go = ev.target.closest('.cap') && $('.cap-go', ev.target.closest('.cap'));
+      if (go) { ev.preventDefault(); go.click(); }
+    }
+  });
   winBody.addEventListener('click', function (ev) {
+    if (capClick(ev)) return;
     var t = ev.target.closest('[data-pair],[data-char]');
     if (t && winCur) {
       var isPair = t.hasAttribute('data-pair');
@@ -1091,6 +1100,112 @@
     var sg = ev.target.closest('[data-song]');
     if (sg) toggleTrack({ id: sg.getAttribute('data-song'), title: sg.getAttribute('data-title') });
   });
+
+  /* ------------------------------------------------------------------
+   * 연결 (CAPTCHA 기믹) — 다른 홈으로 가는 문
+   *   체크 → 문제가 펼쳐지고, ⟳ 를 누르면 옆 홈으로 넘어가고, 확인을 누르면 그 홈이 열린다
+   * ------------------------------------------------------------------ */
+  var capTimer = null;
+  function hostOf(u) { return String(u || '').replace(/^https?:\/\//, '').replace(/\/$/, ''); }
+  function shown(l) { return (l && l.label) || hostOf(l && l.url); }
+  /* 비뚤비뚤한 글자 */
+  function warp(word, seed) {
+    var n = (seed * 9301 + 49297) % 233280;
+    function rnd() { n = (n * 9301 + 49297) % 233280; return n / 233280; }
+    var chars = Array.from(String(word || ''));
+    var h = chars.map(function (c) {
+      if (c === ' ') return '<i class="sp"></i>';
+      var r = (rnd() - 0.5) * 44, y = (rnd() - 0.5) * 14, sx = 0.78 + rnd() * 0.5, sz = 0.85 + rnd() * 0.35;
+      return '<b style="transform:translateY(' + y.toFixed(1) + 'px) rotate(' + r.toFixed(1) + 'deg) scaleX(' + sx.toFixed(2) + ');font-size:' + sz.toFixed(2) + 'em">' + esc(c) + '</b>';
+    }).join('');
+    var a = (rnd() * 10 + 4).toFixed(1), b = (rnd() * 10 + 4).toFixed(1);
+    return '<span class="cw" style="transform:rotate(' + ((rnd() - 0.5) * 12).toFixed(1) + 'deg)">' + h +
+      '<svg class="cw-line" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ' + a + 'C30 ' + (30 - a) + ' 60 ' + b + ' 100 ' + (30 - b) + '"/></svg></span>';
+  }
+  function capHtml(p) {
+    var list = arr(p.links).filter(function (l) { return l && l.url; }), k = p._k;
+    if (!list.length) return headHtml(p) + '<div class="empty">아직 없어요</div>';
+    var first = list[0];
+    return headHtml(p) +
+      '<div class="cap" data-i="0" style="--n:' + list.length + '">' +
+        '<div class="cap-anchor">' +
+          '<button type="button" class="cap-box" data-cap="check" aria-expanded="false" aria-label="I\'m not a robot"><i class="cap-spin"></i><svg class="cap-ok" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19.5 7"/></svg></button>' +
+          '<span class="cap-label">I\'m not a robot</span>' +
+          '<span class="cap-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4a12 12 0 0 1 11.3 8M28 16a12 12 0 0 1-8 11.3M16 28A12 12 0 0 1 4.7 20M4 16a12 12 0 0 1 8-11.3"/><path d="M27.5 6.5v6h-6M4.5 25.5v-6h6"/></svg><small>208CAPTCHA</small></span>' +
+        '</div>' +
+        '<div class="cap-pop" aria-hidden="true">' +
+          '<p class="cap-to"><b data-cap-to>' + esc(shown(first)) + '</b> 에 가려면 아래 글자를 입력하세요</p>' +
+          '<div class="cap-view"><div class="cap-track">' + list.map(function (l, i) {
+            var w = arr(l.words).length ? arr(l.words) : [shown(l)];
+            return '<div class="cap-slide" aria-hidden="' + (i ? 'true' : 'false') + '">' +
+              '<input class="cap-in" type="text" spellcheck="false" autocomplete="off" aria-label="정답" value="">' +
+              '<div class="cap-words">' + w.map(function (x, j) { return warp(x, i * 7 + j * 3 + 1); }).join('') + '</div>' +
+            '</div>';
+          }).join('') + '</div></div>' +
+          '<div class="cap-foot">' +
+            '<button type="button" class="cap-ic" data-cap="next" aria-label="다른 홈 (새 문제)"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4h-4"/></svg></button>' +
+            '<button type="button" class="cap-ic" data-cap="audio" aria-label="소리로 듣기 (음악)"><svg viewBox="0 0 24 24"><path d="M4.5 15v-3a7.5 7.5 0 0 1 15 0v3"/><rect x="3.5" y="13.5" width="4" height="6.5" rx="1.6"/><rect x="16.5" y="13.5" width="4" height="6.5" rx="1.6"/></svg></button>' +
+            '<button type="button" class="cap-ic" data-cap="info" aria-label="도움말"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/></svg></button>' +
+            '<span class="cap-dots">' + list.map(function (l, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') + '</span>' +
+            '<a class="cap-go" data-cap="go" href="' + esc(first.url) + '" target="_blank" rel="noopener">' + esc(p.verify || 'Verify') + '</a>' +
+          '</div>' +
+          '<p class="cap-help" hidden>' + esc(p.help || '사람만 지나갈 수 있어요. ⟳ 를 누르면 다른 홈으로 넘어가요.') + '</p>' +
+        '</div>' +
+      '</div>';
+  }
+  function capType(cap) {
+    var p = winCur && winCur.p, list = arr(p && p.links).filter(function (l) { return l && l.url; });
+    var i = +cap.getAttribute('data-i'), l = list[i] || {}, input = $$('.cap-in', cap)[i];
+    clearInterval(capTimer);
+    if (!input) return;
+    var text = String(l.answer || ''), n = 0;
+    input.value = '';
+    if (reduced) { input.value = text; return; }
+    capTimer = setInterval(function () {
+      if (!document.body.contains(input)) { clearInterval(capTimer); return; }
+      input.value = text.slice(0, ++n);
+      if (n >= text.length) clearInterval(capTimer);
+    }, 70);
+  }
+  function capClick(ev) {
+    var b = ev.target.closest('[data-cap]'), cap = b && b.closest('.cap');
+    if (!b || !cap) return false;
+    var act = b.getAttribute('data-cap');
+    var list = arr(winCur && winCur.p.links).filter(function (l) { return l && l.url; });
+    if (act === 'check') {
+      if (cap.classList.contains('is-open') || cap.classList.contains('is-wait')) return true;
+      audio();
+      cap.classList.add('is-wait');
+      setTimeout(function () {
+        cap.classList.remove('is-wait');
+        cap.classList.add('is-open');
+        b.setAttribute('aria-expanded', 'true');
+        $('.cap-pop', cap).setAttribute('aria-hidden', 'false');
+        capType(cap);
+      }, reduced ? 0 : 750);
+      return true;
+    }
+    if (act === 'next') {
+      var i = (+cap.getAttribute('data-i') + 1) % list.length;
+      cap.setAttribute('data-i', i);
+      cap.style.setProperty('--i', i);
+      $$('.cap-slide', cap).forEach(function (s, j) { s.setAttribute('aria-hidden', j === i ? 'false' : 'true'); });
+      $$('.cap-dots i', cap).forEach(function (d, j) { d.classList.toggle('on', j === i); });
+      $('[data-cap-to]', cap).textContent = shown(list[i]);
+      $('.cap-go', cap).href = list[i].url;
+      b.classList.remove('is-spin'); void b.offsetWidth; b.classList.add('is-spin');
+      capType(cap);
+      return true;
+    }
+    if (act === 'audio') { if (playing || intent) pause(); else play(); return true; }
+    if (act === 'info') { var h = $('.cap-help', cap); h.hidden = !h.hidden; return true; }
+    if (act === 'go') {
+      // 새 탭으로 열리는 건 그대로 두고, 체크 표시만
+      cap.classList.add('is-ok');
+      return true;
+    }
+    return true;
+  }
 
   /* 주소 끝 #아이디 (또는 #아이디/번호) 로 바로 열기. 글 안에 <a href="#pairs/1"> 처럼 링크도 됨 */
   function setHash(id) {

@@ -76,12 +76,17 @@ window.ERA = {
       color: "#a7bfe3",
       ticket: { to: { code: "MKK", name: "몽콕", en: "Mong Kok", big: "09:00 PM", small: "야시장 입구" } },
 
-      intro: "(3 づ)3 ≡ •*。*+゜。*+゜。\n<mark>(사용 플랫폼)</mark> 그 외 타플랫폼 이용 多",
-      // 닉네임 없이 내용만. name/photo 를 적으면 위에 큰 프로필이 생겨요
+      // 맨 위 프로필 (쎄요 박스에서 이름만 빼고)
+      head: "(3 づ)3 ≡ •*。*+゜。*+゜。",      // 이름 위 작은 줄
+      photo: "assets/img/me.jpg",
+      name: "@muzisblessing",
+      link: "https://x.com/muzisblessing",      // 이름을 누르면 X로
       keywords: ["성인", "AI 채팅 드림 OPEN", "FUB FREE"],
+      intro: "<mark>(사용 플랫폼)</mark> 그 외 타플랫폼 이용 多",
+
       // [제목, 글, 작은 영문 머리말]  <mark>글자</mark> = 하늘색 형광펜
       notes: [
-        ["♥", "<mark>이공팔</mark>\n같은 제작자님 캐릭터 위주로 찍먹 성향 多\n↳ <mark>구일오</mark>, <mark>메오올</mark>, 몰텍스, <mark>하이스트</mark> or etc. . .", "TASTE"],
+        ["♥", "@208X195님 - <mark>이공팔</mark>\n@208X195님 캐릭터 위주로 찍먹 성향 多\n↳ <mark>구일오</mark>, <mark>메오올</mark>, 몰텍스, <mark>하이스트</mark> or etc. . .", "TASTE"],
         ["网恋日记", "맘찍 >>> <mark>멘션 위주 교류</mark>, 제 기력 스태미나와 기분에 따라 달라지기도 ...\n계정주 <mark>키티 일기장</mark>처럼 편하게 쓰는 계정으로 <mark>NSFW 소재</mark> 필터링 없이 얘기합니다!\n↳ (시각 미디어는 블라인드 게시)\n<mark>AI 짤뽑 O</mark> 관련 사항 예민하시면 팔로 비추\n<mark>(소재)</mark> 소비 多\n↳ 현실과 덕질 구분 명확히 합니다 … 소재 지뢰 없음, 제가 님의 지뢰가 될 수도 있어요\n좋아하는 아이에게 사랑만 주지 못하고 <mark>(취향)</mark>을 번갈아서 줍니다…\n↳ 마찬가지로 예민하신 분 팔로 비추…", "DIARY"],
         ["NG", "본인 소비 성향을 이유로 <mark>미성년자</mark> 트친은 받지 않고 있습니다 ㅠㅠ\n<mark>직멘 외 온리 배려</mark> 어렵습니다\n↳ (혹시라도 제 메인캐 타드림이 배려리에 있으시면 편하게 정리해주세용)\n드림 지우기, 견제, 뒷담화, 컨택 없는 공론화 등 아무튼 상식 밖의 <mark>피곤한 행동들</mark> …\n오랜 기간 동안 (맘찍 포함) 일절 교류가 없는 상태\n<mark>FUB FREE</mark>\n위와 같은 사항들이 있지만 알아서 흐린 눈 하고 알잘딱해요 행복한 덕질합시다 ^///^", "NG"]
       ]
@@ -183,6 +188,25 @@ window.ERA = {
           quote: "글쎄, 네가 발 딛고 서 있는 여기는 현실인데.",
           about: "돈도 백도 없던 시절, 스포트라이트가 간절했던 임완청은 삼합회 회장의 눈에 들어 그의 스폰을 받아들였다. 그렇게 10년. 그 사이 잃어버린 것이 무엇인지도 모른 채, 재미없는 어른이 되어버렸다. 이 바닥에서 구를 대로 구른 그녀가 터득한 생존 방식은 간단했다. 벽을 세우고, 진심은 절대 드러내지 않는 것. 그런데, 자꾸만 이상한 남자가 벽을 허문다. 체리맛 사탕. 시작은 그랬다."
         }
+      ]
+    }
+
+    ,
+    /* ---------------- 연결 (다른 홈) ----------------
+       I'm not a robot 체크 → 문제가 펼쳐짐 → ⟳ 누르면 옆 홈으로 넘어감 → Verify 누르면 그 홈이 새 탭으로 */
+    {
+      id: "links",
+      type: "captcha",
+      label: "연결",
+      lat: 22.3218, lng: 114.1776,
+      color: "#a7bfe3",
+      ticket: { to: { code: "WWW", name: "다른 홈" } },
+      intro: "사람이면 통과. ⟳ 를 누르면 다른 홈으로 넘어가요.",
+      verify: "Verify",
+      // label: 보이는 주소 · words: 비뚤비뚤한 글자 · answer: 입력칸에 저절로 쳐지는 답
+      links: [
+        { url: "https://xn--ob0bl61cehi.com", label: "이공팔.com", words: ["이공팔", ".com"], answer: "208 with me" },
+        { url: "https://luvinfo.me/90s", label: "luvinfo.me/90s", words: ["can I", "love?"], answer: "do you want to?" }
       ]
     }
 

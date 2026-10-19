@@ -736,3 +736,51 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gray-2);outline-off
   .edit-bar span{flex-basis:100%;order:5;font-size:12px}
   .is-edit #app{padding-top:96px}
 }
+
+/* ---------- 연결: CAPTCHA 기믹 ---------- */
+.cap{--blue:#4a8be0;--i:0;position:relative;width:min(100%,340px);margin:26px auto 40px;font-family:Roboto,"Roboto Condensed",var(--sans);color:#222}
+.cap-anchor{position:relative;z-index:2;display:flex;align-items:center;gap:12px;height:76px;padding:0 12px 0 14px;border:1px solid #d3d3d3;border-radius:3px;background:#f9f9f9;box-shadow:0 0 4px 1px rgba(0,0,0,.08)}
+.cap-box{position:relative;flex:none;width:28px;height:28px;padding:0;border:2px solid #c1c1c1;border-radius:2px;background:#fff;cursor:pointer;transition:border-color .2s,border-radius .3s,width .3s,height .3s}
+.cap-box:hover{border-color:#b2b2b2}
+.cap-spin{position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--blue);border-right-color:transparent;opacity:0}
+.cap.is-wait .cap-box{border-color:transparent;border-radius:50%}
+.cap.is-wait .cap-spin{opacity:1;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
+.cap-ok{position:absolute;inset:-6px;width:36px;height:36px;fill:none;stroke:#0a9e5a;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .35s ease .05s}
+.cap.is-ok .cap-box{border-color:transparent;background:transparent}
+.cap.is-ok .cap-ok{stroke-dashoffset:0}
+.cap-label{flex:1;font-size:14.5px;letter-spacing:.01em}
+.cap-logo{display:flex;flex-direction:column;align-items:center;gap:2px;color:#555}
+.cap-logo svg{width:30px;height:30px;fill:none;stroke:var(--blue);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.cap-logo small{font-size:8.5px;letter-spacing:.02em;color:#555}
+.cap-pop{position:relative;z-index:3;margin:-14px 0 0 18px;padding:14px 14px 0;border:1px solid #ccc;border-radius:2px;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.18);
+  opacity:0;transform:translateY(-8px) scale(.97);transform-origin:20px 0;pointer-events:none;visibility:hidden;transition:opacity .25s ease,transform .3s cubic-bezier(.2,.9,.3,1.2),visibility 0s .3s}
+.cap.is-open .cap-pop{opacity:1;transform:none;pointer-events:auto;visibility:visible;transition-delay:0s}
+.cap-to{margin:0 0 10px;font-size:12px;color:#666;line-height:1.5;word-break:keep-all}
+.cap-to b{color:#222;font-weight:600}
+.cap-view{overflow:hidden;margin:0 -3px;padding:0 3px}
+.cap-track{display:flex;gap:6px;transform:translateX(calc(var(--i) * (-100% - 6px)));transition:transform .45s cubic-bezier(.65,0,.3,1)}
+.cap-slide{flex:none;width:100%}
+.cap-in{display:block;width:100%;height:38px;padding:0 10px;border:1px solid #4a8be0;border-radius:2px;font:15px Roboto,var(--sans);color:#222;outline:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
+.cap-in:focus{box-shadow:0 0 0 2px rgba(74,139,224,.25)}
+.cap-words{display:flex;align-items:center;justify-content:space-around;gap:12px;min-height:96px;padding:10px 0 12px;font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:38px;font-weight:700;color:#111}
+.cw{position:relative;display:inline-flex;align-items:center;white-space:nowrap}
+.cw b{display:inline-block;margin:0 -.05em;font-weight:900;color:#141414;text-shadow:.5px .5px 0 #141414}
+.cw .sp{display:inline-block;width:.3em}
+.cw-line{position:absolute;left:-4%;top:20%;width:108%;height:60%;overflow:visible;pointer-events:none}
+.cw-line path{fill:none;stroke:#141414;stroke-width:1.3;vector-effect:non-scaling-stroke}
+.cap-foot{display:flex;align-items:center;gap:6px;margin:0 -14px;padding:10px 14px;border-top:1px solid #dfdfdf}
+.cap-ic{display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:none;color:#555;cursor:pointer}
+.cap-ic:hover{background:#f1f1f1;color:#222}
+.cap-ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cap-ic.is-spin svg{animation:spin .45s ease}
+.cap-dots{display:flex;gap:4px;margin-left:4px}
+.cap-dots i{width:5px;height:5px;border-radius:50%;background:#d0d0d0;transition:background .2s}
+.cap-dots i.on{background:var(--blue)}
+.cap-go{margin-left:auto;display:inline-grid;place-items:center;min-width:94px;height:38px;padding:0 18px;border-radius:2px;background:var(--blue);color:#fff;font:600 14px Roboto,var(--sans);letter-spacing:.02em;text-decoration:none;text-transform:none;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.cap-go:hover{background:#3b7bd0}
+.cap-help{margin:0 -14px;padding:10px 14px 12px;border-top:1px solid #eee;font-size:12px;line-height:1.6;color:#666;background:#fafafa}
+@media (max-width:420px){.cap-words{font-size:28px;min-height:84px}.cap-pop{margin-left:8px}}
+.hero-intro{margin:8px 0 0;font-size:14px;line-height:1.7;color:var(--ink-2);word-break:keep-all}
+.hero-name a{color:inherit;text-decoration:none}
+.hero-name a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
