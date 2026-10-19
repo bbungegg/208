@@ -737,39 +737,132 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gray-2);outline-off
   .is-edit #app{padding-top:96px}
 }
 
-/* ---------- 연결: CAPTCHA 기믹 (작은 창) ---------- */
-.win.is-mini{top:0;bottom:0;height:fit-content;max-height:calc(100% - 32px);margin:auto;width:min(372px,calc(100% - 32px))}
-.win.is-mini .win-head{padding:8px 8px 0 14px}
+/* ---------- 연결: CAPTCHA 기믹 (옛 SOLVE media 위젯처럼) ---------- */
+.win.is-mini{top:0;bottom:0;height:fit-content;max-height:calc(100% - 32px);margin:auto;width:min(350px,calc(100% - 32px));background:none;box-shadow:none;overflow:visible}
+.win.is-mini .win-head{padding:0 0 6px;justify-content:flex-end}
 .win.is-mini .win-head::after{display:none}
-.win.is-mini .win-route{visibility:hidden}
-.win.is-mini .win-body{padding:0 22px 22px}
+.win.is-mini .win-route{display:none}
+.win.is-mini .win-head .x{background:rgba(255,255,255,.9);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.win.is-mini .win-body{padding:0;overflow:visible}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.cap{--i:0;font-family:var(--cond);color:#1a1616}
-.cap-h,.cap-l{display:block;margin:0 0 7px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a8481}
-.cap-l{margin-top:16px}
-.cap-view{overflow:hidden;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.cap{--i:0;padding:5px 6px 6px;border:1px solid #b9b9b9;border-radius:4px;background:linear-gradient(#fbfbfb,#ececec);
+  box-shadow:0 10px 30px -12px rgba(0,0,0,.35);font-family:Arial,Helvetica,sans-serif;color:#111}
+.sm-h{margin:0 0 3px 3px;font-size:13px;color:#111}
+.cap-view{overflow:hidden;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
 .cap-track{display:flex;transform:translateX(calc(var(--i) * -100%));transition:transform .5s cubic-bezier(.65,0,.3,1)}
-.cap-art{flex:none;display:block;width:100%;height:auto;aspect-ratio:264/124;image-rendering:pixelated;image-rendering:crisp-edges}
-.cap-row{display:flex;align-items:center;gap:2px}
-.cap-in{flex:1;min-width:0;height:36px;margin-right:6px;padding:0 2px;border:0;border-bottom:1.5px solid #1a1616;border-radius:0;background:none;font:500 16px var(--cond);letter-spacing:.02em;color:#1a1616;outline:none}
-.cap-in:focus{border-bottom-color:#7a1c1c}
-.cap-ic{display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:none;color:#5d5654;cursor:pointer}
-.cap-ic:hover{color:#1a1616;background:#efecea}
-.cap-ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.cap-ic.is-spin svg{animation:capspin .45s ease}
+.cap-art{flex:none;display:block;width:100%;height:auto;aspect-ratio:2/1;image-rendering:pixelated;image-rendering:crisp-edges}
+.sm-bot{display:flex;align-items:flex-end;gap:8px;margin-top:4px}
+.sm-l{flex:1;min-width:0}
+.sm-lab{display:block;margin:0 0 2px 2px;font-size:13px;color:#111}
+.cap-in{display:block;width:100%;height:24px;padding:0 5px;border:1px solid #7b9ebd;border-radius:2px;background:#fff;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.12);font:13px Arial,Helvetica,sans-serif;color:#111;outline:none}
+.cap-in:focus{border-color:#3d86c6;box-shadow:0 0 0 2px rgba(61,134,198,.25)}
+.sm-r{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.sm-logo{font:700 12px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;color:#555;text-transform:uppercase}
+.sm-logo b{margin-right:2px;color:#444}
+.sm-logo{text-transform:none;font-weight:400;color:#38a8d8}
+.sm-logo b{font-weight:900;letter-spacing:.1em}
+.sm-btns{display:flex;gap:3px}
+.sm-b{display:grid;place-items:center;width:30px;height:22px;padding:0;border:1px solid #9cb3c9;border-radius:3px;
+  background:linear-gradient(#fff,#dfe8f1);color:#1f78c8;cursor:pointer}
+.sm-b:hover{background:linear-gradient(#fff,#cfdeec)}
+.sm-b:active{background:#d3e1ee}
+.sm-b svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sm-b svg .f{fill:currentColor;stroke:none}
+.sm-b.is-spin svg{animation:capspin .45s ease}
 @keyframes capspin{to{transform:rotate(1turn)}}
-.cap-help{margin:10px 0 0;font:13px/1.6 var(--sans);color:#6f6866}
-.cap-end{display:flex;align-items:center;gap:12px;margin-top:20px}
-.cap-to{flex:1;min-width:0;display:flex;align-items:center;gap:9px;font-size:13px;letter-spacing:.03em;color:#6f6866}
-.cap-to b{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:500;color:#1a1616}
+.cap-help{margin:6px 2px 0;font-size:12px;line-height:1.5;color:#444}
+.cap-end{display:flex;align-items:center;gap:10px;margin-top:12px;padding:0 2px}
+.cap-to{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font:12.5px var(--cond);letter-spacing:.04em;color:#555}
+.cap-to b{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:500;color:#111}
 .cap-dots{display:flex;gap:4px}
-.cap-dots i{width:5px;height:5px;border-radius:50%;background:#d6d0cd;transition:background .2s}
-.cap-dots i.on{background:#7a1c1c}
-.cap-go{flex:none;display:inline-grid;place-items:center;height:36px;padding:0 20px;border-radius:2px;background:#1a1616;color:#fff;font:500 13px var(--cond);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:background .2s}
-.cap-go:hover{background:#7a1c1c}
-.cap.is-ok .cap-go::before{content:"✓ ";}
+.cap-dots i{width:5px;height:5px;border-radius:50%;background:#c4c4c4;transition:background .2s}
+.cap-dots i.on{background:#1f78c8}
+.cap-go{flex:none;display:inline-grid;place-items:center;height:26px;padding:0 14px;border:1px solid #9cb3c9;border-radius:3px;
+  background:linear-gradient(#fff,#dfe8f1);color:#1f78c8;font:700 12.5px Arial,Helvetica,sans-serif;text-decoration:none}
+.cap-go:hover{background:linear-gradient(#fff,#cfdeec)}
 .hero-intro{margin:8px 0 0;font-size:14px;line-height:1.7;color:var(--ink-2);word-break:keep-all}
 .hero-name a{color:inherit;text-decoration:none}
 .hero-name a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 #brand-sub.is-swap{animation:swap .45s ease}
 @keyframes swap{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ==========================================================================
+   창 정리 — 위 경로줄 없이, 하늘색 바탕 없이, 흑백 + 검붉은 포인트
+   ========================================================================== */
+.win-route{visibility:hidden}
+.win-head{padding:10px 10px 0 12px}
+.win-head::after{display:none}
+.win-body{padding-top:6px}
+.page-head{margin:0 0 18px}
+.page-en{font-size:10.5px;letter-spacing:.22em;color:var(--muted)}
+
+/* 칸 제목: 한 줄, 작은 영문 */
+.sec{margin-top:34px}
+.sec-t{display:block;margin:0 0 14px;padding:0 0 8px;border-bottom:1px solid var(--tk-ink);
+  font-family:var(--cond);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--tk-ink)}
+
+/* 태그: 알약 없이 글자만 */
+.chips{gap:4px 14px}
+.chip,.sec .chip{height:auto;padding:0;border-radius:0;background:none;font-size:13px;color:var(--ink-2)}
+.chip::before{color:#6b1717;opacity:.7}
+
+/* 테마곡: 얇은 줄 */
+.song{height:30px;padding:0 12px 0 4px;background:none;color:var(--tk-ink);box-shadow:inset 0 0 0 1px var(--tk-ink)}
+.song i{background:var(--tk-ink);color:#fff}
+.song .eq b{background:var(--tk-ink)}
+
+/* 프로필: 바탕 없이, 사진은 작은 정사각형 */
+.hero{padding:4px 0 0;border-radius:0;background:none;gap:18px;align-items:center}
+.hero .photo{width:84px;aspect-ratio:1;border-radius:6px}
+.hero-name{font-size:26px}
+
+/* 페어 목록 */
+.pc{padding:16px 4px;border-radius:0;background:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pc + .pc{border-top:0}
+.pc:hover{transform:none;box-shadow:none;background:var(--soft)}
+.pc-route{font-size:13px;letter-spacing:.04em;color:var(--tk-ink)}
+.pc .tk-badge{background:none;color:var(--tk-ink);box-shadow:inset 0 0 0 1px var(--tk-ink)}
+
+/* 페어 자세히: 사진 없이 이름 ✈ 이름 */
+.duo{padding:18px 0 4px;border-radius:0;background:none;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) minmax(0,1fr)}
+.who{gap:4px}
+.who-code{font-size:30px}
+.who-name{font-size:12.5px;color:var(--muted)}
+.duo .tk-badge{background:none;color:var(--tk-ink);box-shadow:inset 0 0 0 1px var(--tk-ink)}
+.duo-title{margin-top:26px}
+
+/* 대사: 왼쪽 a, 오른쪽 b */
+.quotes{gap:12px}
+.quote{flex-direction:column;align-items:flex-start;gap:4px;max-width:82%}
+.quote.is-b{align-self:flex-end;align-items:flex-end;text-align:right}
+.quote cite{min-width:0;font-size:12px;letter-spacing:.06em}
+.quote p{padding:10px 14px;border-radius:2px 14px 14px 14px;background:none;box-shadow:inset 0 0 0 1px var(--line);font-size:14.5px}
+.quote.is-b p{border-radius:14px 2px 14px 14px;background:var(--tk-ink);color:#fff;box-shadow:none}
+
+/* 연표 */
+.tl li::before{box-shadow:inset 0 0 0 1.5px var(--tk-ink)}
+.tl li:last-child::before{background:#6b1717;box-shadow:none}
+
+/* 증명사진 카드: 색 띠 없이, 사진은 덜 길게 */
+.idc{border-radius:6px;box-shadow:0 0 0 1px var(--line)}
+.idc-top{height:28px;background:none;border-bottom:1px dashed var(--gray-2)}
+.idc .photo{width:76px;aspect-ratio:4/5;border-radius:4px}
+.idc.is-more:hover{transform:none;box-shadow:0 0 0 1px var(--tk-ink)}
+
+/* 서사 쪽지 */
+.ch-note{background:none;border-left:2px solid #6b1717;border-radius:0;padding:4px 0 4px 12px}
+.ch-note b::before{content:none}
+.who-code{white-space:nowrap}
+.quote.is-b p{text-align:left}
+@media (max-width:720px){.who-code{font-size:22px}.duo{grid-template-columns:minmax(0,1fr) minmax(70px,1fr) minmax(0,1fr)}}
+/* 페어 안 두 사람 소개 */
+.ppl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 34px}
+.pp{min-width:0}
+.pp:nth-child(2){padding-left:34px;margin-left:-34px;border-left:1px solid var(--line)}
+.pp-name{display:flex;align-items:baseline;gap:8px;margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--tk-ink)}
+.pp-name small{font-size:12.5px;font-weight:400;color:var(--muted)}
+.pp .chips{margin-top:8px}
+.pp-quote{margin:12px 0 0;font-size:14px;color:var(--tk-ink)}
+.pp-about{margin:10px 0 0;font-size:14px;line-height:1.85;color:var(--ink-2);word-break:keep-all}
+@media (max-width:720px){.ppl{grid-template-columns:1fr;gap:26px}.pp:nth-child(2){padding:26px 0 0;margin:0;border-left:0;border-top:1px solid var(--line)}}
