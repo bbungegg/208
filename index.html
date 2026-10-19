@@ -14,7 +14,36 @@
 <body>
 
 <div id="app">
-  <div class="frame">
+  <div class="frame xp" id="xp">
+    <!-- 옛 브라우저 창 테두리 -->
+    <div class="xp-title">
+      <svg class="xp-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#fff" stroke="#6b1717" stroke-width="1.2"/><path d="M1.8 8h12.4M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13" fill="none" stroke="#6b1717" stroke-width=".9"/></svg>
+      <span class="xp-t" id="xp-t">208 with me</span>
+      <span class="xp-ctl">
+        <button type="button" class="xp-c" data-xp="min" aria-label="최소화"><i class="i-min"></i></button>
+        <button type="button" class="xp-c" data-xp="max" aria-label="최대화"><i class="i-max"></i></button>
+        <button type="button" class="xp-c xp-close" data-xp="close" aria-label="창 닫기"><i class="i-x"></i></button>
+      </span>
+    </div>
+    <div class="xp-menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span data-xp="fav">Favorites</span><span>Tools</span><span>Help</span></div>
+    <div class="xp-tools">
+      <button type="button" class="xp-tb xp-back" data-xp="back" aria-label="뒤로"><b class="xp-round"><svg viewBox="0 0 16 16"><path d="M9.5 4 5.5 8l4 4"/></svg></b><span>Back</span><em>▾</em></button>
+      <button type="button" class="xp-tb xp-fwd" data-xp="fwd" aria-label="앞으로" disabled><b class="xp-round"><svg viewBox="0 0 16 16"><path d="M6.5 4l4 4-4 4"/></svg></b><em>▾</em></button>
+      <button type="button" class="xp-tb" data-xp="stop" aria-label="중지"><svg class="xp-i" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" fill="#fff" stroke="#8a8a96"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="#b3261e" stroke-width="1.8"/></svg></button>
+      <button type="button" class="xp-tb" data-xp="refresh" aria-label="새로 고침"><svg class="xp-i" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" fill="#fff" stroke="#8a8a96"/><path d="M10.6 6.2A3.1 3.1 0 1 0 11 9" fill="none" stroke="#2f7d32" stroke-width="1.5"/><path d="M11 3.8v2.6H8.4" fill="none" stroke="#2f7d32" stroke-width="1.5"/></svg></button>
+      <button type="button" class="xp-tb" data-xp="home" aria-label="홈"><svg class="xp-i" viewBox="0 0 16 16"><path d="M2.5 8 8 3l5.5 5" fill="none" stroke="#555" stroke-width="1.4"/><path d="M4 7.2V13h3V10h2v3h3V7.2" fill="#f4e1b5" stroke="#8a6d2b"/></svg></button>
+      <i class="xp-sep"></i>
+      <button type="button" class="xp-tb" data-xp="search" aria-label="검색"><svg class="xp-i" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="3.8" fill="#e8f0f7" stroke="#555" stroke-width="1.4"/><path d="M9.3 9.3 13.5 13.5" stroke="#555" stroke-width="2"/></svg><span>Search</span></button>
+      <button type="button" class="xp-tb" data-xp="fav" aria-label="즐겨찾기"><svg class="xp-i" viewBox="0 0 16 16"><path d="M8 1.8l1.9 4 4.3.4-3.3 2.9 1 4.3L8 11.2l-3.9 2.2 1-4.3-3.3-2.9 4.3-.4z" fill="#f2c94c" stroke="#a5781b" stroke-width=".8"/></svg><span>Favorites</span></button>
+      <button type="button" class="xp-tb" data-xp="music" aria-label="음악"><svg class="xp-i" viewBox="0 0 16 16"><path d="M6 12.2V3.5l7-1.5v8.4" fill="none" stroke="#6b1717" stroke-width="1.4"/><circle cx="4.4" cy="12.2" r="1.9" fill="#6b1717"/><circle cx="11.4" cy="10.6" r="1.9" fill="#6b1717"/></svg></button>
+    </div>
+    <div class="xp-addr">
+      <span class="xp-lab">Address</span>
+      <span class="xp-field"><svg class="xp-pg" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z" fill="#fff" stroke="#7a7a86"/><circle cx="8" cy="9.5" r="3" fill="none" stroke="#6b1717" stroke-width="1"/></svg><span id="xp-url">http://208with.me/</span><em>▾</em></span>
+      <button type="button" class="xp-go" data-xp="refresh"><b>→</b>Go</button>
+      <span class="xp-links">Links <b>»</b></span>
+    </div>
+
     <div class="box" id="box">
       <div id="map"></div>
 
@@ -88,7 +117,20 @@
         <div class="win-body" id="win-body"></div>
       </section>
     </div>
+
+    <div class="xp-status">
+      <span class="xp-st" id="xp-st"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z" fill="#fff" stroke="#7a7a86"/></svg><span id="xp-st-t">Done</span></span>
+      <span class="xp-cell"></span><span class="xp-cell"></span>
+      <span class="xp-zone"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="#e8eef5" stroke="#4a6d8f"/><path d="M2 8h12M8 2c-1.8 2-1.8 10 0 12M8 2c1.8 2 1.8 10 0 12" fill="none" stroke="#4a6d8f" stroke-width=".8"/></svg>Internet</span>
+    </div>
   </div>
+</div>
+
+<!-- 아래 작업 표시줄 (넓은 화면에서만) -->
+<div class="xp-task" aria-hidden="true">
+  <span class="xp-start"><i></i>start</span>
+  <span class="xp-item"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#fff" stroke="#6b1717"/></svg><span id="xp-task-t">208 with me</span></span>
+  <span class="xp-tray"><span id="xp-clock">2:08 AM</span></span>
 </div>
 
 <div id="yt-host" aria-hidden="true"><div id="yt"></div></div>

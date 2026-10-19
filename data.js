@@ -111,10 +111,10 @@ window.ERA = {
           work: "팔보완자 · 舊夢未了",
           badge: "One way",
           color: "#a7bfe3",
-          a: { code: "李公八", name: "이공팔", photo: "assets/img/gongpal.webp",
+          a: { code: "李公八", name: "이공팔", photo: "assets/img/gongpal.webp", since: "since 1990.01",
               tags: ["삼합회 정식 단원", "햇살?연하강아지", "냄새맡고쫓아가"],
               about: "홍콩 바닥에서 삼합회란 이름을 모르는 이가 있을 리가. 모른다면 그 무지는 죄일 테니까. 이공팔은 삼합회 간부 대신 8년 간 수감 생활을 끝내고 출소한 뒤로, 삼합회 정식 단원이 됐다. 낮에는 요양원을 찾아 봉사하면서도, 밤이 되면 칼부림 끝에 기어코 피를 보는 것. 그에겐 그닥 이상한 일도 아닐 것이다. 모순, 그만큼 이 남자를 잘 표현한 말이 있을까." },
-          b: { code: "林浣清", name: "임완청", photo: "assets/img/wancheong.webp",
+          b: { code: "林浣清", name: "임완청", photo: "assets/img/wancheong.webp", since: "since 1990.01",
               tags: ["삼합회 계열사 배우", "회피형연상누님", "프로도망러"],
               about: "돈도 백도 없던 시절, 스포트라이트가 간절했던 임완청은 삼합회 회장의 눈에 들어 그의 스폰을 받아들였다. 그렇게 10년. 그 사이 잃어버린 것이 무엇인지도 모른 채, 재미없는 어른이 되어버렸다. 이 바닥에서 구를 대로 구른 그녀가 터득한 생존 방식은 간단했다. 벽을 세우고, 진심은 절대 드러내지 않는 것. 그런데, 자꾸만 이상한 남자가 벽을 허문다. 체리맛 사탕. 시작은 그랬다." },
           flight: "1990 → 1997",
@@ -163,31 +163,6 @@ window.ERA = {
       ]
     },
 
-    /* ---------------- 버닝 캐릭터 목록 ---------------- */
-    {
-      id: "burning",
-      type: "chars",
-      label: "버닝 중",
-      en: "NOW BURNING",
-      lat: 22.3283, lng: 114.1673,
-      color: "#e2dcd9",
-      ticket: { to: { code: "SSP", name: "삼수이포", en: "Sham Shui Po", big: "02:10 AM", small: "골목 시장" } },
-
-      // 캐릭터 하나 = { ... }. heat: 불꽃 0~5
-      // quote / about / basics / traits 같은 걸 더 적으면 카드를 눌렀을 때 자세히 보기가 열려요.
-      chars: [
-        {
-          name: "李公八", photo: "assets/img/gongpal.webp",
-          heat: 5, since: "1990.01"
-        },
-        {
-          name: "林浣清", photo: "assets/img/wancheong.webp",
-          heat: 5, since: "1990.01"
-        }
-      ]
-    }
-
-    ,
     /* ---------------- 연결 (다른 홈) ----------------
        I'm not a robot 체크 → 문제가 펼쳐짐 → ⟳ 누르면 옆 홈으로 넘어감 → Verify 누르면 그 홈이 새 탭으로 */
     {

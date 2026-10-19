@@ -171,7 +171,9 @@
         iconSize: [22, 22],
         iconAnchor: [11, 11]
       })
-    }).addTo(map).on('click', function () { openPage(p); });
+    }).addTo(map).on('click', function () { openPage(p); })
+      .on('mouseover', function () { xpStatus('http://' + DOMAIN + '/#' + p.id); })
+      .on('mouseout', function () { xpStatus(); });
     m.getElement().setAttribute('aria-label', label);
   });
 
@@ -297,6 +299,7 @@
     stamped = false;
     view = 'card';
     box.classList.add('is-card');
+    xpSync();
     setScrim('dark');
     fromDot(p);
     tag.classList.remove('is-open', 'is-stamped', 'is-press');
@@ -314,6 +317,7 @@
     var my = ++tagNo;
     view = '';
     setScrim('');
+    setTimeout(xpSync, 0);
     box.classList.remove('is-card');
     cardHint.hidden = true;
     cardClose.hidden = true;
@@ -476,6 +480,7 @@
     setScrim('solid');               // 오프닝: 지도는 가리고 탑승권만
     box.classList.add('is-ticket');
     view = 'ticket';
+    xpSync();
     fitTicket();
     bindTicket();
   }
@@ -619,6 +624,7 @@
     var main = $('.tk-main', holder);
     try { sessionStorage.setItem(OPEN_KEY, '1'); } catch (x) {}
     view = '';
+    xpSync();
     cur = null;
     if (main && main.animate) {
       main.animate([{ transform: 'none', opacity: 1 }, { transform: 'translateY(-70px) scale(.94)', opacity: 0 }],
@@ -885,6 +891,7 @@
       q = q || {};
       var a = q.a || {}, b = q.b || {}, k = p._k + '.pairs.' + i;
       return '<div role="button" tabindex="0" class="pc" data-pair="' + i + '" style="--c:' + esc(colorOf(q, p)) + '">' +
+        '<span class="pc-photos">' + photo(a) + photo(b) + '</span>' +
         '<span class="pc-body">' +
           '<span class="pc-route"><b>' + esc(a.code || a.name || '') + '</b>' + plane() + '<b>' + esc(b.code || b.name || '') + '</b>' +
             (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') + '</span>' +
@@ -938,15 +945,21 @@
           '<span class="meter-bar"><i style="width:0"></i></span><span class="meter-v">' + Math.round(v) + '</span></div>';
       }).join('') + '</div>');
     }
-    // 두 사람 소개 (a 왼쪽, b 오른쪽)
-    if ([a, b].some(function (x) { return x.about || x.quote || arr(x.tags).length; })) {
-      h += sec('PROFILE', '', '<div class="ppl">' + ['a', 'b'].map(function (w) {
+    // 두 사람 소개: 증명사진 카드 (a 왼쪽, b 오른쪽)
+    if ([a, b].some(function (x) { return x.about || x.photo || arr(x.tags).length; })) {
+      h += sec('PROFILE', '', '<div class="ids pids">' + ['a', 'b'].map(function (w, i) {
         var x = w === 'a' ? a : b, kk = k + '.' + w;
-        return '<article class="pp">' +
-          '<h4 class="pp-name">' + esc(x.code || x.name || '') + (x.code && x.name ? '<small>' + esc(x.name) + '</small>' : '') + '</h4>' +
-          chips(x.tags, false, kk + '.tags') +
-          (x.quote || EDIT ? '<p class="pp-quote">“' + ed(kk + '.quote', x.quote) + '”</p>' : '') +
-          (x.about || EDIT ? '<p class="pp-about">' + edr(kk + '.about', x.about) + '</p>' : '') +
+        return '<article class="idc pid">' +
+          '<span class="idc-top"><span>' + esc(q.title || 'PASSENGER') + '</span><span>No. ' + pad3(i + 1) + '</span><i class="idc-hole"></i></span>' +
+          '<span class="idc-main">' + photo(x) +
+            '<span class="idc-info">' +
+              '<span class="idc-label">NAME</span>' +
+              '<strong class="idc-name">' + esc(x.code || x.name || '') + (x.code && x.name ? ' <small>' + esc(x.name) + '</small>' : '') + '</strong>' +
+              chips(x.tags, false, kk + '.tags') +
+              '<span class="idc-foot"><i class="idc-bar"></i><em>' + esc(x.since || '') + '</em></span>' +
+            '</span>' +
+          '</span>' +
+          (x.about || EDIT ? '<p class="pid-about">' + edr(kk + '.about', x.about) + '</p>' : '') +
         '</article>';
       }).join('') + '</div>');
     }
@@ -966,7 +979,7 @@
     }
     var story = arr(q.story);
     if (story.length) {
-      h += sec(q.storyTitle || 'STORY', '', '<ol class="story">' + story.map(function (c, i) {
+      h += sec('STORY', '', (q.storyTitle ? '<h4 class="story-t">' + esc(q.storyTitle) + '</h4>' : '') + '<ol class="story">' + story.map(function (c, i) {
         c = c || {};
         var kk = k + '.story.' + i;
         return '<li class="ch"><span class="ch-n">' + ('0' + (i + 1)).slice(-2) + '</span><div class="ch-b">' +
@@ -1285,6 +1298,7 @@
   function setHash(id) {
     if (!window.history || !history.replaceState) return;
     try { history.replaceState(null, '', location.pathname + location.search + (id ? '#' + encodeURIComponent(id).replace(/%2F/g, '/') : '')); } catch (x) {}
+    xpSync();
   }
   function fromHash() {
     var parts = decodeURIComponent(location.hash.replace(/^#/, '')).split('/');
@@ -1439,6 +1453,55 @@
     document.addEventListener('pointerdown', kick, true);
     document.addEventListener('keydown', kick, true);
   }
+
+  /* ------------------------------------------------------------------
+   * 옛 브라우저 창 — 제목줄 · 주소창 · 상태줄 · 버튼
+   * ------------------------------------------------------------------ */
+  var DOMAIN = site.domain || '208with.me';
+  var xpT = $('#xp-t'), xpUrl = $('#xp-url'), xpSt = $('#xp-st-t'), xpTask = $('#xp-task-t');
+  function xpLabel() {
+    var v = winCur;
+    if (view === 'ticket') return '';
+    if (view === 'card' && cur) return cur.label || '';
+    if (!v) return '';
+    var it = itemOf(v);
+    return (it && (it.title || it.code || it.name)) || v.p.label || '';
+  }
+  function xpSync() {
+    if (!xpT) return;
+    var name = site.title || '208 with me', label = xpLabel();
+    var t = (label ? label + ' - ' : '') + name;
+    xpT.textContent = t + ' - Kowloon Explorer';
+    if (xpTask) xpTask.textContent = t;
+    xpUrl.textContent = 'http://' + DOMAIN + '/' + (location.hash || '');
+    xpStatus();
+  }
+  function xpStatus(text) {
+    if (!xpSt) return;
+    xpSt.textContent = text || (view === 'ticket' ? 'Opening page http://' + DOMAIN + '/ ... tear the ticket' : 'Done');
+  }
+  $$('[data-xp]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var a = b.getAttribute('data-xp');
+      if (a === 'back') { if (view === 'win') { if (stack.length) back(); else closeWin(); } else if (view === 'card') closeCard(); }
+      else if (a === 'stop') { if (view === 'win') closeWin(); else if (view === 'card') closeCard(); }
+      else if (a === 'refresh') location.reload();
+      else if (a === 'home') { if (view === 'win') closeWin(); if (view === 'card') closeCard(); setMenu(false); fitAll(true); }
+      else if (a === 'fav' || a === 'search') { if (view !== 'ticket') setMenu(!menu.classList.contains('is-open')); }
+      else if (a === 'music') { if (playing || intent) pause(); else play(); }
+      else if (a === 'max') { $('#app').classList.toggle('is-max'); setTimeout(function () { map.invalidateSize(); fitTicket(); }, 60); }
+      else if (a === 'min') { var x = $('#xp'); x.classList.remove('is-min'); void x.offsetWidth; x.classList.add('is-min'); }
+      else if (a === 'close') { if (view === 'win') closeWin(); else if (view === 'card') closeCard(); }
+    });
+  });
+  // 시계: 지금 홍콩 시간
+  (function tick() {
+    var c = $('#xp-clock');
+    if (!c) return;
+    try { c.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Hong_Kong' }); } catch (x) {}
+    setTimeout(tick, 30000);
+  })();
+  xpSync();
 
   /* ------------------------------------------------------------------
    * 편집 모드 — 208with.me/?edit
