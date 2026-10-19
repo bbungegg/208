@@ -109,7 +109,6 @@ window.ERA = {
       pairs: [
         {
           title: "八寶丸子",
-          work: "팔보완자 · 舊夢未了",
           badge: "One way",
           color: "#a7bfe3",
           a: { code: "李公八", name: "이공팔", photo: "assets/img/gongpal.webp", since: "since 1990.01",
