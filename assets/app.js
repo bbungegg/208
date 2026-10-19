@@ -934,7 +934,7 @@
     return '<div class="who">' + pic +
       (x.code || EDIT ? '<span class="who-code">' + ed(k + '.code', x.code) + '</span>' : '') +
       '<span class="who-name">' + ed(k + '.name', x.name || '') + '</span>' +
-      (arr(x.tags).length ? '<ul class="wt">' + arr(x.tags).map(function (t, j) { return '<li><i></i><span>' + ed(k + '.tags.' + j, t) + '</span></li>'; }).join('') + '</ul>' : '') +
+      (arr(x.tags).length ? '<span class="who-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(k + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
     '</div>';
   }
   function pairHtml(q, k) {
@@ -979,7 +979,7 @@
           '<span class="meter-bar"><i style="width:0"></i></span><span class="meter-v">' + Math.round(v) + '</span></div>';
       }).join('') + '</div>');
     }
-    var tl = arr(q.timeline);
+    var tl = q.showTimeline ? arr(q.timeline) : [];   // 연표는 기본으로 숨김 (showTimeline: true 면 보임)
     if (tl.length) {
       h += sec('TIMELINE', '연표', '<ol class="tl">' + tl.map(function (r, i) {
         r = arr(r);
