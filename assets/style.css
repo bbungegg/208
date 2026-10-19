@@ -1030,3 +1030,10 @@ body{background:#d9d8dd}
   .duo-about::before{display:none}
   .da-n{display:block;margin-bottom:6px}
 }
+
+/* 소개글: 작고 가볍게, 처음엔 4줄만 */
+.duo-about{gap:0 40px;margin-top:22px;padding-top:18px}
+.da p{font-size:13.5px;line-height:1.85;color:#5c5652;letter-spacing:-.01em}
+.da.is-clip p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.da-more{margin-top:6px;padding:0;font-family:var(--cond);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--tk-ink);border-bottom:1px solid currentColor}
+.da-more:hover{color:#6b1717}

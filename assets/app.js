@@ -946,7 +946,8 @@
     if (a.about || b.about || EDIT) {
       h += '<div class="duo-about">' + ['a', 'b'].map(function (w) {
         var x = w === 'a' ? a : b;
-        return '<div class="da"><span class="da-n">' + esc(x.code || x.name || '') + '</span><p>' + edr(k + '.' + w + '.about', x.about) + '</p></div>';
+        return '<div class="da' + (EDIT ? '' : ' is-clip') + '"><span class="da-n">' + esc(x.code || x.name || '') + '</span><p>' + edr(k + '.' + w + '.about', x.about) + '</p>' +
+          (EDIT ? '' : '<button type="button" class="da-more" data-more>more</button>') + '</div>';
       }).join('') + '</div>';
     }
 
@@ -1170,6 +1171,8 @@
   });
   winBody.addEventListener('click', function (ev) {
     if (capClick(ev)) return;
+    var mo = ev.target.closest('[data-more]');
+    if (mo) { var da = mo.closest('.da'); da.classList.toggle('is-clip'); mo.textContent = da.classList.contains('is-clip') ? 'more' : 'close'; return; }
     var t = ev.target.closest('[data-pair],[data-char]');
     if (t && winCur) {
       var isPair = t.hasAttribute('data-pair');
