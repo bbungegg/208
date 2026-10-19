@@ -923,23 +923,32 @@
   /* 페어 자세히 */
   function whoHtml(x, k) {
     x = x || {};
-    return '<div class="who">' +
+    return '<div class="who">' + (x.photo ? photo(x) : '') +
       (x.code || EDIT ? '<span class="who-code">' + ed(k + '.code', x.code) + '</span>' : '') +
-      '<span class="who-name">' + ed(k + '.name', x.name || '') + '</span></div>';
+      '<span class="who-name">' + ed(k + '.name', x.name || '') + '</span>' +
+      (arr(x.tags).length ? '<span class="who-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(k + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
+    '</div>';
   }
   function pairHtml(q, k) {
     q = q || {};
     var a = q.a || {}, b = q.b || {}, h = '';
     function who(k) { return k === 'a' ? a.name || '' : k === 'b' ? b.name || '' : k || ''; }
+    h += '<div class="duo-title"><h2 id="win-title">' + ed(k + '.title', q.title || '') + '</h2>' +
+      (q.work || EDIT ? '<span class="duo-work">' + ed(k + '.work', q.work) + '</span>' : '') +
+      (q.tagline || EDIT ? '<p>' + ed(k + '.tagline', q.tagline) + '</p>' : '') + chips(q.keywords, false, k + '.keywords') + songBtn(q.song) + '</div>';
     h += '<div class="duo">' + whoHtml(a, k + '.a') +
       '<div class="duo-mid">' +
         (q.flight || EDIT ? '<span class="duo-flight">' + ed(k + '.flight', q.flight) + '</span>' : '') +
         '<span class="duo-line"><i class="o"></i><i class="d"></i>' + plane() + '<i class="d"></i><i class="o is-fill"></i></span>' +
         (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') +
       '</div>' + whoHtml(b, k + '.b') + '</div>';
-    h += '<div class="duo-title"><h2 id="win-title">' + ed(k + '.title', q.title || '') + '</h2>' +
-      (q.work || EDIT ? '<span class="duo-work">' + ed(k + '.work', q.work) + '</span>' : '') +
-      (q.tagline || EDIT ? '<p>' + ed(k + '.tagline', q.tagline) + '</p>' : '') + chips(q.keywords, false, k + '.keywords') + songBtn(q.song) + '</div>';
+    // 두 사람 소개글: 이름 바로 아래 양쪽 단
+    if (a.about || b.about || EDIT) {
+      h += '<div class="duo-about">' + ['a', 'b'].map(function (w) {
+        var x = w === 'a' ? a : b;
+        return '<div class="da"><span class="da-n">' + esc(x.code || x.name || '') + '</span><p>' + edr(k + '.' + w + '.about', x.about) + '</p></div>';
+      }).join('') + '</div>';
+    }
 
     var views = arr(q.views);
     if (views.length) {
@@ -959,23 +968,6 @@
         var v = clamp(m[1], 0, 100);
         return '<div class="meter" data-v="' + v + '"><span class="meter-n">' + ed(k + '.meters.' + i + '.0', m[0]) + '</span>' +
           '<span class="meter-bar"><i style="width:0"></i></span><span class="meter-v">' + Math.round(v) + '</span></div>';
-      }).join('') + '</div>');
-    }
-    // 두 사람 소개 카드 (a 왼쪽, b 오른쪽)
-    if ([a, b].some(function (x) { return x.about || x.photo || arr(x.tags).length; })) {
-      h += sec('PROFILE', '', '<div class="pids">' + ['a', 'b'].map(function (w, i) {
-        var x = w === 'a' ? a : b, kk = k + '.' + w;
-        return '<article class="pid">' +
-          '<div class="pid-head">' + photo(x) +
-            '<div class="pid-txt">' +
-              '<span class="pid-no">No. ' + pad3(i + 1) + (x.since ? ' · ' + esc(x.since) : '') + '</span>' +
-              '<h4 class="pid-name">' + esc(x.code || x.name || '') + '</h4>' +
-              (x.code && x.name ? '<span class="pid-ko">' + esc(x.name) + '</span>' : '') +
-              (arr(x.tags).length ? '<span class="pid-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(kk + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
-            '</div>' +
-          '</div>' +
-          (x.about || EDIT ? '<p class="pid-about">' + edr(kk + '.about', x.about) + '</p>' : '') +
-        '</article>';
       }).join('') + '</div>');
     }
     var tl = arr(q.timeline);

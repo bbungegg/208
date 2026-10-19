@@ -1003,3 +1003,30 @@ body{background:#d9d8dd}
 /* 메뉴 아이콘: 전부 같은 선 아이콘 */
 .menu-item svg{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 @media (prefers-reduced-motion:reduce){.spot .pin img{animation:none}}
+
+/* ---------- 페어 위쪽: 두 사람 (사진 · 이름 · 태그) + 양쪽 단 소개글 ---------- */
+.duo-title{margin-top:8px}
+.duo{margin-top:30px;padding:0;align-items:start;grid-template-columns:minmax(0,1fr) minmax(80px,.7fr) minmax(0,1fr)}
+.duo .who{gap:0}
+.duo .who .photo{width:min(132px,100%);aspect-ratio:4/5;border-radius:12px;margin-bottom:14px;box-shadow:0 14px 26px -18px rgba(30,20,20,.55)}
+.duo .who-code{font-size:32px;line-height:1.1}
+.duo .who-name{margin-top:3px;font-size:13px;color:var(--muted)}
+.who-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 0;margin-top:10px;font-size:12.5px;line-height:1.5;color:#6b6460;text-align:center}
+.who-tags{gap:2px 10px}
+.who-tags span::before{content:"#";margin-right:1px;color:#b7a9a3}
+.duo-mid{align-self:center;margin-top:-40px}
+.duo-about{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 44px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+.duo-about::before{content:"";position:absolute;left:50%;top:22px;bottom:4px;width:1px;background:radial-gradient(circle,#c9c3bf 0 .8px,transparent 1.1px) 0 0 / 1px 5px repeat-y}
+.da{min-width:0}
+.da-n{display:none;font-family:var(--cond);font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.da p{margin:0;font-size:14.5px;line-height:1.95;color:#3f3a37;word-break:keep-all;overflow-wrap:anywhere}
+@media (max-width:640px){
+  .duo{grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);gap:6px}
+  .duo .who .photo{width:100%;max-width:120px}
+  .duo .who-code{font-size:24px}
+  .duo-mid{margin-top:-20px}
+  .duo-mid .duo-flight,.duo-mid .tk-badge{display:none}
+  .duo-about{grid-template-columns:1fr;gap:24px}
+  .duo-about::before{display:none}
+  .da-n{display:block;margin-bottom:6px}
+}
