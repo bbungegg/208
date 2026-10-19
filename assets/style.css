@@ -1180,7 +1180,14 @@ details.tg:first-of-type{margin-top:30px}
 @keyframes flap{50%{transform:rotate(-12deg)}}
 @keyframes flapr{0%,100%{transform:scaleX(-1)}50%{transform:scaleX(-1) rotate(-12deg)}}
 .bd-angel.is-pop{animation:bdpop .5s ease}
-@media (max-width:1499px){.bd-w,.bd-angel{display:none}}
+/* 단어장 자리: 창을 조금 줄여서 양옆에 늘 170px 이상 남긴다 */
+.has-bd{--win:min(1100px,calc(100vw - 340px))}
+@media (min-width:1000px){
+  .has-bd .xp{width:var(--win)}
+  .bd-w{--gut:calc(50vw - var(--win) / 2 - 14px)}
+}
+@media (max-width:1499px){.bd-w b{font-size:30px}.bd-w small{font-size:12.5px}.bd-chip{font-size:12px}}
+@media (max-width:999px){.bd-w{display:none}}
 .bd-wing{stroke-width:1.1}.bd-wing path + path{stroke-width:.8}
 @media (max-width:720px){.bd{display:none}}
 @media (prefers-reduced-motion:reduce){.bd-w,.bd-angel,.bd-wing{animation:none}}
