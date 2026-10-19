@@ -15,7 +15,8 @@ window.ERA = {
     title: "208 with me",      // 브라우저 탭 제목
     sub: "auto",                // 왼쪽 위 지명. "auto" = 지금 보고 있는 동네 이름 (직접 적으면 그 글자로 고정)
     color: "#a7bfe3",           // 기본 포인트 색 (티켓 파란 띠)
-    dot: "#6b1717",             // 지도 위 점 색
+    dot: "#6b1717",             // 지도 위 점 색 (pin 이 없을 때)
+    pin: "assets/img/cherry.png", // 지도 위 점 대신 쓸 그림 (비우면 동그란 점)
     tiles: "osm",               // 지도: "osm" 또는 "esri" (안 뜨면 바꿔 보기)
     sound: true,                // 티켓 찢는 소리
     autoplay: true,             // 들어오자마자 음악 (브라우저 정책상 처음 누르는 순간 = 탑승권 뜯을 때 시작)
@@ -72,7 +73,7 @@ window.ERA = {
     {
       id: "profile",
       type: "profile",
-      label: "성향표",
+      label: "me",
       lat: 22.3196, lng: 114.1712,
       color: "#a7bfe3",
       ticket: { to: { code: "MKK", name: "몽콕", en: "Mong Kok", big: "09:00 PM", small: "야시장 입구" } },
@@ -97,7 +98,7 @@ window.ERA = {
     {
       id: "pairs",
       type: "pairs",
-      label: "페어",
+      label: "♥",
       card: "label",                     // 누르면 체크인 카드 → 도장 → 창 (위의 label)
       lat: 22.3236, lng: 114.1628,
       color: "#c9d3dc",
@@ -168,7 +169,7 @@ window.ERA = {
     {
       id: "links",
       type: "captcha",
-      label: "연결",
+      label: "link",
       lat: 22.3218, lng: 114.1776,
       color: "#a7bfe3",
       ticket: { to: { code: "WWW", name: "다른 홈" } },

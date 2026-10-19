@@ -58,6 +58,17 @@
   var GO = '<svg class="go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg>';
   var FLAME = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 2C13.5 5.5 18 8.2 18 13.6A6 6 0 0 1 6 13.6C6 10.6 6.6 8.4 7.6 6.6 8.2 8.8 9.2 10 10.6 10.6 9.8 7.6 10.6 4.6 12.5 2ZM12 19.4a2.6 2.6 0 0 0 2.6-2.6c0-1.6-1.2-2.6-2-3.8-.6 1.4-1.6 2-2.4 2.8a2.6 2.6 0 0 0 1.8 3.6Z"/></svg>';
   var MAP_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 4.5 6v13.5L9 18l6 1.5 4.5-1.5V4.5L15 6 9 4.5ZM9 4.5V18M15 6v13.5"/></svg>';
+  // 메뉴 아이콘 (전체 지도와 같은 선 아이콘). 점마다 icon: "me" | "heart" | "link" | "note"
+  var ICONS = {
+    me: '<path d="M12 12a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2ZM5 19.5c.9-3.4 3.6-5.2 7-5.2s6.1 1.8 7 5.2"/>',
+    heart: '<path d="M12 19s-7-4.3-7-9.4A3.9 3.9 0 0 1 12 7.4a3.9 3.9 0 0 1 7 2.2C19 14.7 12 19 12 19Z"/>',
+    link: '<path d="M10.2 13.8a3.4 3.4 0 0 0 4.8 0l3-3a3.4 3.4 0 0 0-4.8-4.8l-1 1"/><path d="M13.8 10.2a3.4 3.4 0 0 0-4.8 0l-3 3a3.4 3.4 0 0 0 4.8 4.8l1-1"/>',
+    note: '<path d="M6.5 4.5h8l3 3v12h-11z"/><path d="M9 11h6M9 14.5h6"/>'
+  };
+  function iconOf(p) {
+    var k = p.icon || { profile: 'me', pairs: 'heart', captcha: 'link' }[p.type] || 'note';
+    return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[k] || ICONS.note) + '</svg>';
+  }
   var EN = { profile: 'PROFILE', pairs: 'PAIRS', chars: 'CHARACTERS', note: 'NOTE', captcha: 'ARE YOU HUMAN?' };
 
   /* 점 = 창 */
@@ -165,7 +176,12 @@
     var m = L.marker(p._ll, {
       keyboard: true,
       riseOnHover: true,
-      icon: L.divIcon({
+      icon: site.pin ? L.divIcon({
+        className: 'spot is-pin',
+        html: '<img src="' + esc(site.pin) + '" alt="" draggable="false">',
+        iconSize: [34, 39],
+        iconAnchor: [17, 34]
+      }) : L.divIcon({
         className: 'spot',
         html: '<i style="--c:' + esc(site.dot || colorOf(p)) + '"></i>',
         iconSize: [22, 22],
@@ -216,7 +232,7 @@
   var menuList = $('#menu-list');
   menuList.innerHTML = pages.map(function (p, i) {
     return '<button type="button" class="menu-item" data-go="' + esc(p.id) + '" style="--d:' + (i * 0.04).toFixed(2) + 's">' +
-      '<span>' + esc(p.label || p.id) + '</span><i style="--c:' + esc(colorOf(p)) + '"></i></button>';
+      '<span>' + esc(p.label || p.id) + '</span>' + iconOf(p) + '</button>';
   }).join('') +
     '<button type="button" class="menu-item" data-fit style="--d:' + (pages.length * 0.04).toFixed(2) + 's"><span>전체 지도</span>' + MAP_ICON + '</button>';
 
