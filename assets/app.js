@@ -919,7 +919,23 @@
         return '<blockquote class="quote"><cite>' + esc(who(x[0])) + '</cite><p>' + edr(k + '.quotes.' + i + '.1', x[1]) + '</p></blockquote>';
       }).join('') + '</div>');
     }
-    if (q.about || EDIT) h += sec('STORY', '소개', '<div class="prose">' + edr(k + '.about', q.about) + '</div>');
+    var story = arr(q.story);
+    if (story.length) {
+      h += sec('STORY', q.storyTitle || '서사', '<ol class="story">' + story.map(function (c, i) {
+        c = c || {};
+        var kk = k + '.story.' + i;
+        return '<li class="ch"><span class="ch-n">' + ('0' + (i + 1)).slice(-2) + '</span><div class="ch-b">' +
+          (c.when || EDIT ? '<small class="ch-when">' + ed(kk + '.when', c.when) + '</small>' : '') +
+          '<h4 class="ch-t">' + ed(kk + '.title', c.title || '') + '</h4>' +
+          (c.text || EDIT ? '<p class="ch-text">' + edr(kk + '.text', c.text) + '</p>' : '') +
+          arr(c.notes).map(function (n, j) {
+            n = arr(n);
+            return '<div class="ch-note"><b>' + ed(kk + '.notes.' + j + '.0', n[0] || '') + '</b><p>' + edr(kk + '.notes.' + j + '.1', n[1]) + '</p></div>';
+          }).join('') +
+        '</div></li>';
+      }).join('') + '</ol>');
+    }
+    if (q.about || EDIT) h += sec('ABOUT', '소개', '<div class="prose">' + edr(k + '.about', q.about) + '</div>');
     h += notesHtml(q.notes, k + '.notes');
     return h;
   }
@@ -1216,6 +1232,17 @@
     return hasSong(p) || arr(p.pairs).some(hasSong) || arr(p.chars).some(hasSong);
   });
   if (anySong) startYT();
+
+  /* 들어오자마자 음악: 브라우저가 소리 자동재생을 막아서, 처음 누르는 순간(탑승권 뜯기 등) 바로 튼다 */
+  if (songs.length && site.autoplay !== false && !EDIT) {
+    var kick = function () {
+      document.removeEventListener('pointerdown', kick, true);
+      document.removeEventListener('keydown', kick, true);
+      if (!playing && !intent) play();
+    };
+    document.addEventListener('pointerdown', kick, true);
+    document.addEventListener('keydown', kick, true);
+  }
 
   /* ------------------------------------------------------------------
    * 편집 모드 — 208with.me/?edit
