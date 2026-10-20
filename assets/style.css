@@ -1374,3 +1374,6 @@ details.tg:first-of-type{margin-top:30px}
 .pl li .is-on i{color:#6b1717;font-size:9px;letter-spacing:-2px}
 .pl-e{margin:0;padding:12px;color:#888}
 .tab[data-tab="0"]{font-size:15px}
+/* 창이 펴지는 동안엔 안쪽(제목줄 글자 포함)도 전부 숨김 */
+.win.is-hold,.win.is-hold *{visibility:hidden !important}
+.ghost{border-radius:6px}
