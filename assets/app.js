@@ -1480,22 +1480,21 @@
       pl = document.createElement('div');
       pl.className = 'pl';
       pl.innerHTML =
-        '<div class="pl-h"><span>' + esc(D.playlistTitle || 'Song') + '</span><button type="button" data-pa="x" aria-label="닫기">×</button></div>' +
+        '<div class="pl-h"><svg class="xp-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 12.2V3.5l7-1.5v8.4" fill="none" stroke="#6b1717" stroke-width="1.4"/><circle cx="4.4" cy="12.2" r="1.9" fill="#6b1717"/><circle cx="11.4" cy="10.6" r="1.9" fill="#6b1717"/></svg>' +
+          '<span>' + esc(D.playlistTitle || 'Playlist') + '</span>' +
+          '<span class="tag-ctl"><span class="xp-c"><i class="i-min"></i></span><span class="xp-c"><i class="i-max"></i></span><button type="button" class="xp-c xp-close" data-pa="x" aria-label="닫기"><i class="i-x"></i></button></span></div>' +
         '<div class="pl-b">' +
-          '<div class="pl-top">' +
+          '<div class="pl-now">' +
             '<div class="pl-art"><img alt="" data-pl-img></div>' +
-            '<div class="pl-side">' +
-              '<div class="pl-dev"><i class="pl-cd" aria-hidden="true"></i><i class="pl-deck" aria-hidden="true"><b></b></i></div>' +
-              '<div class="pl-vol"><button type="button" class="pb" data-pa="up" aria-label="소리 크게">+</button><button type="button" class="pb" data-pa="down" aria-label="소리 작게">−</button><span class="pl-vbar"><i data-pl-vol></i></span></div>' +
+            '<div class="pl-meta"><small>NOW PLAYING</small><b data-pl-title></b><span data-pl-artist></span>' +
+              '<div class="pl-ctl">' +
+                '<button type="button" class="pb" data-pa="prev" aria-label="이전 곡"><svg viewBox="0 0 16 16"><path d="M3.5 3.5h1.6v9H3.5zM12.5 3.5v9L5.6 8z"/></svg></button>' +
+                '<button type="button" class="pb pl-pp" data-pa="pp" aria-label="재생/일시정지"><svg viewBox="0 0 16 16"><path class="i-p" d="M5 3.5v9l7-4.5z"/><path class="i-s" d="M4.5 3.5h2.5v9H4.5zM9 3.5h2.5v9H9z"/></svg></button>' +
+                '<button type="button" class="pb" data-pa="next" aria-label="다음 곡"><svg viewBox="0 0 16 16"><path d="M10.9 3.5h1.6v9h-1.6zM3.5 3.5v9L10.4 8z"/></svg></button>' +
+                '<button type="button" class="pb pl-v" data-pa="down" aria-label="소리 작게">−</button><span class="pl-vbar"><i data-pl-vol></i></span><button type="button" class="pb pl-v" data-pa="up" aria-label="소리 크게">+</button>' +
+              '</div>' +
             '</div>' +
           '</div>' +
-          '<div class="pl-ctl">' +
-            '<button type="button" class="pb pl-pp" data-pa="pp" aria-label="재생/일시정지"><svg viewBox="0 0 16 16"><path class="i-p" d="M5 3.5v9l7-4.5z"/><path class="i-s" d="M4.5 3.5h2.5v9H4.5zM9 3.5h2.5v9H9z"/></svg></button>' +
-            '<button type="button" class="pb" data-pa="prev" aria-label="이전 곡"><svg viewBox="0 0 16 16"><path d="M3.5 3.5h1.8v9H3.5zM12.5 3.5v9L5.6 8z"/></svg></button>' +
-            '<button type="button" class="pb" data-pa="next" aria-label="다음 곡"><svg viewBox="0 0 16 16"><path d="M10.7 3.5h1.8v9h-1.8zM3.5 3.5v9L10.4 8z"/></svg></button>' +
-          '</div>' +
-          '<label class="pl-f"><span>Artist:</span><b data-pl-artist></b><em>▾</em></label>' +
-          '<label class="pl-f"><span>Title:</span><b data-pl-title></b><em>▾</em></label>' +
           '<div class="pl-pr"><span data-pl-t>0:00</span><span class="pl-bar"><i data-pl-fill></i><b data-pl-knob></b></span><span data-pl-d>0:00</span></div>' +
           '<ol class="pl-list" data-pl-list></ol>' +
         '</div>';
@@ -1525,7 +1524,7 @@
       });
     }
     var r = btn.getBoundingClientRect();
-    pl.style.left = Math.max(8, Math.min(r.left - 20, innerWidth - 330)) + 'px';
+    pl.style.left = Math.max(8, Math.min(r.left - 20, innerWidth - 348)) + 'px';
     pl.style.top = (r.bottom + 4) + 'px';
     pl.hidden = false;
     plPaint();
@@ -1551,7 +1550,7 @@
     if (img.getAttribute('src') !== src) img.setAttribute('src', src);
     $('[data-pl-artist]', pl).textContent = m.artist || '—';
     $('[data-pl-title]', pl).textContent = m.title || '—';
-    $('[data-pl-vol]', pl).style.height = vol + '%';
+    $('[data-pl-vol]', pl).style.width = vol + '%';
     $('[data-pl-list]', pl).innerHTML = songs.map(function (s, i) {
       var t = splitTitle(s.title);
       return '<li><button type="button" data-pl="' + i + '" class="' + (i === idx ? 'is-cur' : '') + '"><i>' + (i === idx && on ? '♪' : ('0' + (i + 1)).slice(-2)) + '</i><b>' + esc(t.title) + '</b><small>' + esc(t.artist) + '</small></button></li>';

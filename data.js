@@ -64,13 +64,11 @@ window.ERA = {
   /* 왼쪽 아래 음악 (유튜브 주소의 v= 뒷부분). 비우면 [] */
   playlistTitle: "八寶丸子 OST",   // ♫ 버튼 목록 제목
   playlist: [
+    { id: "W6NcLBQZrU0", title: "回春丹 - 初恋" },
+    { id: "FN2X5JwMdEE", title: "The Flying Pickets - Only You" },
     { id: "6KnYw4EwYGc", title: "Cocteau Twins - Heaven or Las Vegas" },
     { id: "xMaE6toi4mk", title: "The Clash - Should I Stay or Should I Go" },
-    { id: "7jYDYon4sGQ", title: "伍佰 & China Blue - Last Dance" },
-    { id: "vcX-IqLWdWc", title: "王菲 - 夢中人" },
-    { id: "FN2X5JwMdEE", title: "The Flying Pickets - Only You" },
-    { id: "W6NcLBQZrU0", title: "回春丹 - 初恋" },
-    { id: "cYo047rraQw", title: "張國榮 - 當年情" }
+    { id: "7jYDYon4sGQ", title: "伍佰 & China Blue - Last Dance" }
   ],
 
   /* ------------------------------------------------------------------
