@@ -661,9 +661,14 @@
     }, reduced ? 0 : 560);
   }
   /* 종이(r 자리)가 창 크기로 펴지고, 다 펴지면 창 내용이 올라온다 */
+  /* 페어가 하나뿐이면 목록 없이 바로 그 페어 창 */
+  function entryView(p) {
+    if (p.type === 'pairs' && arr(p.pairs).length === 1) return { p: p, kind: 'pair', i: 0 };
+    return { p: p, kind: 'page' };
+  }
   function morphFrom(r, rad0, p, cleanup) {
     var b = box.getBoundingClientRect();
-    showWin({ p: p, kind: 'page' }, { hold: true });
+    showWin(entryView(p), { hold: true });
     var w = win.getBoundingClientRect();
     var rad = getComputedStyle(win).borderTopLeftRadius;
     var done = function () {
@@ -1424,7 +1429,7 @@
     var parts = decodeURIComponent(location.hash.replace(/^#/, '')).split('/');
     var p = parts[0] && pageById(parts[0]);
     if (!p || morphing) return;
-    var n = parseInt(parts[1], 10) - 1, v = { p: p, kind: 'page' };
+    var n = parseInt(parts[1], 10) - 1, v = entryView(p);
     if (n >= 0 && p.type === 'pairs' && arr(p.pairs)[n]) v = { p: p, kind: 'pair', i: n };
     if (n >= 0 && p.type === 'chars' && arr(p.chars)[n]) v = { p: p, kind: 'char', i: n };
     if (winCur && winCur.p === v.p && winCur.kind === v.kind && winCur.i === v.i) return;
