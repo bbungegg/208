@@ -970,7 +970,7 @@
   function whoHtml(x, k, w) {
     x = x || {};
     var pic = x.photo ? photo(x) : '';
-    if (pic && w && x.about && !EDIT) pic = '<button type="button" class="who-pic" data-who="' + w + '" aria-expanded="false">' + pic + '<span class="who-tap">PROFILE <b>+</b></span></button>';
+    if (pic && w && x.about && !EDIT) pic = '<button type="button" class="who-pic" data-who="' + w + '" aria-expanded="false">' + pic + '<span class="who-tap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6.5v11M6.5 12h11"/></svg></span></button>';
     return '<div class="who">' + pic +
       (x.code || EDIT ? '<span class="who-code">' + ed(k + '.code', x.code) + '</span>' : '') +
       '<span class="who-name">' + ed(k + '.name', x.name || '') + '</span>' +

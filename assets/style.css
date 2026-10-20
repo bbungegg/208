@@ -1311,3 +1311,13 @@ details.tg:first-of-type{margin-top:30px}
 .pc-title{line-height:1.25}
 .pc-route{margin-top:3px}
 .pc-work{margin-left:8px;color:#aaa}
+
+/* 사진 위 프로필 버튼: 작은 반투명 원 + 얇은 + (열리면 천천히 ×) */
+.who-tap{left:auto;right:8px;bottom:8px;transform:none;display:grid;place-items:center;width:30px;height:30px;padding:0;gap:0;border-radius:50%;
+  background:rgba(255,255,255,.72);box-shadow:0 1px 4px rgba(0,0,0,.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#141414;transition:background .2s}
+.who-tap svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;transition:transform .35s cubic-bezier(.3,.7,.3,1)}
+.who-pic:hover .who-tap{background:#fff}
+.who-pic.is-on .who-tap{background:#141414;color:#fff}
+.who-pic.is-on .who-tap svg{transform:rotate(45deg)}
+.who-pic.is-on .photo{box-shadow:0 0 0 1.5px #141414 !important}
+.who-pic{margin-bottom:14px}
