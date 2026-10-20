@@ -131,7 +131,6 @@ window.ERA = {
           },
           flight: "1990 → 1997",
           tagline: "안 변하면? 9년이든 90년이든 안 변해.",
-          keywords: ["체리맛 사탕", "홍콩 → 시드니", "Heaven or Las Vegas"],
           song: { id: "6KnYw4EwYGc", title: "Cocteau Twins - Heaven or Las Vegas" },
           quotes: [["a", "근데 나는 현실주의자 아닐 걸?"], ["b", "글쎄, 네가 발 딛고 서 있는 여기는 현실인데."]],
           timeline: [["1990.01.05", "相逢 — 첫 만남"], ["1997.06.30", "遠行 — 홍콩 반환 하루 전, 함께 홍콩을 떠나다"]],

@@ -1533,3 +1533,13 @@ details.tg:first-of-type{margin-top:30px}
 .win.is-me{border-radius:12px;box-shadow:0 0 0 1px #d6d6d6,0 24px 48px -28px rgba(0,0,0,.35) !important;background:#fff !important;overflow:hidden}
 .win.is-me .hero .photo{border-radius:8px}
 .ctr-plain .ctr-row b{border-radius:8px}
+/* 창은 전부 각지게 (about me 처럼): 창 6px, 안쪽 사진 · 카드 4px */
+.win:not(.is-mini),.win.is-me{border-radius:6px !important}
+.ghost{border-radius:6px}
+.win .photo,.win .hero .photo,.duo .who .photo,.pc-photos .photo{border-radius:4px !important}
+.pc{border-radius:6px}
+.dp{border-radius:6px}
+.ctr-plain .ctr-row b{border-radius:4px}
+.quote p{border-radius:2px 10px 10px 10px}
+.quote.is-b p{border-radius:10px 2px 10px 10px}
+.who-tap{border-radius:4px}
