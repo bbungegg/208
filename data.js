@@ -14,7 +14,7 @@ window.ERA = {
   site: {
     title: "208 with me",      // 브라우저 탭 제목
     sub: "auto",                // 왼쪽 위 지명. "auto" = 지금 보고 있는 동네 이름 (직접 적으면 그 글자로 고정)
-    color: "#d3eaf2",           // 기본 포인트 색 (티켓 띠 · 연하늘)
+    color: "#b3231f",           // 기본 포인트 색 (티켓 띠 · 레드)
     dot: "#6b1717",             // 지도 위 점 색 (pin 이 없을 때)
     pin: "assets/img/cherry.png", // 지도 위 점 대신 쓸 그림 (비우면 동그란 점). 점마다 pin: "assets/img/goldfish.png" 처럼 따로 줄 수도 있어요
     tiles: "osm",               // 지도: "osm" 또는 "esri" (안 뜨면 바꿔 보기)
