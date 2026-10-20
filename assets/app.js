@@ -799,9 +799,22 @@
         n = arr(n);
         return '<div class="tab-pane' + (i ? '' : ' is-on') + '" role="tabpanel" data-pane="' + i + '">' +
           (n[0] && n[0] !== n[2] ? '<b class="tab-t">' + ed(k + '.' + i + '.0', n[0]) + '</b>' : '') +
-          '<div class="tab-tx">' + edr(k + '.' + i + '.1', n[1]) + '</div></div>';
+          (EDIT ? '<div class="tab-tx">' + edr(k + '.' + i + '.1', n[1]) + '</div>' : lines(n[1])) + '</div>';
       }).join('') + '</div>' +
     '</div>';
+  }
+  /* 줄글 → 한 줄씩 목록 (↳ 로 시작하면 바로 위 줄에 붙는 덧붙임) */
+  function lines(t) {
+    var out = '', open = false;
+    String(t || '').split(/\r?\n/).forEach(function (l) {
+      l = l.trim();
+      if (!l) return;
+      var sub = /^[↳└ㄴ]/.test(l);
+      if (sub) { out += '<span class="ln-sub">' + rich(l.replace(/^[↳└ㄴ]\s*/, '')) + '</span>'; return; }
+      out += (open ? '</li>' : '') + '<li><span class="ln-main">' + rich(l) + '</span>';
+      open = true;
+    });
+    return '<ul class="ln">' + out + (open ? '</li>' : '') + '</ul>';
   }
   /* 카운터: 그날부터 지금까지 (Days : Hrs : Mins : Secs) */
   var counterTimer = null;
@@ -822,7 +835,13 @@
       if (!el.isConnected) { clearInterval(counterTimer); return; }
       var t = Math.max(0, Math.floor((Date.now() - from) / 1000));
       var v = [Math.floor(t / 86400), Math.floor(t / 3600) % 24, Math.floor(t / 60) % 60, t % 60];
-      $$('[data-u]', el).forEach(function (b, i) { b.textContent = i ? ('0' + v[i]).slice(-2) : v[i]; });
+      $$('[data-u]', el).forEach(function (b, i) {
+        var t = i ? ('0' + v[i]).slice(-2) : String(v[i]);
+        if (b.textContent === t) return;
+        b.textContent = t;
+        if (b.getAttribute('data-ready')) { b.classList.remove('is-flip'); void b.offsetWidth; b.classList.add('is-flip'); }
+        b.setAttribute('data-ready', '1');
+      });
     }
     tick();
     counterTimer = setInterval(tick, 1000);
