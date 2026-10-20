@@ -1569,18 +1569,19 @@
       try { document.documentElement.style.setProperty('--bd-photo', 'url("' + new URL(B.photo, location.href).href + '")'); } catch (x) {}   // 오프닝 뒤 배경에도
     }
     var words = arr(B.words).filter(function (w) { return arr(w)[0]; });
+    // 양옆 두 줄(세로 칸)에 차례로 쌓는다 → 서로 안 겹침. 좌우로만 살짝 엇갈리게
     var half = Math.ceil(words.length / 2), r = rng('208');
-    var h = '';
+    var cols = { l: '', r: '' };
     words.forEach(function (w, i) {
       w = arr(w);
-      var side = i < half ? 'l' : 'r', n = side === 'l' ? i : i - half, cnt = side === 'l' ? half : words.length - half;
-      var y = 5 + (n + 0.5) * (84 / cnt) + (r() - 0.5) * 4;
-      var x = 0.08 + r() * 0.42;
-      var kind = ['up', 'down', 'side', 'vert'][Math.floor(r() * 4)];
-      var chip = w[2] ? '<span class="bd-chip' + (r() < 0.3 ? ' is-v' : '') + '">' + esc(w[2]) + '</span>' : '';
-      h += '<button type="button" class="bd-w is-' + kind + ' is-' + side + '" style="--x:' + x.toFixed(2) + ';--y:' + y.toFixed(1) + '%;--d:' + (-r() * 6).toFixed(2) + 's" data-say="' + esc(w[0]) + '" title="' + esc(w[1] || '') + '">' +
+      var side = i < half ? 'l' : 'r';
+      var kind = ['up', 'down', 'side'][Math.floor(r() * 3)];
+      var sx = ((i % 2 ? 1 : -1) * (0.15 + r() * 0.35)).toFixed(2);   // 칸 안에서 좌우 엇갈림 (-0.5 ~ 0.5)
+      var chip = w[2] ? '<span class="bd-chip">' + esc(w[2]) + '</span>' : '';
+      cols[side] += '<button type="button" class="bd-w is-' + kind + '" style="--sx:' + sx + ';--d:' + (-r() * 6).toFixed(2) + 's" data-say="' + esc(w[0]) + '" title="' + esc(w[1] || '') + '">' +
         '<b>' + esc(w[0]) + '</b><small>' + esc(w[1] || '') + '</small>' + chip + '</button>';
     });
+    var h = '<div class="bd-col is-l">' + cols.l + '</div><div class="bd-col is-r">' + cols.r + '</div>';
     if (B.center) {
       h += '<button type="button" class="bd-angel" data-say="' + esc(B.center) + '">' +
         '<svg class="bd-wing" viewBox="0 0 70 80" aria-hidden="true"><path d="M66 46C52 18 22 4 4 10c8 4 4 9 0 13 9 2 6 8 2 12 9 1 7 8 4 12 9-1 9 6 7 11 12-3 30-6 49-12Z"/><path d="M58 40C44 26 28 18 14 17M54 46C40 36 26 32 12 31M50 51C38 46 26 45 15 46"/></svg>' +
