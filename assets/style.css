@@ -1529,3 +1529,7 @@ details.tg:first-of-type{margin-top:30px}
 /* 카운터는 ♥ 탭 안에만 */
 .tab-pane .ctr-plain{margin:18px 0 6px}
 .tab-pane{max-height:none;overflow:visible}
+/* about me 도 페어 창과 같은 모양 (둥근 정도 · 그림자) */
+.win.is-me{border-radius:12px;box-shadow:0 0 0 1px #d6d6d6,0 24px 48px -28px rgba(0,0,0,.35) !important;background:#fff !important;overflow:hidden}
+.win.is-me .hero .photo{border-radius:8px}
+.ctr-plain .ctr-row b{border-radius:8px}
