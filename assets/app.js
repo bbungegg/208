@@ -820,9 +820,12 @@
   var counterTimer = null;
   function counterHtml(c) {
     if (!c || !c.from) return '';
-    return '<div class="ctr" data-from="' + esc(c.from) + '"><p class="ctr-t">' + esc(c.label || '') + '</p>' +
+    var d = new Date(Date.parse(c.from));
+    var since = isFinite(d) ? ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear() : '';
+    return '<div class="ctr" data-from="' + esc(c.from) + '">' +
+      '<div class="ctr-l"><p class="ctr-t">' + esc(c.label || '') + '</p><span class="ctr-s">HKG ' + esc(since) + ' → NOW</span></div>' +
       '<div class="ctr-row">' + ['Days', 'Hrs', 'Mins', 'Secs'].map(function (u, i) {
-        return (i ? '<i>:</i>' : '') + '<span><b data-u="' + i + '">0</b><small>' + u + '</small></span>';
+        return '<span><b data-u="' + i + '"></b><small>' + u + '</small></span>';
       }).join('') + '</div></div>';
   }
   function counterTick() {
@@ -835,12 +838,17 @@
       if (!el.isConnected) { clearInterval(counterTimer); return; }
       var t = Math.max(0, Math.floor((Date.now() - from) / 1000));
       var v = [Math.floor(t / 86400), Math.floor(t / 3600) % 24, Math.floor(t / 60) % 60, t % 60];
+      // 숫자 한 자리 = 판 한 장. 바뀐 자리만 넘어간다
       $$('[data-u]', el).forEach(function (b, i) {
         var t = i ? ('0' + v[i]).slice(-2) : String(v[i]);
-        if (b.textContent === t) return;
-        b.textContent = t;
-        if (b.getAttribute('data-ready')) { b.classList.remove('is-flip'); void b.offsetWidth; b.classList.add('is-flip'); }
-        b.setAttribute('data-ready', '1');
+        var cards = b.children;
+        if (cards.length !== t.length) { b.innerHTML = t.split('').map(function (ch) { return '<i>' + ch + '</i>'; }).join(''); return; }
+        t.split('').forEach(function (ch, j) {
+          var c = cards[j];
+          if (c.textContent === ch) return;
+          c.textContent = ch;
+          c.classList.remove('is-flip'); void c.offsetWidth; c.classList.add('is-flip');
+        });
       });
     }
     tick();
