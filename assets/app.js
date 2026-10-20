@@ -956,10 +956,9 @@
       return '<div role="button" tabindex="0" class="pc" data-pair="' + i + '" style="--c:' + esc(colorOf(q, p)) + '">' +
         '<span class="pc-photos">' + photo(a) + photo(b) + '</span>' +
         '<span class="pc-body">' +
-          '<span class="pc-route"><b>' + esc(a.code || a.name || '') + '</b>' + plane() + '<b>' + esc(b.code || b.name || '') + '</b>' +
-            (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') + '</span>' +
           '<strong class="pc-title">' + ed(k + '.title', q.title || '') + '</strong>' +
-          '<span class="pc-sub">' + esc([q.work, [a.name, b.name].filter(Boolean).join(' × ')].filter(Boolean).join(' · ')) + '</span>' +
+          '<span class="pc-route"><b>' + esc(a.code || a.name || '') + '</b>' + plane() + '<b>' + esc(b.code || b.name || '') + '</b>' +
+            (q.work ? '<span class="pc-work">' + esc(q.work) + '</span>' : '') + '</span>' +
           (q.tagline || EDIT ? '<span class="pc-tag">' + ed(k + '.tagline', q.tagline) + '</span>' : '') +
         '</span>' +
         (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') +
@@ -1111,8 +1110,8 @@
   /* 창 제목줄에 보이는 파일 이름 (점마다 file: "..." 로 바꿀 수 있어요) */
   function fileName(v) {
     var it = itemOf(v);
-    if (it) return it.file || (it.title || it.name || 'untitled') + '.png';
-    return v.p.file || { profile: 'me.txt', pairs: 'pairs', captcha: 'link' }[v.p.type] || (v.p.label || v.p.id) + '.txt';
+    if (it) return it.file || it.title || it.name || '';
+    return v.p.file || { profile: 'about me', pairs: 'pairs', captcha: 'link' }[v.p.type] || v.p.label || v.p.id;
   }
   function bodyHtml(v) {
     var p = v.p;

@@ -1307,3 +1307,7 @@ details.tg:first-of-type{margin-top:30px}
 /* 해시태그 # : 자주색 말고 연회색 */
 .chip::before,.win .chip::before,.duo-title .chip::before{color:#bbb !important;opacity:1 !important}
 .tab-pane{max-height:190px}
+/* 페어 목록: 제목 → 李公八 ✈ 林浣清 → 한 줄 */
+.pc-title{line-height:1.25}
+.pc-route{margin-top:3px}
+.pc-work{margin-left:8px;color:#aaa}
