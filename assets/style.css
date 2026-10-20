@@ -1541,3 +1541,5 @@ details.tg:first-of-type{margin-top:30px}
 .song:hover span{color:#141414;text-decoration:underline;text-underline-offset:3px}
 .song.is-playing{color:#141414}
 .duo-title .song{align-self:center}
+/* 페어 이름 한자: 두껍게 */
+.duo .who-code{font-family:"Noto Sans TC",var(--sans);font-weight:900;letter-spacing:-.01em}
