@@ -1517,3 +1517,12 @@ details.tg:first-of-type{margin-top:30px}
 .win .page-head{display:none}
 
 
+
+/* 탭: 상자 없이 작은 글자 탭 + 고른 것만 밑줄 */
+.tabs-bar{gap:18px;padding:0 2px;border-bottom:1px solid #e8e8e8}
+.tab,.tab[data-tab="0"],.tab.is-on{min-width:0;height:30px;margin:0 0 -1px;padding:0 1px;border:0;border-bottom:1.5px solid transparent;border-radius:0;
+  background:none;color:#aaa;font:500 12.5px/30px var(--sans);letter-spacing:.02em;box-shadow:none;transform:none}
+.tab.is-on{color:#141414;font-weight:600;border-bottom-color:#141414}
+@media (hover:hover){.tab:hover{background:none;color:#555}}
+.tab[data-tab="0"]{font-size:13px}
+.tabs-box{border:0;border-radius:0;padding:12px 2px 0;background:none}
