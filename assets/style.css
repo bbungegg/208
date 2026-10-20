@@ -1408,3 +1408,7 @@ details.tg:first-of-type{margin-top:30px}
 .ctr-row b::after{background:#4a1219}
 .ctr-row i{color:#77202a}
 .pl-art img.is-pin{object-fit:contain;padding:30px;background:#2a2a2a;image-rendering:pixelated}
+/* 단어장: 사이버코어 쨍한 파랑 */
+.bd-w,.bd-w small{color:#0a3dff !important}
+.bd-w{text-shadow:0 0 1px #fff,0 0 6px rgba(255,255,255,.9),0 0 12px rgba(80,140,255,.55) !important}
+.bd-w:hover b,.bd-w:focus-visible b{color:#00c2ff !important}
