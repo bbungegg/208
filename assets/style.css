@@ -1272,3 +1272,38 @@ details.tg:first-of-type{margin-top:30px}
 .bd-w.is-side{grid-template-columns:auto auto}
 @media (max-height:760px){.bd-w b{font-size:26px}.bd-w small{font-size:11.5px}.bd-chip{font-size:11.5px;padding:1px 4px}}
 @media (max-width:999px){.bd-col{display:none}}
+
+/* 성향표: 파란 톤 빼고 다른 창처럼 흰색 · 회색 (탭 · 카운터 기믹만 유지) */
+.win.is-me{background:#fff;box-shadow:0 0 0 1px #d6d6d6,0 24px 48px -28px rgba(0,0,0,.35)}
+.win.is-me .win-head{background:#fff}
+.tab{border-color:#dcdcdc;background:#f6f6f6;color:#888}
+.tab:hover{color:#222}
+.tab.is-on{background:#fff;color:#141414}
+.tabs-box{border-color:#dcdcdc}
+.tab-pane{border:0;border-radius:0;background:none;padding:2px 4px;scrollbar-color:#cfcfcf transparent}
+.tab-pane::-webkit-scrollbar-thumb{background:#cfcfcf}
+.tab-t{color:#999}
+.tab-tx{color:#333}
+.ctr-t{color:#141414}
+.ctr-row b{background:#f3f3f3;color:#141414}
+.ctr-row small{color:#888}
+.ctr-row i{color:#bbb}
+
+/* 성향표: 파란 톤 빼고 다른 창처럼 흰색 · 회색 (탭 · 카운터 기믹만 유지) */
+.win.is-me{background:#fff;box-shadow:0 0 0 1px #d6d6d6,0 24px 48px -28px rgba(0,0,0,.35)}
+.win.is-me .win-head{background:#fff}
+.tab{border-color:#dcdcdc;background:#f6f6f6;color:#888}
+.tab:hover{color:#222}
+.tab.is-on{background:#fff;color:#141414}
+.tabs-box{border-color:#dcdcdc}
+.tab-pane{border:0;border-radius:0;background:none;padding:2px 4px;scrollbar-color:#cfcfcf transparent}
+.tab-pane::-webkit-scrollbar-thumb{background:#cfcfcf}
+.tab-t{color:#999}
+.tab-tx{color:#333}
+.ctr-t{color:#141414}
+.ctr-row b{background:#f3f3f3;color:#141414}
+.ctr-row small{color:#888}
+.ctr-row i{color:#bbb}
+/* 해시태그 # : 자주색 말고 연회색 */
+.chip::before,.win .chip::before,.duo-title .chip::before{color:#bbb !important;opacity:1 !important}
+.tab-pane{max-height:190px}
