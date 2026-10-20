@@ -1001,64 +1001,81 @@
       (arr(x.tags).length ? '<span class="who-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(k + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
     '</div>';
   }
-  /* 페어 창: [사람 a | 가운데(경로 · 대사 · 서사) | 사람 b] */
-  function personHtml(x, kk, side) {
-    x = x || {};
-    return '<aside class="pv-p is-' + side + '">' +
-      (x.photo ? '<figure class="pv-ph">' + photo(x) + '</figure>' : '') +
-      '<div class="pv-who">' +
-        '<h3 class="pv-n">' + ed(kk + '.code', x.code || '') + '<small>' + ed(kk + '.name', x.name || '') + '</small></h3>' +
-        (arr(x.tags).length ? '<ul class="pv-tags">' + arr(x.tags).map(function (t, j) { return '<li>' + ed(kk + '.tags.' + j, t) + '</li>'; }).join('') + '</ul>' : '') +
-        (x.about || EDIT ? '<p class="pv-about">' + edr(kk + '.about', x.about) + '</p>' : '') +
-      '</div>' +
-    '</aside>';
-  }
   function pairHtml(q, k) {
     q = q || {};
     var a = q.a || {}, b = q.b || {}, h = '';
-    function who(w) { return w === 'a' ? a.name || '' : w === 'b' ? b.name || '' : w || ''; }
-    h += '<header class="pv-h"><h2 id="win-title">' + ed(k + '.title', q.title || '') + '</h2>' +
-      (q.tagline || EDIT ? '<p>' + ed(k + '.tagline', q.tagline) + '</p>' : '') + songBtn(q.song) + '</header>';
-    var mid = '';
-    mid += '<div class="pv-route">' +
-      '<span>' + esc(a.code || a.name || '') + '</span><i class="d"></i>' + plane() + '<i class="d"></i><span>' + esc(b.code || b.name || '') + '</span>' +
-      '</div>' +
-      '<div class="pv-route-s">' + (q.flight || EDIT ? ed(k + '.flight', q.flight) : '') + (q.badge ? ' · ' + ed(k + '.badge', q.badge) : '') + '</div>';
+    function who(k) { return k === 'a' ? a.name || '' : k === 'b' ? b.name || '' : k || ''; }
+    h += '<div class="duo-title"><h2 id="win-title">' + ed(k + '.title', q.title || '') + '</h2>' +
+      (q.work || EDIT ? '<span class="duo-work">' + ed(k + '.work', q.work) + '</span>' : '') +
+      (q.tagline || EDIT ? '<p>' + ed(k + '.tagline', q.tagline) + '</p>' : '') + chips(q.keywords, false, k + '.keywords') + songBtn(q.song) + '</div>';
+    h += '<div class="duo">' + whoHtml(a, k + '.a', 'a') +
+      '<div class="duo-mid">' +
+        (q.flight || EDIT ? '<span class="duo-flight">' + ed(k + '.flight', q.flight) + '</span>' : '') +
+        '<span class="duo-line"><i class="o"></i><i class="d"></i>' + plane() + '<i class="d"></i><i class="o is-fill"></i></span>' +
+        (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') +
+      '</div>' + whoHtml(b, k + '.b', 'b') + '</div>';
+    // 두 사람 소개글: 이름 바로 아래 양쪽 단
+    // 사진을 누르면 아래로 펼쳐진다 (토글)
+    if (a.about || b.about || EDIT) {
+      h += '<div class="dp-wrap' + (EDIT ? ' is-open is-edit' : '') + '" data-on=""><div class="dp-in">' + ['a', 'b'].map(function (w) {
+        var x = w === 'a' ? a : b;
+        return '<div class="dp is-' + w + '"><span class="dp-n">' + esc(x.code || x.name || '') + '<small>' + esc(x.name || '') + '</small></span><p>' + edr(k + '.' + w + '.about', x.about) + '</p></div>';
+      }).join('') + '</div></div>';
+    }
+
+    var views = arr(q.views);
+    if (views.length) {
+      h += sec('TO EACH OTHER', '서로에게', '<div class="views">' + views.map(function (v, i) {
+        v = v || {};
+        var other = v.who === 'a' ? 'b' : v.who === 'b' ? 'a' : '';
+        return '<article class="view"><div class="view-h"><b>' + esc(who(v.who)) + '</b>' + plane() +
+          (other ? '<b>' + esc(who(other)) + '</b>' : '') + '</div>' +
+          (v.call || EDIT ? '<p class="view-call">“' + ed(k + '.views.' + i + '.call', v.call) + '”</p>' : '') +
+          (v.text || EDIT ? '<p class="view-text">' + edr(k + '.views.' + i + '.text', v.text) + '</p>' : '') + '</article>';
+      }).join('') + '</div>');
+    }
+    var meters = arr(q.meters);
+    if (meters.length) {
+      h += sec('METER', '관계 수치', '<div class="meters">' + meters.map(function (m, i) {
+        m = arr(m);
+        var v = clamp(m[1], 0, 100);
+        return '<div class="meter" data-v="' + v + '"><span class="meter-n">' + ed(k + '.meters.' + i + '.0', m[0]) + '</span>' +
+          '<span class="meter-bar"><i style="width:0"></i></span><span class="meter-v">' + Math.round(v) + '</span></div>';
+      }).join('') + '</div>');
+    }
+    var tl = q.showTimeline ? arr(q.timeline) : [];   // 연표는 기본으로 숨김 (showTimeline: true 면 보임)
+    if (tl.length) {
+      h += sec('TIMELINE', '연표', '<ol class="tl">' + tl.map(function (r, i) {
+        r = arr(r);
+        return '<li><time>' + ed(k + '.timeline.' + i + '.0', r[0]) + '</time><p>' + edr(k + '.timeline.' + i + '.1', r[1]) + '</p></li>';
+      }).join('') + '</ol>');
+    }
     var qs = arr(q.quotes);
     if (qs.length) {
-      mid += '<div class="quotes chat' + (EDIT || reduced ? ' is-shown' : '') + '">' + qs.map(function (x, i) {
+      h += '<div class="quotes chat' + (EDIT || reduced ? ' is-shown' : '') + '">' + qs.map(function (x, i) {
         x = arr(x);
         return '<blockquote class="quote is-' + (x[0] === 'b' ? 'b' : 'a') + '"><cite>' + esc(who(x[0])) + '</cite>' +
           '<p><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="say">' + edr(k + '.quotes.' + i + '.1', x[1]) + '</span></p></blockquote>';
       }).join('') + '</div>';
     }
-    var tl = q.showTimeline ? arr(q.timeline) : [];
-    if (tl.length) {
-      mid += sec('TIMELINE', '연표', '<ol class="tl">' + tl.map(function (r, i) {
-        r = arr(r);
-        return '<li><time>' + ed(k + '.timeline.' + i + '.0', r[0]) + '</time><p>' + edr(k + '.timeline.' + i + '.1', r[1]) + '</p></li>';
-      }).join('') + '</ol>');
-    }
     var story = arr(q.story);
     if (story.length) {
-      mid += '<section class="pv-story">' + (q.storyTitle ? '<h3 class="pv-st">' + esc(q.storyTitle) + '</h3>' : '') +
-        '<ol class="pv-tl">' + story.map(function (c, i) {
-          c = c || {};
-          var kk = k + '.story.' + i;
-          return '<li>' +
-            (c.when || EDIT ? '<small>' + ed(kk + '.when', c.when) + '</small>' : '') +
-            '<h4>' + ed(kk + '.title', c.title || '') + '</h4>' +
-            (c.text || EDIT ? '<p>' + edr(kk + '.text', c.text) + '</p>' : '') +
-            arr(c.notes).map(function (n, j) {
-              n = arr(n);
-              return '<div class="pv-note"><b>' + ed(kk + '.notes.' + j + '.0', n[0] || '') + '</b><p>' + edr(kk + '.notes.' + j + '.1', n[1]) + '</p></div>';
-            }).join('') +
-          '</li>';
-        }).join('') + '</ol></section>';
+      h += sec('STORY', '', (q.storyTitle ? '<h4 class="story-t">' + esc(q.storyTitle) + '</h4>' : '') + '<ol class="story">' + story.map(function (c, i) {
+        c = c || {};
+        var kk = k + '.story.' + i;
+        return '<li class="ch"><span class="ch-n">' + ('0' + (i + 1)).slice(-2) + '</span><div class="ch-b">' +
+          (c.when || EDIT ? '<small class="ch-when">' + ed(kk + '.when', c.when) + '</small>' : '') +
+          '<h4 class="ch-t">' + ed(kk + '.title', c.title || '') + '</h4>' +
+          (c.text || EDIT ? '<p class="ch-text">' + edr(kk + '.text', c.text) + '</p>' : '') +
+          arr(c.notes).map(function (n, j) {
+            n = arr(n);
+            return '<div class="ch-note"><b>' + ed(kk + '.notes.' + j + '.0', n[0] || '') + '</b><p>' + edr(kk + '.notes.' + j + '.1', n[1]) + '</p></div>';
+          }).join('') +
+        '</div></li>';
+      }).join('') + '</ol>');
     }
-    if (q.about || EDIT) mid += sec('ABOUT', '소개', '<div class="prose">' + edr(k + '.about', q.about) + '</div>');
-    mid += notesHtml(q.notes, k + '.notes');
-    h += '<div class="pv">' + personHtml(a, k + '.a', 'a') + '<div class="pv-m">' + mid + '</div>' + personHtml(b, k + '.b', 'b') + '</div>';
+    if (q.about || EDIT) h += sec('ABOUT', '소개', '<div class="prose">' + edr(k + '.about', q.about) + '</div>');
+    h += notesHtml(q.notes, k + '.notes');
     return h;
   }
 
@@ -1140,7 +1157,6 @@
     win.style.setProperty('--c', colorOf(itemOf(v), v.p));
     win.classList.toggle('is-mini', v.p.type === 'captcha' && v.kind === 'page');
     win.classList.toggle('is-me', v.p.type === 'profile' && v.kind === 'page');
-    win.classList.toggle('is-pair', v.kind === 'pair');
     winRoute.innerHTML = '<span class="win-file">' + esc(fileName(v)) + '</span>';
     winBody.innerHTML = bodyHtml(v);
     if (v.p.type === 'captcha') capInit();
