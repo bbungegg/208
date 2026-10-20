@@ -1001,6 +1001,22 @@
       (arr(x.tags).length ? '<span class="who-tags">' + arr(x.tags).map(function (t, j) { return '<span>' + ed(k + '.tags.' + j, t) + '</span>'; }).join('') + '</span>' : '') +
     '</div>';
   }
+  /* 두 사람 사이: 작은 탑승권 조각 (오프닝 탑승권 정보로) */
+  function stubHtml(q, k) {
+    var t = (opening && opening.ticket) || {}, f = t.from || {}, to = t.to || {}, strip = {};
+    arr(t.strip).concat(arr(t.info)).forEach(function (r) { r = arr(r); strip[String(r[0]).toLowerCase()] = r[1]; });
+    return '<div class="stub">' +
+      '<div class="stub-r"><b>' + esc(f.code || '') + '</b>' + plane() + '<b>' + esc(to.code || '') + '</b></div>' +
+      '<div class="stub-c"><span>' + esc(f.name || '') + '</span><span>' + esc(to.name || '') + '</span></div>' +
+      '<dl class="stub-d">' +
+        (strip.date ? '<div><dt>Date</dt><dd>' + esc(strip.date) + '</dd></div>' : '') +
+        (strip.flight ? '<div><dt>Flight</dt><dd>' + esc(strip.flight) + '</dd></div>' : '') +
+        (strip.seat ? '<div><dt>Seat</dt><dd>' + esc(strip.seat) + '</dd></div>' : '') +
+      '</dl>' +
+      (q.flight || EDIT ? '<span class="stub-f">' + ed(k + '.flight', q.flight) + '</span>' : '') +
+      (q.badge ? '<span class="stub-b">' + ed(k + '.badge', q.badge) + '</span>' : '') +
+    '</div>';
+  }
   function pairHtml(q, k) {
     q = q || {};
     var a = q.a || {}, b = q.b || {}, h = '';
@@ -1009,11 +1025,7 @@
       (q.work || EDIT ? '<span class="duo-work">' + ed(k + '.work', q.work) + '</span>' : '') +
       (q.tagline || EDIT ? '<p>' + ed(k + '.tagline', q.tagline) + '</p>' : '') + chips(q.keywords, false, k + '.keywords') + songBtn(q.song) + '</div>';
     h += '<div class="duo">' + whoHtml(a, k + '.a', 'a') +
-      '<div class="duo-mid">' +
-        (q.flight || EDIT ? '<span class="duo-flight">' + ed(k + '.flight', q.flight) + '</span>' : '') +
-        '<span class="duo-line"><i class="o"></i><i class="d"></i>' + plane() + '<i class="d"></i><i class="o is-fill"></i></span>' +
-        (q.badge ? '<span class="tk-badge">' + ed(k + '.badge', q.badge) + '</span>' : '') +
-      '</div>' + whoHtml(b, k + '.b', 'b') + '</div>';
+      '<div class="duo-mid">' + stubHtml(q, k) + '</div>' + whoHtml(b, k + '.b', 'b') + '</div>';
     // 두 사람 소개글: 이름 바로 아래 양쪽 단
     // 사진을 누르면 아래로 펼쳐진다 (토글)
     if (a.about || b.about || EDIT) {
