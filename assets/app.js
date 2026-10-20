@@ -1761,11 +1761,14 @@
       else if (a === 'close') { if (view === 'win') closeWin(); else if (view === 'card') closeCard(); }
     });
   });
-  // 시계: 지금 홍콩 시간
+  // 시계: 지금 시간
   (function tick() {
     var c = $('#xp-clock');
     if (!c) return;
-    try { c.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Hong_Kong' }); } catch (x) {}
+    // 보는 사람 컴퓨터 시간 (site.clockZone 에 "Asia/Hong_Kong" 같은 걸 적으면 그 도시 시간)
+    var o = { hour: 'numeric', minute: '2-digit' };
+    if (site.clockZone) o.timeZone = site.clockZone;
+    try { c.textContent = new Date().toLocaleTimeString('en-US', o); } catch (x) { c.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); }
     setTimeout(tick, 30000);
   })();
   xpSync();
