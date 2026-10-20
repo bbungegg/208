@@ -823,7 +823,8 @@
     return '<div class="ctr ctr-plain" data-from="' + esc(c.from) + '"><p class="ctr-t">' + esc(c.label || '') + '</p>' +
       '<div class="ctr-row">' + ['Days', 'Hrs', 'Mins', 'Secs'].map(function (u, i) {
         return (i ? '<i>:</i>' : '') + '<span><b data-u="' + i + '">0</b><small>' + u + '</small></span>';
-      }).join('') + '</div></div>';
+      }).join('') + '</div></div>' +
+      '<p class="me-foot">best viewed in 800 × 600 · Netscape 4.0 · © 1997 208 with me</p>';
   }
   function counterTick() {
     clearInterval(counterTimer);
