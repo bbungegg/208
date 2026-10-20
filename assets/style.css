@@ -1516,48 +1516,4 @@ details.tg:first-of-type{margin-top:30px}
 .win .page-head{margin-top:0}
 .win .page-head{display:none}
 
-/* ==========================================================================
-   about me = 캡차(SOLVE media) 위젯 느낌: 회색 패널 · 라벨 · 흰 입력칸 · 파란 테두리 버튼
-   ========================================================================== */
-.win.is-me{background:none !important;box-shadow:none !important;overflow:visible;border-radius:0;width:min(470px,calc(100% - 32px))}
-.win.is-me .win-head{height:auto;padding:0 0 6px;justify-content:flex-end;background:none !important;border:0}
-.win.is-me .win-route{display:none}
-.win.is-me .win-head .x{width:26px;height:26px;border-radius:3px;background:#fff;border:1px solid #b9b9b9;box-shadow:0 1px 3px rgba(0,0,0,.15);color:#333}
-.win.is-me .win-body{padding:6px 8px 10px;border:1px solid #b9b9b9;border-radius:4px;background:linear-gradient(#fbfbfb,#ececec);
-  box-shadow:0 10px 30px -12px rgba(0,0,0,.35);font-family:Arial,Helvetica,sans-serif;color:#111}
-.win.is-me .win-body::before{content:"About me:";display:block;margin:0 0 4px 3px;font:13px Arial,Helvetica,sans-serif;color:#111}
-/* 위: 사진 + 흰 칸 */
-.win.is-me .hero{display:flex;gap:8px;align-items:stretch;padding:0;background:none}
-.win.is-me .hero .photo{width:96px;height:auto;aspect-ratio:1;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-.win.is-me .hero-txt{padding:6px 8px;border:1px solid #7b9ebd;border-radius:2px;background:#fff;box-shadow:inset 0 1px 2px rgba(0,0,0,.12)}
-.win.is-me .hero-code{font:11px Arial,sans-serif;letter-spacing:0;color:#888}
-.win.is-me .hero-name{margin-top:2px;font:700 19px Arial,Helvetica,sans-serif;letter-spacing:-.01em}
-.win.is-me .hero-intro{margin-top:4px;font:13px/1.45 Arial,sans-serif;color:#333}
-.win.is-me .hero .chips{margin-top:6px;gap:2px 10px}
-.win.is-me .chip{font:12.5px Arial,sans-serif;color:#555}
-/* 탭 = 작은 파란 테두리 버튼 */
-.win.is-me .tabs{margin-top:10px}
-.win.is-me .tabs-bar{gap:3px;padding:0;margin-bottom:4px}
-.win.is-me .tab,.win.is-me .tab[data-tab="0"]{min-width:0;height:24px;padding:0 12px;border:1px solid #9cb3c9;border-radius:3px;margin:0;
-  background:linear-gradient(#fff,#dfe8f1);color:#1f78c8;font:700 12.5px/22px Arial,Helvetica,sans-serif;letter-spacing:0}
-.win.is-me .tab.is-on{height:24px;margin:0;background:#d3e1ee;color:#0f4f8a;box-shadow:inset 0 1px 2px rgba(0,0,0,.15)}
-@media (hover:hover){.win.is-me .tab:hover{background:linear-gradient(#fff,#cfdeec)}}
-.win.is-me .tabs-box{padding:6px 8px;border:1px solid #7b9ebd;border-radius:2px;background:#fff;box-shadow:inset 0 1px 2px rgba(0,0,0,.12)}
-.win.is-me .ln li{padding:3px 0 3px 12px;font:13.5px/1.55 Arial,Helvetica,sans-serif;color:#111}
-.win.is-me .ln li::before{top:11px;width:3px;height:3px}
-.win.is-me .ln-sub{font-size:12.5px}
-/* 카운터 = 라벨 + 흰 입력칸 */
-.win.is-me .ctr-plain{margin-top:10px;text-align:left}
-.win.is-me .ctr-plain .ctr-t{margin:0 0 4px 3px;font:13px Arial,Helvetica,sans-serif;letter-spacing:0;text-transform:none;color:#111}
-.win.is-me .ctr-plain .ctr-row{justify-content:flex-start;gap:4px}
-.win.is-me .ctr-plain .ctr-row b{min-width:0;height:28px;padding:0 8px;border:1px solid #7b9ebd;border-radius:2px;background:#fff !important;box-shadow:inset 0 1px 2px rgba(0,0,0,.12) !important;
-  font:700 16px/26px Arial,Helvetica,sans-serif;color:#111}
-.win.is-me .ctr-plain .ctr-row b::after{content:none !important}
-.win.is-me .ctr-plain .ctr-row > i{line-height:28px;font-size:14px;color:#888}
-.win.is-me .ctr-plain .ctr-row small{font:11px Arial,sans-serif;letter-spacing:0;text-transform:none;color:#555}
-@media (max-width:720px){.win.is-me{top:14px;bottom:auto;max-height:calc(100% - 28px)}}
 
-/* about me 카운터: 가운데 */
-.win.is-me .ctr-plain{text-align:center}
-.win.is-me .ctr-plain .ctr-t{margin-left:0}
-.win.is-me .ctr-plain .ctr-row{justify-content:center}
