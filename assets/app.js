@@ -1408,7 +1408,7 @@
       capType(cap);
       return true;
     }
-    if (act === 'audio') { if (playing || intent) pause(); else play(); return true; }
+    if (act === 'audio') { if (isOn()) pause(); else play(); return true; }
     if (act === 'info') { var h = $('.cap-help', cap); h.hidden = !h.hidden; return true; }
     if (act === 'go') { cap.classList.add('is-ok'); return false; }   // 새 탭은 그대로 열리게
     return true;
@@ -1459,7 +1459,7 @@
   var player = $('#player');
   var playBtn = $('#play');
   var pTitle = $('#player-title');
-  var idx = 0, intent = false, playing = false, yt = null, ready = false, ytStarted = false;
+  var idx = 0, intent = false, playing = false, yt = null, ready = false, ytStarted = false, userPaused = false;
   player.hidden = !songs.length;
 
   function markSongs() {
@@ -1470,39 +1470,93 @@
       b.setAttribute('aria-label', (on ? '일시정지: ' : '재생: ') + (b.getAttribute('data-title') || '테마곡'));
     });
   }
-  /* ♫ 버튼: 플레이리스트 목록 */
-  var pl = null;
+  /* ♫ 버튼: 옛날 플레이어 창 (앨범 그림 · CD · 버튼 · 진행바 · 곡 목록) */
+  var pl = null, plTimer = null, vol = 40;
+  function mmss(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+  function splitTitle(t) { var m = String(t || '').split(' - '); return m.length > 1 ? { artist: m[0], title: m.slice(1).join(' - ') } : { artist: '', title: m[0] }; }
   function plToggle(btn) {
-    if (pl && !pl.hidden) { pl.hidden = true; return; }
+    if (pl && !pl.hidden) { plClose(); return; }
     if (!pl) {
       pl = document.createElement('div');
       pl.className = 'pl';
+      pl.innerHTML =
+        '<div class="pl-h"><span>' + esc(D.playlistTitle || 'Song') + '</span><button type="button" data-pa="x" aria-label="닫기">×</button></div>' +
+        '<div class="pl-b">' +
+          '<div class="pl-top">' +
+            '<div class="pl-art"><img alt="" data-pl-img></div>' +
+            '<div class="pl-side">' +
+              '<div class="pl-dev"><i class="pl-cd" aria-hidden="true"></i><i class="pl-deck" aria-hidden="true"><b></b></i></div>' +
+              '<div class="pl-vol"><button type="button" class="pb" data-pa="up" aria-label="소리 크게">+</button><button type="button" class="pb" data-pa="down" aria-label="소리 작게">−</button><span class="pl-vbar"><i data-pl-vol></i></span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pl-ctl">' +
+            '<button type="button" class="pb pl-pp" data-pa="pp" aria-label="재생/일시정지"><svg viewBox="0 0 16 16"><path class="i-p" d="M5 3.5v9l7-4.5z"/><path class="i-s" d="M4.5 3.5h2.5v9H4.5zM9 3.5h2.5v9H9z"/></svg></button>' +
+            '<button type="button" class="pb" data-pa="prev" aria-label="이전 곡"><svg viewBox="0 0 16 16"><path d="M3.5 3.5h1.8v9H3.5zM12.5 3.5v9L5.6 8z"/></svg></button>' +
+            '<button type="button" class="pb" data-pa="next" aria-label="다음 곡"><svg viewBox="0 0 16 16"><path d="M10.7 3.5h1.8v9h-1.8zM3.5 3.5v9L10.4 8z"/></svg></button>' +
+          '</div>' +
+          '<label class="pl-f"><span>Artist:</span><b data-pl-artist></b><em>▾</em></label>' +
+          '<label class="pl-f"><span>Title:</span><b data-pl-title></b><em>▾</em></label>' +
+          '<div class="pl-pr"><span data-pl-t>0:00</span><span class="pl-bar"><i data-pl-fill></i><b data-pl-knob></b></span><span data-pl-d>0:00</span></div>' +
+          '<ol class="pl-list" data-pl-list></ol>' +
+        '</div>';
       document.body.appendChild(pl);
+      $('[data-pl-img]', pl).addEventListener('error', function () { if (site.pin && this.getAttribute('src') !== site.pin) { this.src = site.pin; this.classList.add('is-pin'); } });
+      $('[data-pl-img]', pl).addEventListener('load', function () { this.classList.toggle('is-pin', this.getAttribute('src') === site.pin); });
       pl.addEventListener('click', function (ev) {
         var it = ev.target.closest('[data-pl]');
-        if (it) { var i = +it.getAttribute('data-pl'); if (i === idx && (playing || intent)) pause(); else { player.hidden = false; cue(i); } plPaint(); return; }
-        if (ev.target.closest('[data-pl-x]')) pl.hidden = true;
+        if (it) { var i = +it.getAttribute('data-pl'); if (i === idx && isOn()) pause(); else { player.hidden = false; cue(i); } plPaint(); return; }
+        var b = ev.target.closest('[data-pa]');
+        if (!b) return;
+        var a = b.getAttribute('data-pa');
+        if (a === 'x') plClose();
+        else if (a === 'pp') { if (isOn()) pause(); else play(); }
+        else if (a === 'next') cue(idx + 1);
+        else if (a === 'prev') cue(ready && yt.getCurrentTime && yt.getCurrentTime() > 4 ? idx : idx - 1);
+        else if (a === 'up' || a === 'down') { vol = clamp(vol + (a === 'up' ? 10 : -10), 0, 100); try { if (ready) yt.setVolume(vol); } catch (x) {} }
+        plPaint();
+      });
+      $('.pl-bar', pl).addEventListener('click', function (ev) {
+        if (!ready) return;
+        var r = this.getBoundingClientRect(), d = 0;
+        try { d = yt.getDuration(); yt.seekTo(d * clamp((ev.clientX - r.left) / r.width, 0, 1), true); } catch (x) {}
       });
       document.addEventListener('pointerdown', function (ev) {
-        if (pl && !pl.hidden && !pl.contains(ev.target) && !ev.target.closest('[data-xp="music"]')) pl.hidden = true;
+        if (pl && !pl.hidden && !pl.contains(ev.target) && !ev.target.closest('[data-xp="music"]')) plClose();
       });
     }
     var r = btn.getBoundingClientRect();
-    pl.style.left = Math.max(8, Math.min(r.left, innerWidth - 300)) + 'px';
+    pl.style.left = Math.max(8, Math.min(r.left - 20, innerWidth - 330)) + 'px';
     pl.style.top = (r.bottom + 4) + 'px';
     pl.hidden = false;
     plPaint();
+    clearInterval(plTimer);
+    plTimer = setInterval(plTime, 500);
+  }
+  function plClose() { if (pl) pl.hidden = true; clearInterval(plTimer); }
+  function plTime() {
+    if (!pl || pl.hidden) return;
+    var t = 0, d = 0;
+    try { if (ready) { t = yt.getCurrentTime() || 0; d = yt.getDuration() || 0; } } catch (x) {}
+    $('[data-pl-t]', pl).textContent = mmss(t);
+    $('[data-pl-d]', pl).textContent = mmss(d);
+    var f = d ? clamp(t / d * 100, 0, 100) : 0;
+    $('[data-pl-fill]', pl).style.width = f + '%';
+    $('[data-pl-knob]', pl).style.left = f + '%';
   }
   function plPaint() {
     if (!pl || pl.hidden) return;
-    var list = songs.length ? songs : [];
-    pl.innerHTML = '<div class="pl-h"><span>' + esc(D.playlistTitle || 'Playlist') + '</span><button type="button" data-pl-x aria-label="닫기">×</button></div>' +
-      (list.length ? '<ol>' + list.map(function (s, i) {
-        var on = i === idx && (playing || intent);
-        var t = String(s.title || ''), m = t.split(' - ');
-        return '<li><button type="button" data-pl="' + i + '" class="' + (i === idx ? 'is-cur' : '') + (on ? ' is-on' : '') + '">' +
-          '<i>' + (on ? '❚❚' : i + 1) + '</i><span><b>' + esc(m.length > 1 ? m.slice(1).join(' - ') : t) + '</b>' + (m.length > 1 ? '<small>' + esc(m[0]) + '</small>' : '') + '</span></button></li>';
-      }).join('') + '</ol>' : '<p class="pl-e">곡이 없어요</p>');
+    var cur = songs[idx] || {}, m = splitTitle(cur.title), on = isOn();
+    pl.classList.toggle('is-on', on);
+    var img = $('[data-pl-img]', pl), src = cur.id ? 'https://i.ytimg.com/vi/' + encodeURIComponent(cur.id) + '/hqdefault.jpg' : '';
+    if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+    $('[data-pl-artist]', pl).textContent = m.artist || '—';
+    $('[data-pl-title]', pl).textContent = m.title || '—';
+    $('[data-pl-vol]', pl).style.height = vol + '%';
+    $('[data-pl-list]', pl).innerHTML = songs.map(function (s, i) {
+      var t = splitTitle(s.title);
+      return '<li><button type="button" data-pl="' + i + '" class="' + (i === idx ? 'is-cur' : '') + '"><i>' + (i === idx && on ? '♪' : ('0' + (i + 1)).slice(-2)) + '</i><b>' + esc(t.title) + '</b><small>' + esc(t.artist) + '</small></button></li>';
+    }).join('');
+    plTime();
   }
   function paint() {
     plPaint();
@@ -1519,6 +1573,7 @@
   function cue(i) {
     if (!songs.length) return;
     intent = true;
+    userPaused = false;
     idx = (i + songs.length) % songs.length;
     if (ready) yt.loadVideoById(songs[idx].id); else startYT();
     paint();
@@ -1526,6 +1581,7 @@
   function play() {
     if (!songs.length) return;
     intent = true;
+    userPaused = false;
     if (!ready) { startYT(); paint(); return; }
     var st = yt.getPlayerState();
     if (st === 2 || st === 5 || st === -1) yt.playVideo(); else yt.loadVideoById(songs[idx].id);
@@ -1534,8 +1590,15 @@
   function pause() {
     intent = false;
     playing = false;
-    if (ready) yt.pauseVideo();
+    userPaused = true;            // 직접 멈췄으면 다시 누르기 전까진 절대 저절로 안 튼다
+    try { if (ready) yt.pauseVideo(); } catch (x) {}
     paint();
+  }
+  /* 지금 소리가 나고 있는지 (화면 표시가 어긋나도 실제 플레이어 기준으로) */
+  function isOn() {
+    var st = -1;
+    try { if (ready) st = yt.getPlayerState(); } catch (x) {}
+    return playing || intent || st === 1 || st === 3;
   }
   /* 창의 테마곡 버튼: 지금 곡이면 재생/정지, 아니면 그 곡으로 */
   function toggleTrack(t) {
@@ -1548,7 +1611,7 @@
     cue(i);
   }
 
-  playBtn.addEventListener('click', function () { if (playing || intent) pause(); else play(); });
+  playBtn.addEventListener('click', function () { if (isOn()) pause(); else play(); });
   $('#next').addEventListener('click', function () { cue(idx + 1); });
   $('#prev').addEventListener('click', function () {
     cue(ready && yt.getCurrentTime && yt.getCurrentTime() > 4 ? idx : idx - 1);
@@ -1580,7 +1643,7 @@
           if (intent && songs.length) { try { yt.loadVideoById(songs[idx].id); } catch (x) {} }
         },
         onStateChange: function (ev) {
-          if (ev.data === 1) { playing = true; if (!intent) yt.pauseVideo(); }
+          if (ev.data === 1) { playing = true; if (!intent || userPaused) { playing = false; yt.pauseVideo(); } }
           else if (ev.data === 0) { playing = false; if (intent) { cue(idx + 1); return; } }
           else if (ev.data === 2) { playing = false; }
           paint();
@@ -1600,10 +1663,12 @@
 
   /* 들어오자마자 음악: 브라우저가 소리 자동재생을 막아서, 처음 누르는 순간(탑승권 뜯기 등) 바로 튼다 */
   if (songs.length && site.autoplay !== false && !EDIT) {
-    var kick = function () {
+    var kick = function (ev) {
+      // 음악 버튼을 직접 누른 거면 그 버튼이 알아서 하게 둔다
+      if (ev && ev.target && ev.target.closest && ev.target.closest('#player,[data-pl],[data-song],[data-cap="audio"],[data-xp="music"],.pl')) return;
       document.removeEventListener('pointerdown', kick, true);
       document.removeEventListener('keydown', kick, true);
-      if (!playing && !intent) play();
+      if (!playing && !intent && !userPaused) play();
     };
     document.addEventListener('pointerdown', kick, true);
     document.addEventListener('keydown', kick, true);

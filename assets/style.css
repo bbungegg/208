@@ -1355,25 +1355,58 @@ details.tg:first-of-type{margin-top:30px}
 .ln li{border-top:0;padding:6px 0 6px 14px}
 .ln li::before{top:14px}
 .tab{letter-spacing:.02em}
-/* ♫ 플레이리스트 (옛 창 메뉴 느낌) */
-.pl{position:fixed;z-index:200;width:290px;border:1px solid #8a8a96;border-radius:3px;background:#fff;box-shadow:2px 3px 10px rgba(0,0,0,.25);
-  font:12.5px Tahoma,"Segoe UI",var(--sans);color:#111;overflow:hidden}
-.pl-h{display:flex;align-items:center;justify-content:space-between;height:26px;padding:0 4px 0 10px;
-  background:linear-gradient(#fdfdfe,#d4d4dd);border-bottom:1px solid #9a9aa6;font-weight:700}
-.pl-h button{width:20px;height:20px;border-radius:2px;font-size:15px;line-height:1;color:#333}
-.pl-h button:hover{background:#c25542;color:#fff}
-.pl ol{margin:0;padding:4px 0;list-style:none;max-height:300px;overflow:auto}
-.pl li button{display:flex;align-items:center;gap:10px;width:100%;padding:6px 10px;text-align:left}
-.pl li button:hover{background:#6b1717;color:#fff}
-.pl li button:hover small,.pl li button:hover i{color:#f0d0d0}
-.pl li i{flex:none;width:22px;font-style:normal;font-family:var(--cond);color:#999;text-align:right}
-.pl li span{flex:1;min-width:0;display:flex;flex-direction:column}
-.pl li b{font-weight:400;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.pl li small{font-size:11px;color:#888;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.pl li .is-cur b{font-weight:700}
-.pl li .is-on i{color:#6b1717;font-size:9px;letter-spacing:-2px}
-.pl-e{margin:0;padding:12px;color:#888}
+/* ♫ 플레이어 창 (90년대 미디어 플레이어) */
+.pl{--g:#c8c8c8;--hi:#fff;--lo:#7a7a7a;position:fixed;z-index:200;width:320px;background:var(--g);border:1px solid #2b2b2b;box-shadow:inset 1px 1px 0 var(--hi),inset -1px -1px 0 var(--lo),3px 4px 12px rgba(0,0,0,.35);
+  font:13px Tahoma,"Segoe UI",var(--sans);color:#111;user-select:none}
+.pl-h{display:flex;align-items:center;justify-content:space-between;height:28px;padding:0 4px 0 8px;background:#7a1f28;color:#fff;
+  font:700 17px/1 "Courier New",Courier,monospace;letter-spacing:.06em;text-shadow:1px 1px 0 #3d0d12}
+.pl-h button{width:20px;height:20px;background:var(--g);color:#111;font:700 14px/1 Tahoma,sans-serif;box-shadow:inset 1px 1px 0 var(--hi),inset -1px -1px 0 var(--lo),0 0 0 1px #2b2b2b}
+.pl-b{padding:10px}
+.pl-top{display:flex;gap:10px}
+.pl-art{flex:none;width:150px;height:150px;padding:4px;background:#e8e8e8;box-shadow:inset -1px -1px 0 var(--hi),inset 1px 1px 0 var(--lo)}
+.pl-art img{display:block;width:100%;height:100%;object-fit:cover;background:#333}
+.pl-side{flex:1;display:flex;justify-content:space-between;gap:6px}
+.pl-dev{display:flex;flex-direction:column;align-items:center;justify-content:space-around}
+.pl-cd{width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,#f3f3f3 0 4px,#9a9a9a 4.5px 5.5px,transparent 6px),conic-gradient(#e9d58a,#cfe7f2,#f1c9e0,#e9d58a,#d4f0d8,#cfe7f2,#e9d58a);
+  box-shadow:0 0 0 1px #8a8a8a,inset 0 0 0 9px rgba(255,255,255,.35)}
+.pl.is-on .pl-cd{animation:spin 2s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
+.pl-deck{position:relative;width:62px;height:24px;background:linear-gradient(#f1f1f1,#cfcfcf);border:1px solid #6d6d6d;border-radius:3px}
+.pl-deck b{position:absolute;left:12px;right:6px;top:9px;height:4px;background:#333;border-radius:1px}
+.pl-deck::before{content:"";position:absolute;left:4px;top:9px;width:4px;height:4px;border-radius:50%;background:#555}
+.pl.is-on .pl-deck::before{background:#e23a2e;box-shadow:0 0 4px #e23a2e}
+.pl-vol{display:grid;grid-template-columns:auto 8px;grid-template-rows:1fr 1fr;gap:4px 4px;align-content:start}
+.pl-vbar{grid-column:2;grid-row:1/3;position:relative;background:#e8e8e8;box-shadow:inset -1px -1px 0 var(--hi),inset 1px 1px 0 var(--lo)}
+.pl-vbar i{position:absolute;left:1px;right:1px;bottom:1px;background:#7a1f28;max-height:calc(100% - 2px)}
+.pb{display:grid;place-items:center;min-width:30px;height:26px;padding:0 6px;background:var(--g);font:700 16px/1 Tahoma,sans-serif;color:#111;
+  box-shadow:inset 1px 1px 0 var(--hi),inset -1px -1px 0 var(--lo),0 0 0 1px #2b2b2b}
+.pb:active{box-shadow:inset -1px -1px 0 var(--hi),inset 1px 1px 0 var(--lo),0 0 0 1px #2b2b2b}
+.pb svg{width:14px;height:14px;fill:#111}
+.pl-ctl{display:grid;grid-template-columns:1fr auto auto;gap:3px;margin:10px 0}
+.pl-pp .i-s{display:none}
+.pl.is-on .pl-pp .i-p{display:none}
+.pl.is-on .pl-pp .i-s{display:block}
+.pl-f{display:flex;align-items:center;gap:6px;margin-top:5px}
+.pl-f span{flex:none;width:44px;text-align:right;color:#333}
+.pl-f b{flex:1;min-width:0;height:24px;padding:0 6px;line-height:24px;background:#fff;font-weight:400;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:inset 1px 1px 0 var(--lo),inset -1px -1px 0 var(--hi),inset 2px 2px 0 #333}
+.pl-f em{flex:none;display:grid;place-items:center;width:18px;height:24px;margin-left:-6px;font-style:normal;font-size:10px;background:var(--g);box-shadow:inset 1px 1px 0 var(--hi),inset -1px -1px 0 var(--lo),0 0 0 1px #2b2b2b}
+.pl-pr{display:flex;align-items:center;gap:8px;margin:10px 0 4px;font:12px "Courier New",monospace;color:#444}
+.pl-bar{position:relative;flex:1;height:18px;background:#e8e8e8;cursor:pointer;box-shadow:inset 1px 1px 0 var(--lo),inset -1px -1px 0 var(--hi)}
+.pl-bar i{position:absolute;left:2px;top:2px;bottom:2px;background:repeating-linear-gradient(90deg,#8a8a8a 0 2px,#a6a6a6 2px 4px);max-width:calc(100% - 4px)}
+.pl-bar b{position:absolute;top:-1px;width:12px;height:20px;margin-left:-6px;background:var(--g);box-shadow:inset 1px 1px 0 var(--hi),inset -1px -1px 0 var(--lo),0 0 0 1px #2b2b2b}
+.pl-list{margin:8px 0 0;padding:2px;list-style:none;max-height:150px;overflow:auto;background:#fff;box-shadow:inset 1px 1px 0 var(--lo),inset -1px -1px 0 var(--hi)}
+.pl-list button{display:flex;align-items:baseline;gap:8px;width:100%;padding:3px 6px;text-align:left;font-size:12.5px}
+.pl-list i{flex:none;width:16px;font-style:normal;font-family:"Courier New",monospace;color:#888}
+.pl-list b{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-list small{margin-left:auto;flex:none;max-width:40%;font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-list button:hover,.pl-list .is-cur{background:#7a1f28;color:#fff}
+.pl-list button:hover small,.pl-list .is-cur small,.pl-list button:hover i,.pl-list .is-cur i{color:#f3d6d6}
 .tab[data-tab="0"]{font-size:15px}
 /* 창이 펴지는 동안엔 안쪽(제목줄 글자 포함)도 전부 숨김 */
 .win.is-hold,.win.is-hold *{visibility:hidden !important}
 .ghost{border-radius:6px}
+/* 플립시계: 체리색 (너무 쨍하지 않게) */
+.ctr-row b{background:linear-gradient(#8a2630 0 50%,#77202a 50%);color:#fbeee9;box-shadow:0 2px 0 #4a1219,0 6px 12px -6px rgba(74,18,25,.6),inset 0 1px 0 rgba(255,255,255,.1)}
+.ctr-row b::after{background:#4a1219}
+.ctr-row i{color:#77202a}
+.pl-art img.is-pin{object-fit:contain;padding:30px;background:#2a2a2a;image-rendering:pixelated}
