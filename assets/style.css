@@ -1486,3 +1486,20 @@ details.tg:first-of-type{margin-top:30px}
 .tc-i{color:#fff36b;text-shadow:0 0 6px rgba(255,240,100,.8),1px 1px 0 #001a8a}
 .tc-i.is-red{color:#ff4d6d;text-shadow:0 0 6px rgba(255,255,255,.5),1px 1px 0 #001a8a}
 @keyframes tcblink{50%{color:#fff;text-shadow:0 0 8px #fff,1px 1px 0 #001a8a}}
+
+/* ---------- 작은 창(성향표 · 연결) 위치: Safari 에서도 안 잘리게 ---------- */
+.win.is-me,.win.is-mini{top:50%;bottom:auto;height:auto;margin:0 auto;translate:0 -50%;max-height:calc(100% - 32px)}
+.win.is-me .win-body{flex:1 1 auto;min-height:0;overflow-y:auto}
+@media (max-width:720px){
+  /* 성향표: 다른 창처럼 화면 높이 그대로 */
+  .win.is-me{top:6px;bottom:6px;translate:none;max-height:none;width:calc(100% - 12px)}
+  /* 연결(캡차): 위쪽에 붙여서 */
+  .win.is-mini{top:14px;translate:none}
+}
+
+/* 창 닫기 X: 테마에 맞게 작고 각지게, 터치 후 회색 동그라미 안 남게 */
+.x{width:30px;height:30px;border-radius:3px;background:none}
+.x:hover{background:none}
+@media (hover:hover){.x:hover{background:#efefef;color:#141414}}
+.win.is-mini .win-head .x{width:26px;height:26px;border-radius:3px;background:#fff;border:1px solid #b9b9b9;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.win.is-mini .win-head .x svg{width:13px;height:13px}
