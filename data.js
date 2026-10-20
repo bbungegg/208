@@ -62,6 +62,7 @@ window.ERA = {
   },
 
   /* 왼쪽 아래 음악 (유튜브 주소의 v= 뒷부분). 비우면 [] */
+  playlistTitle: "八寶丸子 OST",   // ♫ 버튼 목록 제목
   playlist: [
     { id: "6KnYw4EwYGc", title: "Cocteau Twins - Heaven or Las Vegas" },
     { id: "xMaE6toi4mk", title: "The Clash - Should I Stay or Should I Go" },

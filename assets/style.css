@@ -1351,3 +1351,26 @@ details.tg:first-of-type{margin-top:30px}
 @media (max-width:480px){.ctr-row b{min-width:42px;height:50px;line-height:50px;font-size:26px;padding:0 6px}.ctr-row i{line-height:50px;font-size:18px}}
 .ctr-row b::before{content:none}
 .tab-pane{max-height:250px}
+/* 탭 목록: 구분선 없이 */
+.ln li{border-top:0;padding:6px 0 6px 14px}
+.ln li::before{top:14px}
+.tab{letter-spacing:.02em}
+/* ♫ 플레이리스트 (옛 창 메뉴 느낌) */
+.pl{position:fixed;z-index:200;width:290px;border:1px solid #8a8a96;border-radius:3px;background:#fff;box-shadow:2px 3px 10px rgba(0,0,0,.25);
+  font:12.5px Tahoma,"Segoe UI",var(--sans);color:#111;overflow:hidden}
+.pl-h{display:flex;align-items:center;justify-content:space-between;height:26px;padding:0 4px 0 10px;
+  background:linear-gradient(#fdfdfe,#d4d4dd);border-bottom:1px solid #9a9aa6;font-weight:700}
+.pl-h button{width:20px;height:20px;border-radius:2px;font-size:15px;line-height:1;color:#333}
+.pl-h button:hover{background:#c25542;color:#fff}
+.pl ol{margin:0;padding:4px 0;list-style:none;max-height:300px;overflow:auto}
+.pl li button{display:flex;align-items:center;gap:10px;width:100%;padding:6px 10px;text-align:left}
+.pl li button:hover{background:#6b1717;color:#fff}
+.pl li button:hover small,.pl li button:hover i{color:#f0d0d0}
+.pl li i{flex:none;width:22px;font-style:normal;font-family:var(--cond);color:#999;text-align:right}
+.pl li span{flex:1;min-width:0;display:flex;flex-direction:column}
+.pl li b{font-weight:400;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pl li small{font-size:11px;color:#888;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pl li .is-cur b{font-weight:700}
+.pl li .is-on i{color:#6b1717;font-size:9px;letter-spacing:-2px}
+.pl-e{margin:0;padding:12px;color:#888}
+.tab[data-tab="0"]{font-size:15px}

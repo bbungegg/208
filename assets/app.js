@@ -793,12 +793,12 @@
     return '<div class="tabs">' +
       '<div class="tabs-bar" role="tablist">' + list.map(function (n, i) {
         n = arr(n);
-        return '<button type="button" role="tab" class="tab' + (i ? '' : ' is-on') + '" data-tab="' + i + '" aria-selected="' + (i ? 'false' : 'true') + '">' + esc(n[2] || n[0] || '') + '</button>';
+        return '<button type="button" role="tab" class="tab' + (i ? '' : ' is-on') + '" data-tab="' + i + '" aria-selected="' + (i ? 'false' : 'true') + '">' + esc(n[0] || n[2] || '') + '</button>';
       }).join('') + '</div>' +
       '<div class="tabs-box">' + list.map(function (n, i) {
         n = arr(n);
         return '<div class="tab-pane' + (i ? '' : ' is-on') + '" role="tabpanel" data-pane="' + i + '">' +
-          (n[0] && n[0] !== n[2] ? '<b class="tab-t">' + ed(k + '.' + i + '.0', n[0]) + '</b>' : '') +
+          (EDIT ? '<b class="tab-t">' + ed(k + '.' + i + '.0', n[0]) + '</b>' : '') +
           (EDIT ? '<div class="tab-tx">' + edr(k + '.' + i + '.1', n[1]) + '</div>' : lines(n[1])) + '</div>';
       }).join('') + '</div>' +
     '</div>';
@@ -1470,7 +1470,42 @@
       b.setAttribute('aria-label', (on ? '일시정지: ' : '재생: ') + (b.getAttribute('data-title') || '테마곡'));
     });
   }
+  /* ♫ 버튼: 플레이리스트 목록 */
+  var pl = null;
+  function plToggle(btn) {
+    if (pl && !pl.hidden) { pl.hidden = true; return; }
+    if (!pl) {
+      pl = document.createElement('div');
+      pl.className = 'pl';
+      document.body.appendChild(pl);
+      pl.addEventListener('click', function (ev) {
+        var it = ev.target.closest('[data-pl]');
+        if (it) { var i = +it.getAttribute('data-pl'); if (i === idx && (playing || intent)) pause(); else { player.hidden = false; cue(i); } plPaint(); return; }
+        if (ev.target.closest('[data-pl-x]')) pl.hidden = true;
+      });
+      document.addEventListener('pointerdown', function (ev) {
+        if (pl && !pl.hidden && !pl.contains(ev.target) && !ev.target.closest('[data-xp="music"]')) pl.hidden = true;
+      });
+    }
+    var r = btn.getBoundingClientRect();
+    pl.style.left = Math.max(8, Math.min(r.left, innerWidth - 300)) + 'px';
+    pl.style.top = (r.bottom + 4) + 'px';
+    pl.hidden = false;
+    plPaint();
+  }
+  function plPaint() {
+    if (!pl || pl.hidden) return;
+    var list = songs.length ? songs : [];
+    pl.innerHTML = '<div class="pl-h"><span>' + esc(D.playlistTitle || 'Playlist') + '</span><button type="button" data-pl-x aria-label="닫기">×</button></div>' +
+      (list.length ? '<ol>' + list.map(function (s, i) {
+        var on = i === idx && (playing || intent);
+        var t = String(s.title || ''), m = t.split(' - ');
+        return '<li><button type="button" data-pl="' + i + '" class="' + (i === idx ? 'is-cur' : '') + (on ? ' is-on' : '') + '">' +
+          '<i>' + (on ? '❚❚' : i + 1) + '</i><span><b>' + esc(m.length > 1 ? m.slice(1).join(' - ') : t) + '</b>' + (m.length > 1 ? '<small>' + esc(m[0]) + '</small>' : '') + '</span></button></li>';
+      }).join('') + '</ol>' : '<p class="pl-e">곡이 없어요</p>');
+  }
   function paint() {
+    plPaint();
     markSongs();
     if (!songs.length) return;
     var title = songs[idx].title || '';
@@ -1656,7 +1691,7 @@
       else if (a === 'refresh') location.reload();
       else if (a === 'home') { if (view === 'win') closeWin(); if (view === 'card') closeCard(); setMenu(false); fitAll(true); }
       else if (a === 'fav' || a === 'search') { if (view !== 'ticket') setMenu(!menu.classList.contains('is-open')); }
-      else if (a === 'music') { if (playing || intent) pause(); else play(); }
+      else if (a === 'music') { plToggle(b); }
       else if (a === 'max') { $('#app').classList.toggle('is-max'); setTimeout(function () { map.invalidateSize(); fitTicket(); }, 60); }
       else if (a === 'min') { var x = $('#xp'); x.classList.remove('is-min'); void x.offsetWidth; x.classList.add('is-min'); }
       else if (a === 'close') { if (view === 'win') closeWin(); else if (view === 'card') closeCard(); }
