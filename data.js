@@ -26,6 +26,18 @@ window.ERA = {
     }
   },
   label: { src: "assets/label.svg", stamp: "CHECKED IN", date: "1997.06.30" },
+  /* 창 위 흐르는 광고 줄 (00년대 스팸 사이트 느낌). 비우면 [] */
+  ticker: [
+    "WELCOME TO HEAVEN OR LAS VEGAS",
+    "CONGRATULATIONS!!! YOU ARE THE 208TH VISITOR",
+    "JACKPOT 777 — CLAIM YOUR ONE WAY TICKET TO SYDNEY",
+    "TONIGHT ONLY @ KAI TAK CASINO — BET EVERYTHING ON RED",
+    "FREE CHERRY CANDY WITH EVERY SPIN",
+    "DOUBLE OR NOTHING — 9 YEARS OR 90 YEARS",
+    "LAST CALL 30.06.1997 23:59 · THE HOUSE NEVER SLEEPS",
+    "HEAVEN OR LAS VEGAS? CLICK HERE TO FIND OUT"
+  ],
+
   backdrop: {
     photo: "assets/img/bg.jpg",
     words: [

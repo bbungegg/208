@@ -1673,6 +1673,22 @@
     document.addEventListener('keydown', kick, true);
   }
 
+  /* 창 위 흐르는 광고 줄 */
+  (function ticker() {
+    var list = arr(D.ticker).filter(Boolean);
+    if (!list.length) return;
+    var pin = site.pin ? '<img src="' + esc(site.pin) + '" alt="">' : '<i>♥</i>';
+    var one = list.map(function (t, i) {
+      return '<span class="tc-i' + (i % 3 === 1 ? ' is-blink' : '') + (i % 2 ? ' is-red' : '') + '">' + esc(t) + '</span>' + pin;
+    }).join('');
+    var el = document.createElement('div');
+    el.className = 'tc';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<div class="tc-in"><div class="tc-run">' + pin + one + '</div><div class="tc-run">' + pin + one + '</div></div>';
+    document.body.insertBefore(el, document.body.firstChild);
+    document.documentElement.classList.add('has-tc');
+  })();
+
   /* ------------------------------------------------------------------
    * 창 바깥 배경 — 사진 위에 한자 · 병음 · 단어가 둥둥 (넓은 화면에서만)
    * ------------------------------------------------------------------ */
