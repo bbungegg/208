@@ -89,7 +89,6 @@ window.ERA = {
       id: "pairs",
       type: "pairs",
       label: "♥",
-      card: "label",
       lat: 22.3236,
       lng: 114.1628,
       color: "#c9d3dc",
