@@ -1222,3 +1222,38 @@ details.tg:first-of-type{margin-top:30px}
 .duo .who-tags span::before{content:"#";margin-right:1px;color:#bbb}
 .duo .who-tags span::after{content:none !important}
 @media (max-width:640px){.duo .who-code{font-size:22px}.duo .who-tags{font-size:12px;gap:0 8px}}
+
+/* 페어 소개 말풍선: 이름 없이 글만 */
+.dp-n{display:none}
+
+/* ---------- 성향표: 작은 창 + 탭 (연하늘) ---------- */
+.win.is-me{top:0;bottom:0;height:fit-content;max-height:calc(100% - 32px);margin:auto;width:min(500px,calc(100% - 32px));
+  background:linear-gradient(#f2f7fc,#fdfeff);box-shadow:0 0 0 1px #c9d8e6,inset 0 0 0 4px #fff,0 24px 48px -26px rgba(30,60,90,.45)}
+.win.is-me .win-head{background:linear-gradient(#f4f8fc,#e6eff8)}
+.win.is-me .win-body{padding:22px 22px 18px}
+.win.is-me .hero{align-items:center;gap:16px}
+.win.is-me .hero .photo{width:72px;border-radius:50%}
+.win.is-me .hero-name{font-size:22px}
+.win.is-me .hero .chips{margin-top:8px}
+.tabs{margin-top:22px}
+.tabs-bar{display:flex;gap:6px;padding:0 12px;position:relative;z-index:1}
+.tab{height:32px;padding:0 16px;border:1px solid #c9d8e6;border-bottom:0;border-radius:12px 12px 0 0;background:linear-gradient(#fff,#eef4fa);
+  font-family:var(--sans);font-size:14px;color:#4b5b6b;letter-spacing:.01em;transform:translateY(2px);transition:transform .15s}
+.tab:hover{color:#1f3346}
+.tab.is-on{background:#fff;color:#1f3346;font-weight:600;transform:none;box-shadow:0 1px 0 #fff}
+.tabs-box{margin-top:-1px;padding:16px;border:1px solid #c9d8e6;border-radius:14px;background:#fff}
+.tab-pane{display:none;max-height:240px;overflow:auto;padding:12px 14px;border:1px solid #d6e3ef;border-radius:12px;background:#f3f8fd;
+  scrollbar-width:thin;scrollbar-color:#a9bccd transparent;animation:dpin .25s ease}
+.tab-pane.is-on{display:block}
+.tab-pane::-webkit-scrollbar{width:6px}
+.tab-pane::-webkit-scrollbar-thumb{background:#a9bccd;border-radius:6px}
+.tab-t{display:block;margin-bottom:4px;font-size:13.5px;color:#8eaccb}
+.tab-tx{font-size:14px;line-height:1.75;color:#2f3b46;word-break:keep-all;overflow-wrap:anywhere}
+.ctr{margin-top:14px;text-align:center}
+.ctr-t{margin:0 0 12px;font-size:14px;font-weight:700;color:#3d4a56}
+.ctr-row{display:flex;align-items:flex-start;justify-content:center;gap:10px}
+.ctr-row span{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:56px}
+.ctr-row b{display:grid;place-items:center;min-width:56px;height:56px;padding:0 6px;border-radius:99px;background:#eef5fb;font-size:22px;font-weight:700;color:#a3bcd3;font-variant-numeric:tabular-nums}
+.ctr-row small{font-size:13px;color:#4b5864}
+.ctr-row i{font-style:normal;line-height:56px;color:#9aa9b6}
+@media (max-width:480px){.ctr-row{gap:4px}.ctr-row span{min-width:48px}.ctr-row b{min-width:48px;height:48px;font-size:18px}.ctr-row i{line-height:48px}.tab{padding:0 12px;font-size:13px}}

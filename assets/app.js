@@ -786,6 +786,47 @@
     return '<span class="heat" role="img" aria-label="버닝 ' + n + ' / 5">' + h + '</span>';
   }
   /* toggle: 제목을 누르면 펼쳐지는 칸 (성향표) */
+  /* 성향표: 탭 (about / rules ... 처럼). 탭을 누르면 아래 상자 내용이 바뀐다 */
+  function tabsHtml(list, k) {
+    list = arr(list);
+    if (!list.length) return '';
+    return '<div class="tabs">' +
+      '<div class="tabs-bar" role="tablist">' + list.map(function (n, i) {
+        n = arr(n);
+        return '<button type="button" role="tab" class="tab' + (i ? '' : ' is-on') + '" data-tab="' + i + '" aria-selected="' + (i ? 'false' : 'true') + '">' + esc(n[2] || n[0] || '') + '</button>';
+      }).join('') + '</div>' +
+      '<div class="tabs-box">' + list.map(function (n, i) {
+        n = arr(n);
+        return '<div class="tab-pane' + (i ? '' : ' is-on') + '" role="tabpanel" data-pane="' + i + '">' +
+          (n[0] && n[0] !== n[2] ? '<b class="tab-t">' + ed(k + '.' + i + '.0', n[0]) + '</b>' : '') +
+          '<div class="tab-tx">' + edr(k + '.' + i + '.1', n[1]) + '</div></div>';
+      }).join('') + '</div>' +
+    '</div>';
+  }
+  /* 카운터: 그날부터 지금까지 (Days : Hrs : Mins : Secs) */
+  var counterTimer = null;
+  function counterHtml(c) {
+    if (!c || !c.from) return '';
+    return '<div class="ctr" data-from="' + esc(c.from) + '"><p class="ctr-t">' + esc(c.label || '') + '</p>' +
+      '<div class="ctr-row">' + ['Days', 'Hrs', 'Mins', 'Secs'].map(function (u, i) {
+        return (i ? '<i>:</i>' : '') + '<span><b data-u="' + i + '">0</b><small>' + u + '</small></span>';
+      }).join('') + '</div></div>';
+  }
+  function counterTick() {
+    clearInterval(counterTimer);
+    var el = $('.ctr', winBody);
+    if (!el) return;
+    var from = Date.parse(el.getAttribute('data-from'));
+    if (!isFinite(from)) return;
+    function tick() {
+      if (!el.isConnected) { clearInterval(counterTimer); return; }
+      var t = Math.max(0, Math.floor((Date.now() - from) / 1000));
+      var v = [Math.floor(t / 86400), Math.floor(t / 3600) % 24, Math.floor(t / 60) % 60, t % 60];
+      $$('[data-u]', el).forEach(function (b, i) { b.textContent = i ? ('0' + v[i]).slice(-2) : v[i]; });
+    }
+    tick();
+    counterTimer = setInterval(tick, 1000);
+  }
   function notesHtml(list, k, toggle) {
     return arr(list).map(function (n, i) {
       n = arr(n);
@@ -901,7 +942,7 @@
       '</div>';
     }
     if (d.about || EDIT) h += sec('ABOUT', '소개', '<div class="prose">' + edr(k + '.about', d.about) + '</div>');
-    h += notesHtml(d.notes, k + '.notes', d.type === 'profile');
+    h += d.type === 'profile' ? tabsHtml(d.notes, k + '.notes') + counterHtml(d.counter) : notesHtml(d.notes, k + '.notes');
     return h;
   }
 
@@ -1092,9 +1133,11 @@
     var wasHidden = win.hidden;
     win.style.setProperty('--c', colorOf(itemOf(v), v.p));
     win.classList.toggle('is-mini', v.p.type === 'captcha' && v.kind === 'page');
+    win.classList.toggle('is-me', v.p.type === 'profile' && v.kind === 'page');
     winRoute.innerHTML = '<span class="win-file">' + esc(fileName(v)) + '</span>';
     winBody.innerHTML = bodyHtml(v);
     if (v.p.type === 'captcha') capInit();
+    counterTick();
     editable(winBody);
     winBody.scrollTop = 0;
     winBack.hidden = !stack.length;
@@ -1185,6 +1228,13 @@
   });
   winBody.addEventListener('click', function (ev) {
     if (capClick(ev)) return;
+    var tb = ev.target.closest('[data-tab]');
+    if (tb) {
+      var n = tb.getAttribute('data-tab');
+      $$('[data-tab]', winBody).forEach(function (x) { var on = x === tb; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on); });
+      $$('[data-pane]', winBody).forEach(function (x) { x.classList.toggle('is-on', x.getAttribute('data-pane') === n); });
+      return;
+    }
     var wp = ev.target.closest('[data-who]');
     if (wp) {
       var wrap = $('.dp-wrap', winBody), w = wp.getAttribute('data-who'), on = wrap.getAttribute('data-on') === w;
