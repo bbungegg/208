@@ -1557,38 +1557,7 @@ details.tg:first-of-type{margin-top:30px}
 .win.is-me .ctr-plain .ctr-row small{font:11px Arial,sans-serif;letter-spacing:0;text-transform:none;color:#555}
 @media (max-width:720px){.win.is-me{top:14px;bottom:auto;max-height:calc(100% - 28px)}}
 
-/* ---------- about me: 레트로 웹 UI (베벨 · 클래식 버튼 · 표 머리줄) ---------- */
-.win.is-me .win-body{background:#ecebe6;border:1px solid #6f6f7d;border-radius:0;padding:0 0 8px;
-  box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #a9a9b3,0 10px 30px -12px rgba(0,0,0,.35);font-family:Verdana,Tahoma,Arial,sans-serif}
-.win.is-me .win-body::before{content:"■ About me";margin:0 0 8px;padding:3px 8px;background:linear-gradient(90deg,#0a246a,#3a6ea5);color:#fff;font:700 11px/16px Verdana,Tahoma,sans-serif;letter-spacing:.04em}
-.win.is-me .win-body > *{margin-left:8px;margin-right:8px}
-/* 베벨(안으로 들어간 칸) */
-.win.is-me .hero .photo,.win.is-me .hero-txt,.win.is-me .tabs-box,.win.is-me .ctr-plain .ctr-row b{
-  border:2px solid;border-color:#808080 #fff #fff #808080;border-radius:0;box-shadow:inset 1px 1px 0 #404040 !important}
-.win.is-me .hero .photo{width:92px}
-.win.is-me .hero-txt{padding:6px 8px;background:#fff}
-.win.is-me .hero-code{font:10px Verdana,sans-serif}
-.win.is-me .hero-name{font:700 17px Verdana,Tahoma,sans-serif}
-.win.is-me .hero-name a{color:#0000ee;text-decoration:underline}
-.win.is-me .hero-name a:visited{color:#551a8b}
-.win.is-me .hero-intro{font:12px/1.5 Verdana,sans-serif}
-.win.is-me .chip{font:11.5px Verdana,sans-serif;color:#444}
-.win.is-me .chip::before{color:#0a246a !important}
-/* 탭 = 클래식 회색 버튼 (눌린 건 쏙 들어감) */
-.win.is-me .tab,.win.is-me .tab[data-tab="0"]{height:24px;padding:0 12px;border:2px solid;border-color:#fff #808080 #808080 #fff;border-radius:0;
-  background:#d4d0c8;color:#111;font:11.5px/20px Verdana,Tahoma,sans-serif;box-shadow:1px 1px 0 #404040}
-.win.is-me .tab.is-on{border-color:#808080 #fff #fff #808080;background:#e4e1da;color:#111;font-weight:700;box-shadow:inset 1px 1px 0 #404040}
-@media (hover:hover){.win.is-me .tab:hover{background:#dcd9d1}}
-.win.is-me .tab[data-tab="0"]{color:#c0102a}
-.win.is-me .tabs-box{background:#fff;padding:6px 8px}
-.win.is-me .ln li{font:12.5px/1.6 Verdana,Tahoma,sans-serif;padding-left:14px}
-.win.is-me .ln li::before{content:"»";background:none;width:auto;height:auto;top:3px;left:0;font:700 12px Verdana,sans-serif;color:#0a246a}
-.win.is-me .ln-sub{font:11.5px/1.5 Verdana,sans-serif;color:#666}
-/* 카운터 = 옛날 방문자 카운터 */
-.win.is-me .ctr-plain .ctr-t{font:700 11px Verdana,sans-serif;color:#111}
-.win.is-me .ctr-plain .ctr-row b{height:26px;padding:0 6px;background:#fff !important;font:700 15px/22px "Courier New",Courier,monospace;letter-spacing:.06em}
-.win.is-me .ctr-plain .ctr-row > i{line-height:26px}
-.win.is-me .ctr-plain .ctr-row small{font:10px Verdana,sans-serif;color:#555}
-.me-foot{margin:10px 8px 0;padding-top:6px;border-top:1px solid #c4c2b8;font:10px Verdana,sans-serif;color:#777;text-align:center}
-.win:not(.is-me) .me-foot{display:none}
-@media (max-width:720px){.win.is-me .hero{flex-direction:row}.win.is-me .hero .photo{width:76px}}
+/* about me 카운터: 가운데 */
+.win.is-me .ctr-plain{text-align:center}
+.win.is-me .ctr-plain .ctr-t{margin-left:0}
+.win.is-me .ctr-plain .ctr-row{justify-content:center}
