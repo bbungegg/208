@@ -787,7 +787,7 @@
   }
   /* toggle: 제목을 누르면 펼쳐지는 칸 (성향표) */
   /* 성향표: 탭 (about / rules ... 처럼). 탭을 누르면 아래 상자 내용이 바뀐다 */
-  function tabsHtml(list, k) {
+  function tabsHtml(list, k, extra) {   // extra: 첫 탭(♥)에만 붙는 것 (카운터)
     list = arr(list);
     if (!list.length) return '';
     return '<div class="tabs">' +
@@ -799,7 +799,7 @@
         n = arr(n);
         return '<div class="tab-pane' + (i ? '' : ' is-on') + '" role="tabpanel" data-pane="' + i + '">' +
           (EDIT ? '<b class="tab-t">' + ed(k + '.' + i + '.0', n[0]) + '</b>' : '') +
-          (EDIT ? '<div class="tab-tx">' + edr(k + '.' + i + '.1', n[1]) + '</div>' : lines(n[1])) + '</div>';
+          (EDIT ? '<div class="tab-tx">' + edr(k + '.' + i + '.1', n[1]) + '</div>' : lines(n[1])) + (i ? '' : extra || '') + '</div>';
       }).join('') + '</div>' +
     '</div>';
   }
@@ -961,7 +961,7 @@
       '</div>';
     }
     if (d.about || EDIT) h += sec('ABOUT', '소개', '<div class="prose">' + edr(k + '.about', d.about) + '</div>');
-    h += d.type === 'profile' ? tabsHtml(d.notes, k + '.notes') + counterHtml(d.counter) : notesHtml(d.notes, k + '.notes');
+    h += d.type === 'profile' ? tabsHtml(d.notes, k + '.notes', counterHtml(d.counter)) : notesHtml(d.notes, k + '.notes');
     return h;
   }
 

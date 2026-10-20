@@ -1526,3 +1526,6 @@ details.tg:first-of-type{margin-top:30px}
 @media (hover:hover){.tab:hover{background:none;color:#555}}
 .tab[data-tab="0"]{font-size:13px}
 .tabs-box{border:0;border-radius:0;padding:12px 2px 0;background:none}
+/* 카운터는 ♥ 탭 안에만 */
+.tab-pane .ctr-plain{margin:18px 0 6px}
+.tab-pane{max-height:none;overflow:visible}
