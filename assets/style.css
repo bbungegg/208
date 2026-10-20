@@ -1481,3 +1481,8 @@ details.tg:first-of-type{margin-top:30px}
 @media (max-width:720px){.tc{display:none}.has-tc #app{padding-top:0}}
 @media (prefers-reduced-motion:reduce){.tc-in{animation-duration:240s}.tc-i.is-blink{animation:none}}
 .has-tc .bd-col{top:42px}
+/* 광고 줄: 쨍한 파랑 */
+.tc{background:linear-gradient(#2a5bff,#0a3dff 50%,#0029c9);border-bottom:1px solid #9fd0ff;box-shadow:0 1px 0 #001a8a,0 2px 8px rgba(0,40,200,.3)}
+.tc-i{color:#fff36b;text-shadow:0 0 6px rgba(255,240,100,.8),1px 1px 0 #001a8a}
+.tc-i.is-red{color:#ff4d6d;text-shadow:0 0 6px rgba(255,255,255,.5),1px 1px 0 #001a8a}
+@keyframes tcblink{50%{color:#fff;text-shadow:0 0 8px #fff,1px 1px 0 #001a8a}}
